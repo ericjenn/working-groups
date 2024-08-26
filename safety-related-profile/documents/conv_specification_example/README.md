@@ -172,8 +172,7 @@ where
 
 3. <a name="shape_consist"></a> Consistency between the shape of tensors `X`, `W`, `Y` and
     attributes `pads`, `dilations` and `strides`
-    <span id="it:shape_consist" label="it:shape_consist"></span>
-
+   
     - Statement: If parameter `pads` is not empty
  
        *  $$\lfloor{\frac{L.H-(\mbox{\texttt{dilations[0]}} \times W.H-1)}{\mbox{\texttt{stride[0]}}}} \rfloor +1 = \mbox{\texttt{Y.H}} \mbox{ with }  L.H=X.H+\mbox{\texttt{pads[0]}}+\mbox{\texttt{pads[2]}}$$
@@ -271,59 +270,58 @@ If it is not set or set to `NOTSET`, padding is determined by the pads
 attribute (see below). Otherwise, padding is done according to the
 `auto_pad` value, as follows:
 
-- if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{VALID}}$: no padding is
-  done.
+- if auto\_pad = VALID: no padding is done.
 
-- if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{NOTSET}}$: padding is
-  done according to the `pads` attribute. If attribute `pads` is not
-  set, it takes its default value, i.e., $(0,0,0,0)$. In that case, the
-  result is identical to the one that would be obtained if
-  $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{VALID}}$ (i.e., no padding
+- if auto\_pad = NOTSET: padding is done according to the `pads` attribute. If attribute `pads` is not
+  set, it takes its default value, i.e., $(0,0,0,0)$. In that case, the result is identical to the one that would be obtained if
+  auto\_pad = VALID (i.e., no padding
   is done).
 
-- if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{SAME\_UPPER}}$: for each
-  axis, padding must be added so that constraint
-  <a href="#sec:conv_x" data-reference-type="ref"
-  data-reference="sec:conv_x">3.2.1</a>-<a href="#it:shape_consist" data-reference-type="ref"
-  data-reference="it:shape_consist">[it:shape_consist]</a> holds.
-  $$\floor*{\frac{L.H-W.H}{\mbox{\texttt{stride[0]}}}} +1 = \mbox{\texttt{Y.H}} \mbox{ with }  L.H=X.H+pad_h$$
+- if auto\_pad = SAME\_UPPER: for each axis, padding must be added so that [constraint (3) of X](#shape_consist) holds.
+     * $$\lfloor {\frac{L.H-W.H}{\mbox{\texttt{stride[0]}}}} \rfloor +1 = \mbox{\texttt{Y.H}} \mbox{ with }  L.H=X.H+pad_h$$
+   
   and
-  $$\floor*{\frac{L.W-W.W}{\mbox{\texttt{stride[1]}}}} +1 = \mbox{\texttt{Y.W}} \mbox{ with }  L.W=X.W+pad_w$$
+  
+     * $$\lfloor {\frac{L.W-W.W}{\mbox{\texttt{stride[1]}}}} \rfloor +1 = \mbox{\texttt{Y.W}} \mbox{ with }  L.W=X.W+pad_w$$
 
-  If the total padding $pad_h$ (resp. $pad_w$) is even then padding
-  shall be
+  If the total padding $pad_h$ (resp. $pad_w$) is even then padding shall be
 
-  - $pad_h/2$ (resp. $pad_w/2$) at the beginning and
+  - $pad_h/2$ (resp. $pad_w/2$) at the beginning
+  
+   and
 
   - $pad_h/2$ (resp. $pad_w/2$) at the end.
 
   otherwise padding shall be
 
-  - $\floor{pad_h/2}$ (resp. $\floor{pad_w/2}$) at the beginning and
+  - $\lfloor{pad_h/2} \rfloor$ (resp. $\lfloor{pad_w/2} \rfloor$) at the beginning
+  
+    and
 
-  - $\floor{pad_h/2}+1$ (resp. $\floor{pad_w/2}+1$) at the end.
+  - $\lfloor{pad_h/2}\rfloor+1$ (resp. $\lfloor{pad_w/2}\rfloor+1$) at the end.
 
-- $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{SAME\_LOWER}}$: For each
-  axis, padding must be added so that constraint
-  <a href="#sec:conv_x" data-reference-type="ref"
-  data-reference="sec:conv_x">3.2.1</a>-<a href="#it:shape_consist" data-reference-type="ref"
-  data-reference="it:shape_consist">[it:shape_consist]</a> holds.
-  $$\floor*{\frac{L.H-W.H}{\mbox{\texttt{stride[0]}}}} +1 = \mbox{\texttt{Y.H}} \mbox{ with }  L.H=X.H+pad_h$$
+- auto\_pad = SAME\_LOWER: For each axis, padding must be added so that [constraint (3) of X](#shape_consist) holds.
+     * $$\lfloor {\frac{L.H-W.H}{\mbox{\texttt{stride[0]}}}} \rfloor +1 = \mbox{\texttt{Y.H}} \mbox{ with }  L.H=X.H+pad_h$$
+   
   and
-  $$\floor*{\frac{L.W-W.W}{\mbox{\texttt{stride[1]}}}} +1 = \mbox{\texttt{Y.W}} \mbox{ with }  L.W=X.W+pad_w$$
+  
+     * $$\lfloor {\frac{L.W-W.W}{\mbox{\texttt{stride[1]}}}} \rfloor +1 = \mbox{\texttt{Y.W}} \mbox{ with }  L.W=X.W+pad_w$$
 
-  If the total padding $pad_h$ (resp. $pad_w$) is even then padding
-  shall be
+  If the total padding $pad_h$ (resp. $pad_w$) is even then padding shall be
 
-  - $pad_h/2$ (resp. $pad_w/2$) at the beginning and
+  - $pad_h/2$ (resp. $pad_w/2$) at the beginning
+
+    and
 
   - $pad_h/2$ (resp. $pad_w/2$) at the end.
 
   otherwise padding shall be
 
-  - $\floor{pad_h/2+1}$ (resp. $\floor{pad_w/2+1}$) at the beginning and
+  - $\lfloor{pad_h/2+1} \rfloor$ (resp. $\lfloor{pad_w/2+1} \rfloor$) at the beginning
+  
+    and
 
-  - $\floor{pad_h/2}$ (resp. $\floor{pad_w/2}$)at the end.
+  - $\lfloor{pad_h/2} \rfloor$ (resp. $\lfloor{pad_w/2} \rfloor$) at the end.
 
 The effect of the `auto_pad` attribute is illustrated on the following figure:
 
@@ -336,9 +334,7 @@ The effect of the `auto_pad` attribute is illustrated on the following figure:
     - Statement: The value of attribute `auto_pad` shall be in
       `"NOTSET"`, `"SAME_UPPER"`, `"SAME_LOWER"`, `"VALID"`.
 
-2.  Consistency between `pads` and `auto_pad`
-    <span id="it:pads_autopad_consist"
-    label="it:pads_autopad_consist"></span>
+2. <a name="pads_autopad_consist"></a> Consistency between `pads` and `auto_pad`
 
     - Statement: If attribute `pads` is not empty, attribute `auto_pad`
       shall be either empty or set to `NOTSET`.
@@ -368,11 +364,8 @@ The effect of padding illustrated on the following figure:
 
 ###### Constraints.
 
-1.  Consistency between `pads` and `auto_pad`, see
-    <a href="#sec:autopad" data-reference-type="ref"
-    data-reference="sec:autopad">3.3.2</a>-<a href="#it:pads_autopad_consist" data-reference-type="ref"
-    data-reference="it:pads_autopad_consist">[it:pads_autopad_consist]</a>
-
+1.  Consistency between `pads` and `auto_pad`, see [constraint (2)](#pads_autopad_consist)
+    
 2.  Value domain
 
     - Statement: Each element of the `pads` list shall be greater or
@@ -418,20 +411,16 @@ The effect of the `dilations` attribute for a tensor with two spatial axes is de
     - Statement: All values in the `dilation` attribute shall be an
       integer value strictly greater than 0
 
-    - Rationale:
+    - Rationale: ONNX accepts dilations equal to 0 or negative...
 
-      <div class="note">
-
-      ONNX accepts dilations equal to 0 or negative...
-
-      </div>
+    
 
 2.  (C2) Relation between `dilations` and `W`
 
     - Statement: If the `dilations` attribute is not empty, its length
       shall be equal to the number of spatial axes of `W`.
 
-    - Rationale: Dilations shall be defined for all spatial axes of `W`.
+    - Rationale: [NOTE:] Dilations shall be defined for all spatial axes of `W`.
 
 3.  Consistency between the shape of tensors `X`, `W`, `Y` and
     attributes `pads`, `dilations` and `strides`. [See constraint (3) of X](#shape_consist)
@@ -445,14 +434,12 @@ convolution operation.
 For information, when group is greater than 1, convolution is computed
 for each group separately with a specific set of filters.
 
-<div class="note">
 
-I have kept the following text for it may be possible that we allow
+[NOTE:] I have kept the following text for it may be possible that we allow
 `group` greater than 1... This limitation has been chosen to simplify
 this first specification work. This constraint may be relaxed in the
-actual Safety-Related Profile.
+actual Safety-Related Profile.</span>
 
-</div>
 
 The effect of the `group` attribute for a tensor with two spatial axes is depicted on the following figure:
 
@@ -873,7 +860,7 @@ float* conv(input_tensor inp, convolution_kernel kernel, bias_tensor bias, attri
 
 <div class="note">
 
-Elements of the execution semantics is given on the [IR (Intermediate
+[NOTE:] Elements of the execution semantics is given on the [IR (Intermediate
 Representation) page](https://onnx.ai/onnx/repo-docs/IR.html) of the
 ONNX web site. In addition, a Python “reference implementation” is also
 provided (see <https://onnx.ai/onnx/api/reference.html>). The source
@@ -906,7 +893,7 @@ total order of operators.)
 
 <div class="note">
 
-The semantics of an ONNX model is given in Section "Model Semantics" of
+[NOTE:] The semantics of an ONNX model is given in Section "Model Semantics" of
 the [Intermediate
 Representation](https://github.com/onnx/onnx/blob/main/docs/IR.md) page.
 Basically, an inference-model is a stateless function (except possibly

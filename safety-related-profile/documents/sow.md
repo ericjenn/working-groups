@@ -109,40 +109,6 @@ The activities defined below are per domain <x>.
 
 -   ENAct7.\<x\>:Consolidation of industrial needs from all domains
 
-##### *ONNX Requirements Expression*
-
-The activities below take the end-user needs as inputs
-
--   ORAct1: Definition of the list of the aspects to which the
-    requirements for a safety-related ONNX profile will apply, e.g.,
-    -   Semantics of the operators
-    -   Semantics of the graph
-    -   Data types
-    -   Metamodel
-    -   Concrete syntax (format)
-    -   Documentation
-    -   Traceability
-    -   Versioning
-    -   etc.
-
--   ORAct2: For each aspect of the list, definition of the requirements
-    *Examples of requirements that may be expressed:*
-    -   The semantics of the Trained Model Description Language (TMDL) used
-    to describe the TMD shall be defined both informally (for
-    documentation purposes) and formally using a mathematically-grounded
-    language. This covers all that is needed for tooled and/or human
-    interpretation of any valid TMD described using the TMDL (including,
-    (e.g., operators and graphs).
-    -   The formal definition of the TMDL shall define precisely and
-    accurately the expected results of the interpretation of any valid
-    TMDL model. The level of precision and accuracy may be a parameter
-    of the description of the semantics.
-    -   A reference implementation shall be provided for each operator. The
-    reference implementation shall be accompanied with all the necessary
-    information describing the execution environment used to validate
-    compliance with the formal specification.
-    -   In the TMD, it should be possible to indicate the meaning of each
-    dimension of the tensors
 
 ### A2: Specification of the ONNX SR profile
 

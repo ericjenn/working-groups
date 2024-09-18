@@ -2,7 +2,7 @@
 
 ## Terms
 
-The following terms are used in the document:
+The following terms are used in this document:
 
 -   **Trained ML model**: the conceptual structure of graphs and
     operators that maps a set of input tensors to a set of output

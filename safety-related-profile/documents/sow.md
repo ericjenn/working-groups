@@ -56,11 +56,17 @@ dependencies are expressed via their inputs/outputs.
 
 #### Objectives
 
-Elicit end-users needs related to the ONNX format, i.e., What arethe activities using ONNX models?, What are the evidences required by certification authorities that involve the ONNX model[^1]?, How do the ONNX model impact these activities?
+Elicit end-users needs related to the ONNX format, i.e., What are the activities using ONNX models?, What are the evidences required by certification authorities that involve the ONNX model[^1]?, How do the ONNX model impact these activities?
 
-#### Rationales {#rationales .unnumbered}
+#### Rationale {#rationales .unnumbered}
 
-Clarify the expectation of end-users.
+Clarify the expectation of end-user.
+
+#### Activity overview
+
+First define the scope of the safety-related profile (SR profile) in terms operators and constructs, from use cases coming from the various industrial domains.
+Then describe the needs per domain and consolidate them for the whole SR profile.
+ 
 
 #### Inputs
 
@@ -81,7 +87,7 @@ Clarify the expectation of end-users.
 
 The activities defined below are per domain <x>.
 
-##### SC: SR-profile Scope Definition
+##### SC: SR profile Scope Definition
 
 - SCAct1: Identification/definition of the Safety-related industrial use case reference models
 

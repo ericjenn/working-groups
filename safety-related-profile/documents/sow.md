@@ -60,7 +60,7 @@ Elicit end-users needs related to the ONNX format, i.e., What are the activities
 
 #### Rationale {#rationales .unnumbered}
 
-Clarify the expectation of end-user.
+Clarify the expectation of the end-users.
 
 #### Activity overview
 
@@ -124,7 +124,7 @@ Elaborate the list of requirements applicable to the SR profile in order to comp
 
 #### Rationale
 
-Before the starting the development of the SR profile, it is mandatory to express requirements in order to guarantee the statisfaction of the user's need.
+Before starting the development of the SR profile, it is mandatory to express requirements in order to guarantee the statisfaction of the user's need.
 
 #### Activity overview
 

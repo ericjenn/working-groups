@@ -124,12 +124,19 @@ Elaborate the list of requirements applicable to the SR profile in order to comp
 
 #### Rationale
 
-TBD
+Before the starting the development of the SR profile, it is mandatory to express requirements in order to guarantee the statisfaction of the user's need.
+
+#### Activity overview
+
+Before writing the requirements for the SR profile, the various aspects to consider shall be identified clearly.
+Then the requirements are elaborated, grouped, prioritized and verified against the user's needs, within the SR profile scope
+Ensure that the requirements for ONNX are traceable to one or several end-users’ needs.
 
 #### Inputs
 
--   D1.a.\<x\>: End users needs and requirements for domain \<x\>.
+-   D1.a.\<x\>: End users needs for domain \<x\>.
 -   D1.b: Consolidated needs for all industrial domains
+-   D1.c: Safety-related Profile Scope Definition
 
 #### Outputs
 
@@ -145,6 +152,8 @@ TBD
 
 -  ORAct3: Grouping and prioritization of requirements
 
+-  ORAct4: Verification / traceability of the requirements against the user's needs.
+
 ### A3: Development of the ONNX SR profile
 
 #### Objectives
@@ -153,7 +162,13 @@ Development of the ONNX Safety-related profile (syntax and semantics) in complia
 
 #### Rationale
 
-TBD
+The compliance of the SR profile with its requirements and the fact that the requirements are expressed from the user's needs, leads to the satisfaction of the user's needs.
+
+#### Activity overview
+
+Guidelines for the development of the SR profile are first written thanks to a proof of concept that consists in developing a limited subset of the SR profile.
+Then, these guidelines are used to develop the SR profile graph semantics, the semantics of the operators of the SR profile scope, the exchange format and the reference implementation.
+Finally, the SR profile is verified against the requirements and validated against the user's needs.
 
 #### Inputs
 

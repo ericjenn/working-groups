@@ -56,15 +56,15 @@ dependencies are expressed via their inputs/outputs.
 
 #### Objectives
 
-Elicit end-users needs related to the ONNX format, i.e., What are the activities using ONNX models?, What are the evidences required by certification authorities that involve the ONNX model[^1]?, How do the ONNX model impact these activities?
+Elicit end users' needs related to the ONNX format, i.e., What are the activities using ONNX models?, What are the evidences required by certification authorities that involve the ONNX model?, How do the ONNX model impact these activities?
 
-#### Rationale {#rationales .unnumbered}
+#### Rationale
 
-Clarify the expectation of the end-users.
+The definition of the scope of the safety-related profile (SR profile) and the end users' needs within that scope set the frame for the SR profile development.
 
 #### Activity overview
 
-First define the scope of the safety-related profile (SR profile) in terms operators and constructs, from use cases coming from the various industrial domains.
+First define the scope of the safety-related profile in terms operators and constructs, from use cases coming from the various industrial domains.
 Then describe the needs per domain and consolidate them for the whole SR profile.
  
 
@@ -75,11 +75,11 @@ Then describe the needs per domain and consolidate them for the whole SR profile
 
 -   Company-specific requirements
 
--   End-user use cases
+-   End users' use cases
 
 #### Outputs
 
--   D1.a.\<x\>: End users needs and requirements for domain \<x\>.
+-   D1.a.\<x\>: End users' needs and requirements for domain \<x\>.
 -   D1.b: Consolidated needs for all industrial domains
 -   D1.c: Safety-related Profile Scope Definition
 
@@ -95,7 +95,7 @@ The activities defined below are per domain <x>.
 
 - SSAct3: Consolidation of the set of operators and constructs to be included in the Safety-related profile (from the reference models possibly augmented with necessary additional operators and constructs).
 
-##### EN: End-Users Needs Elicitation
+##### EN: End Users' Needs Elicitation
 
 -   ENAct1.\<x\>: Description (overview) of the machine learning development
     process
@@ -124,17 +124,17 @@ Elaborate the list of requirements applicable to the SR profile in order to comp
 
 #### Rationale
 
-Before starting the development of the SR profile, it is mandatory to express requirements in order to guarantee the statisfaction of the user's need.
+Before starting the development of the constituents of the SR profile, it is mandatory to express requirements in compliance with the users' needs, in order to guarantee the statisfaction of the latter.
 
 #### Activity overview
 
 Before writing the requirements for the SR profile, the various aspects to consider shall be identified clearly.
-Then the requirements are elaborated, grouped, prioritized and verified against the user's needs, within the SR profile scope
-Ensure that the requirements for ONNX are traceable to one or several end-users’ needs.
+Then the requirements are elaborated, grouped, prioritized and verified against the end users' needs, within the SR profile scope
+Furthermore, the requirements for ONNX will be made traceable to one or several end users’ needs.
 
 #### Inputs
 
--   D1.a.\<x\>: End users needs for domain \<x\>.
+-   D1.a.\<x\>: End users' needs for domain \<x\>.
 -   D1.b: Consolidated needs for all industrial domains
 -   D1.c: Safety-related Profile Scope Definition
 
@@ -152,7 +152,7 @@ Ensure that the requirements for ONNX are traceable to one or several end-users�
 
 -  ORAct3: Grouping and prioritization of requirements
 
--  ORAct4: Verification / traceability of the requirements against the user's needs.
+-  ORAct4: Verification / traceability of the requirements against the end users' needs.
 
 ### A3: Development of the ONNX SR profile
 
@@ -162,13 +162,13 @@ Development of the ONNX Safety-related profile (syntax and semantics) in complia
 
 #### Rationale
 
-The compliance of the SR profile with its requirements and the fact that the requirements are expressed from the user's needs, leads to the satisfaction of the user's needs.
+The compliance of the SR profile with its requirements and the fact that the requirements are expressed from the end users' needs, leads to the satisfaction of the end users' needs.
 
 #### Activity overview
 
 Guidelines for the development of the SR profile are first written thanks to a proof of concept that consists in developing a limited subset of the SR profile.
 Then, these guidelines are used to develop the SR profile graph semantics, the semantics of the operators of the SR profile scope, the exchange format and the reference implementation.
-Finally, the SR profile is verified against the requirements and validated against the user's needs.
+The SR profile constituents shall be verifiable against their requirements (verification) and against the end users' needs (validation).
 
 #### Inputs
 
@@ -202,7 +202,7 @@ Finally, the SR profile is verified against the requirements and validated again
 
 ##### RI: Reference implementation
 
--  RIAct1: Development of a reference implemation (on the basis of the existing ref imp.). This covers the development of the graph execution engine and operators.
+-  RIAct1: Development of a reference implementation (on the basis of the existing ref imp.). This covers the development of the graph execution engine and operators.
 
 ### A4: V&V of the ONNX Safety-related profile
 
@@ -210,9 +210,13 @@ Finally, the SR profile is verified against the requirements and validated again
 
 Verification (validation) of the ONNX Safety-related profile vs the requirements (resp. needs) expressed in D2.a (resp D1.b and D1.c)
 
-#### Rationales
+#### Rationale
 
-TBD
+
+
+#### Activity overview
+
+The SR profile is verified against the requirements and validated against the end users' needs.
 
 #### Inputs
 
@@ -238,14 +242,6 @@ TBD
 
 -   VAAct1: Validation of the ONNX SR profile via its application to one or several industrial use cases 
 
-##### Analysis of the ONNX standard
-
--   AnaAct1: Analysis of the compliance of the ONNX standard with
-    respect to each of the requirements and identification of
-    non-compliances.
-
--   AnaAct2: Provision of recommendations, solutions, guidance to modify
-    the ONNX standard.
 
 ### A5: Tooling
 

@@ -60,11 +60,11 @@ Elicit end users' needs related to the ONNX format, i.e., What are the activitie
 
 #### Rationale
 
-The definition of the scope of the safety-related profile (SR profile) and the end users' needs within that scope set the frame for the SR profile development.
+The definition of the scope of the safety-related profile (SR profile) and the elicitation of the end users' needs within that scope set the frame for the SR profile development.
 
 #### Activity overview
 
-First define the scope of the safety-related profile in terms operators and constructs, from use cases coming from the various industrial domains.
+First define the scope of the safety-related profile in terms of operators and constructs on the basis of use cases coming from the various industrial domains.
 Then describe the needs per domain and consolidate them for the whole SR profile.
  
 
@@ -129,7 +129,7 @@ Before starting the development of the constituents of the SR profile, it is man
 #### Activity overview
 
 Before writing the requirements for the SR profile, the various aspects to consider shall be identified clearly.
-Then the requirements are elaborated, grouped, prioritized and verified against the end users' needs, within the SR profile scope
+Then the requirements are elaborated, grouped, prioritized and verified against the end users' needs, within the SR profile scope.
 Furthermore, the requirements for ONNX will be made traceable to one or several end users’ needs.
 
 #### Inputs
@@ -162,7 +162,7 @@ Development of the ONNX Safety-related profile (syntax and semantics) in complia
 
 #### Rationale
 
-The compliance of the SR profile with its requirements and the fact that the requirements are expressed from the end users' needs, leads to the satisfaction of the end users' needs.
+The compliance of the SR profile with its requirements, together with the fact that the requirements are expressed from the end users' needs, leads to the satisfaction of the end users' needs.
 
 #### Activity overview
 
@@ -212,11 +212,11 @@ Verification (validation) of the ONNX Safety-related profile vs the requirements
 
 #### Rationale
 
-
+Since the SR profile aims at becoming the ONNX standard for safety-related applications, it is important to verify/validate it before end users can use it. 
 
 #### Activity overview
 
-The SR profile is verified against the requirements and validated against the end users' needs.
+The SR profile is verified against the requirements and validated against the end users' needs. Verification/validation cases and results shall be documented in order to give evidences about the activity.
 
 #### Inputs
 

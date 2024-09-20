@@ -247,11 +247,16 @@ The SR profile is verified against the requirements and validated against the en
 
 #### Objectives
 
-Provision of tooling to support the exploitation of the ONNX SR model. E.g., model inspection and review tool, etc. This 
+Provision of tooling to support the exploitation of the ONNX SR model. E.g., model inspection and review tool, etc, according to the end users' ML development process objectives and activities.
+MAYBE TOO AMBITIOUS. AT LEAST SPEC OF THE TOOLS?
 
 #### Rationales
 
-TBD
+
+
+#### Activity overview
+
+Based on the descritpion of the ML development process objectives and activities made by the end users during actvity A1, tools BLA BLA BLA
 
 #### Inputs
 

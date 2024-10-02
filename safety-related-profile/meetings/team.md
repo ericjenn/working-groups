@@ -1,4 +1,4 @@
-| Last name | First name | COMPANY |    Activity   | Contributuion (R/W)                             |
+| Last name | First name | COMPANY |    Activity   | Contribution (R/W)                             |
 |-----------|------------|---------|---------------|-------------------------------------------------|
 | BARRETEAU | Michel | Thales |
 | BELEGUER ALMECIJA | Salvador | Airbus DS |

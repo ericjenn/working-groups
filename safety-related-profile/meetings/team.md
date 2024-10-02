@@ -1,11 +1,9 @@
-| Last name | First name | COMPANY |    Activity   |   Contribution (R/W)  |
-|-----------|------------|---------|---------------|------------------------|
 | BARRETEAU | Michel | Thales |
 | BELEGUER ALMECIJA | Salvador | Airbus DS |
 | BELFY | Henri | THALES AVS | Relative ONNX embedded part (Operators Definitions...) | R/W (limited W)|
 | BERJON | Pierre | Airbus Operations SAS |
 | BEYER | Michael | BOSCH |
-| BOBLEST | Sebastian | BOSCH |
+| BOBLEST | Sebastian | BOSCH | | R/(W) final contribution clearance in progress |
 | BOUCHON | Stephane | Airbus Protect |
 | BRIAND | Julien | DGA-TA |
 | CHICHIN | Sergei | Airbus Operations SAS |
@@ -25,7 +23,7 @@
 | GARION | Christophe | ISAE |
 | GIRARD | Julien | CEA |
 | HARNOUFI | Bouchra | Airbus DS |
-| JENN | Eric | IRT St Ex | All | WG co-lead
+| JENN | Eric | IRT St Ex | All | WG co-lead                                      
 | JIMENEZ | Arnaud | CS-SOPRASTERIA |
 | KLUGE | Regina | INFINEON |
 | KRISHNA | Ram | |
@@ -49,7 +47,7 @@
 | SADOCK | Christiano | Embraer |
 | SCHMIDT | Bernard | BOSCH |
 | SCHORN | Christoph | BOSCH |
-| SOUYRIS | Jean | Airbus Operations SAS | All | WG Co-lead
+| SOUYRIS | Jean | Airbus Operations SAS | All | WG Co-lead                                      
 | THIERION | Philippe | AMPERE |
 | TOSTES | Pedro | Embraer |
 | TURKI | Mariem | IRT St Ex |

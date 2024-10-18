@@ -36,7 +36,7 @@ MobileNetSSDv2 is particularly popular for its balance between accuracy and spee
 The Netron application shows the following operators for MobileNet-SSDv2. Note that YOLOv8 also provides skeleton capabilities, which is why some additional operators are also interesting for YOLOv8, or for segmentation capability. Additionally, a classic inference layer can be added after this type of detection, and some more operators could be interesting for a complete functionality
 
 ## Operators
-MobileNetSSDv2, when converted into an ONNX (Open Neural Network Exchange) format, utilizes a variety of operators that are supported by the ONNX framework.
+### MobileNetSSDv2, when converted into an ONNX (Open Neural Network Exchange) format, utilizes a variety of operators that are supported by the ONNX framework.
 While the specific list of operators can depend on the implementation details and the framework used (like TensorFlow, PyTorch, etc.), common operators for MobileNetSSDv2 in ONNX typically include:
 1) Conv: Convolution operator.
 2) Add: Element-wise addition.
@@ -54,13 +54,13 @@ While the specific list of operators can depend on the implementation details an
 14) Unsqueeze: Inserting single-dimensional entries to the shape.
 These operators allow MobileNetSSDv2 to perform the necessary computations for feature extraction, processing, and final object detection tasks.
 
-For yolov8 in more the onnx operators are :
+### For yolov8 in more the onnx operators are :
 15) Sigmoid: Sigmoid activation function.
 16) MaxPool: Max Pooling.
 17) Resize: Scaling the size of images.
 18) Sub: Element-wise substraction.
 
-For Classic inference layer (and advanced regression or prediction) in more than the previous operators it is necessary to add :
+### For Classic inference layer (and advanced regression or prediction) in more than the previous operators it is necessary to add :
 19) LeakyRelu: Leaky Rectified Linear Unit.
 20) Relu: Rectified Linear Unit activation.
 21) Pad: Padding around the tensor.

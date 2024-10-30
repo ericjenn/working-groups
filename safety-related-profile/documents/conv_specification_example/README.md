@@ -285,17 +285,17 @@ for the input tensor X.
 If it is not set or set to `NOTSET`, padding is determined by the pads
 attribute (see below). Otherwise, padding is done according to the
 `auto_pad` value, as follows:
-* if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{VALID}}$: no padding is
+- if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{VALID}}$: no padding is
   done.
 
-* if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{NOTSET}}$: padding is
+- if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{NOTSET}}$: padding is
   done according to the `pads` attribute. If attribute `pads` is not
   set, it takes its default value, i.e., $(0,0,0,0)$. In that case, the
   result is identical to the one that would be obtained if
   $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{VALID}}$ (i.e., no padding
   is done).
 
-* if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{SAME\_UPPER}}$: for each
+- if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{SAME\_UPPER}}$: for each
   axis, padding must be added so that constraint
   <a href="#sec:conv_x" data-reference-type="ref"
   data-reference="sec:conv_x">3.2.1</a>-<a href="#it:shape_consist" data-reference-type="ref"
@@ -317,7 +317,7 @@ attribute (see below). Otherwise, padding is done according to the
 
   - $\floor{pad_h/2}+1$ (resp. $\floor{pad_w/2}+1$) at the end.
 
-* $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{SAME\_LOWER}}$: For each
+- $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{SAME\_LOWER}}$: For each
   axis, padding must be added so that constraint
   <a href="#sec:conv_x" data-reference-type="ref"
   data-reference="sec:conv_x">3.2.1</a>-<a href="#it:shape_consist" data-reference-type="ref"

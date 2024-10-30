@@ -17,12 +17,12 @@ needs that will be captured in phase 1 of our work.
     *informal* part is aimed at facilitating the understanding of the
     ONNX construct (e.g., operator). It may be incomplete, as far as it
     is clearly indicated. Conversely, the *formal* specification shall
-    be absolutely complete and non ambiguous.
+    be absolutely complete and non-ambiguous.
 
 3.  Using mathematical formalism shall be avoided if not required. Since
     we are essentially[^1] targeting data and computer scientists, using
-    a very cryptic – yet perfectly well defined and mathematically
-    grounded – notation may reveal being error prone and, consequently,
+    a very cryptic – yet perfectly well-defined and mathematically
+    grounded – notation may reveal being error-prone and, consequently,
     counter effective.
 
 4.  The specification can rely on a formal language, as far as this
@@ -75,8 +75,10 @@ safety-related profile:
 
 - the number of spatial axes of the tensors is equal to 2.
 
-- there is no grouping (i.e., $\mbox{\texttt{group}}=1$), so the `conv`
-  operator does a standard convolution.
+  - there is no grouping (i.e., $\mbox{\texttt{group}}=1$), so the `conv`
+    operator does a standard convolution. 
+
+**This excludes depthwise convolutions, and hence MobileNetV2 which is part of the Thales usecase. $\mbox{\texttt{group}}\neq 1$ makes the specification much more complicated, but I think we need it.**
 
 In the rest of the document, restrictions with respect to the ONNX
 standard `conv` operator are indicated in the text with the tag.
@@ -95,6 +97,7 @@ where
 - `W` is the convolution kernel
 
 - `B` is the optional bias to be added to the result of the convolution.
+**What is the opinion of the group on enforcing a bias? It can of course be 0, but this removes a little room for ambiguity.**
 
 ### Specification for data types: `Y` : real, `X`: real, `W`: real, `B`: real
 
@@ -117,8 +120,7 @@ $$\begin{gathered}
 
 Where
 
-- $b$ is the batch index, $b \in [0,Y.B-1]$ and $Y.B$ is the batch size of
-  the output `Y`
+- $b$ is the batch index, $b \in [0,Y.B-1]$ and $Y.B$ is the batch size. **The batch size is a global property, not of $Y$ only.**
 
 - $c$ is the data channel, $c \in [0,Y.C-1]$ and $Y.C$ is the number of data
   channels of the output `Y`
@@ -136,6 +138,10 @@ Where
 The effect of the operator is depicted on the following picture.
 ![](https://github.com/ericjenn/working-groups/blob/ericjenn-srpwg-wg1/safety-related-profile/documents/conv_specification_example/imgs/conv.png)
 
+**I do not understand the computation in the image: 2 + 1 = 3.
+No explicit numbers are given in either the kernel or the bias.
+This might be confusing.
+**
 
 #### Inputs and outputs
 
@@ -151,7 +157,7 @@ where
 
 - $X.C$ is the number of data channels
 
-- $X.H$ and $X.W$ are the sizes of the tensor for the two spatial axis
+- $X.H$ and $X.W$ are the sizes of the tensor for the two spatial axes
 
 ###### Constraints
 
@@ -164,7 +170,9 @@ where
 2. <a name="channel_consist"></a> Consistency between the number of channels of `X`, `W`, `B`, and
     `Y`.  
 
-    - Statement: $X.C=Y.C=W.C_{in}=B.C$
+    - Statement: $X.C=Y.C=W.C_{in}=B.C$ 
+**Unless I misunderstand something, this is wrong. $X.C = Y.C = W.C_{in}$ applies to Depthwise convolutions. 
+For convolutions $Y.C = W.C_{out}$**
 
     - Rationale: This is a particular case of the more general relation
       $X.C=Y.C=W.C_{in}\cdot\mbox{\texttt{groups}}$ when
@@ -174,7 +182,7 @@ where
     attributes `pads`, `dilations` and `strides`
     <span id="it:shape_consist" label="it:shape_consist"></span>
 
-    - Statement: If parameter `pads` is not empty
+    - Statement: If parameter `pads` is not empty **My view on this: Make pads a required property, the value (0, 0, 0, 0) then denotes no padding. Again, this removed ambiguities.**
  
        *  $$\lfloor{\frac{L.H-(\mbox{\texttt{dilations[0]}} \times W.H-1)}{\mbox{\texttt{stride[0]}}}} \rfloor +1 = \mbox{\texttt{Y.H}} \mbox{ with }  L.H=X.H+\mbox{\texttt{pads[0]}}+\mbox{\texttt{pads[2]}}$$
   

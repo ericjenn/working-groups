@@ -252,13 +252,14 @@ tensor `X` during the convolution.
 
 **Proposal: Enforce a strides attribute to remove ambiguity.**
 
-
 For instance, with $\mbox{\texttt{strides}}[0]=1$ and
 $\mbox{\texttt{strides}}[1]=2$, the kernel is moved 1 unit in the
 first spatial axis and 2 units in the second spatial axis at each step
 of the convolution.
+
 **Not fully correct: The kernel is repeatedly moved 1 unit in the first spatial axis until the end of $X$ is reached. 
-Then the position wrt the first spatial axis is reset, the kernel is moved 2 units in the second spatial axis and the process is repeated.**
+Then the position wrt. the first spatial axis is reset, 
+the kernel is moved 2 units in the second spatial axis and the process is repeated.**
 
 This effect is illustrated on the following figure:
 
@@ -279,12 +280,12 @@ This effect is illustrated on the following figure:
 ##### `auto_pad` : string (default is `NOTSET`)
 
 The `auto_pad` attribute determines if and how automatic padding is done
-for the input tensor X.
+for the input tensor X. **Proposal: Do not allow `auto_pad`, enforce the pads attribute.**
 
 If it is not set or set to `NOTSET`, padding is determined by the pads
 attribute (see below). Otherwise, padding is done according to the
 `auto_pad` value, as follows:
-- if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{VALID}}$: no padding is
+- if $ = \mbox{\texttt{VALID}}$: no padding is
   done.
 
 - if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{NOTSET}}$: padding is

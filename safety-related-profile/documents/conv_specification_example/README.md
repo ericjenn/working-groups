@@ -232,12 +232,12 @@ Optionally,
       `FILTER_SPATIAL`\].
 
     - Rationale: Denotation convention
-
+**Proposal: Enforce denotations.**
 ##### `B`, optional
 
 Tensor `B` is the optional bias. The shape of the bias tensor is
 $(B.C \times 1)$.
-
+**Proposal: Enforce a bias.**
 
 ###### Constraints
 
@@ -250,10 +250,15 @@ $(B.C \times 1)$.
 The `strides` attributes determines how the kernel is moved on the input
 tensor `X` during the convolution.
 
+**Proposal: Enforce a strides attribute to remove ambiguity.**
+
+
 For instance, with $\mbox{\texttt{strides}}[0]=1$ and
-$\mbox{\texttt{strides}}[1]=2$, the kernel is moved of 1 unit in the
+$\mbox{\texttt{strides}}[1]=2$, the kernel is moved 1 unit in the
 first spatial axis and 2 units in the second spatial axis at each step
 of the convolution.
+**Not fully correct: The kernel is repeatedly moved 1 unit in the first spatial axis until the end of $X$ is reached. 
+Then the position wrt the first spatial axis is reset, the kernel is moved 2 units in the second spatial axis and the process is repeated.**
 
 This effect is illustrated on the following figure:
 
@@ -264,7 +269,7 @@ This effect is illustrated on the following figure:
 1.  Size of `strides`
 
     - Statement: If non empty, the number of elements in the `strides`
-      attribute must be equal to 2.
+      attribute must be equal to 2. **Proposal: Enforce a strides attribute to remove ambiguity.**
 
     - Rationale: Striding is done on each spatial axis.
 
@@ -273,6 +278,7 @@ This effect is illustrated on the following figure:
 
 ##### `auto_pad` : string (default is `NOTSET`)
 
+**Proposal: Do not allow `auto_pad`, enforce the pads attribute.**
 The `auto_pad` attribute determines if and how automatic padding is done
 for the input tensor X.
 

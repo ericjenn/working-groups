@@ -285,7 +285,7 @@ for the input tensor X. **Proposal: Do not allow `auto_pad`, enforce the pads at
 If it is not set or set to `NOTSET`, padding is determined by the pads
 attribute (see below). Otherwise, padding is done according to the
 `auto_pad` value, as follows:
-- if $ = \mbox{\texttt{VALID}}$: no padding is
+- if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{VALID}}$: no padding is
   done.
 
 - if $\mbox{\texttt{auto\_pad}} = \mbox{\texttt{NOTSET}}$: padding is
@@ -360,6 +360,9 @@ The effect of the `auto_pad` attribute is illustrated on the following figure:
     - Rationale: Padding is either defined by attribute `pads` or
       computed automatically, in an exclusive manner.
 
+**Enforcing pads and prohibiting auto_pad would simplify things here a lot.**
+
+
 ##### `pads`: list of int (optional, default value is 0 along start and end of each spatial axis).
 
 The `pads` attribute determines the padding at the beginning and ending
@@ -405,7 +408,7 @@ The effect of padding illustrated on the following figure:
 
 4.  Length of `pads`
 
-    - Statement: The length of the `pads` list shall be a multiple of 2
+    - Statement: The length of the `pads` list shall be a multiple of 2 **Is a direct consequence of point 3.**
 
     - Rationale: For each axis, two values must be given: one for the
       beginning and one for the end.
@@ -414,11 +417,11 @@ The effect of padding illustrated on the following figure:
     attributes `pads`, `dilations` and `strides`. [See constraint (3) of X](#shape_consist)
 
 ##### `dilations`: list of ints (default is 1 along each spatial axis)
-
+**Proposal: Enforce dilations.**
 The `dilations` attribute specifies the spacing between the kernel
 elements for each spatial axis of the filter `W`. It is a list of
 non-null integer values where each value gives the dilation factor for
-spatial axis $i$. If the dilation factor is greater than 1 for a axis
+spatial axis $i$. If the dilation factor is greater than 1 for axis
 $i$, then the kernel points are spaced out by the dilation factor.
 
 The effect of the `dilations` attribute for a tensor with two spatial axes is depicted on the following figure:
@@ -436,7 +439,7 @@ The effect of the `dilations` attribute for a tensor with two spatial axes is de
 
       <div class="note">
 
-      ONNX accepts dilations equal to 0 or negative...
+      ONNX accepts dilations equal to 0 or negative... **What does this mean then? Dilation = 0 would shrink the kernel to 1 element!?**
 
       </div>
 
@@ -451,7 +454,7 @@ The effect of the `dilations` attribute for a tensor with two spatial axes is de
     attributes `pads`, `dilations` and `strides`. [See constraint (3) of X](#shape_consist)
 
 ##### `group`: int (default value is 1) 
-
+**Proposal: Enforce group.**
 This parameter specifies the number of groups input channels and output
 channels are divided into. When group is set to 1, this is the standard
 convolution operation.
@@ -465,6 +468,7 @@ I have kept the following text for it may be possible that we allow
 `group` greater than 1... This limitation has been chosen to simplify
 this first specification work. This constraint may be relaxed in the
 actual Safety-Related Profile.
+**I think we must allow group != 1. At least the special case of DepthwiseConvolutions.**
 
 </div>
 
@@ -487,7 +491,7 @@ groups of 3 channels.
 
     - Rationale: Only standard convolutions are considered in the SRP
       profile,
-
+**Would make some use cases not possible.**
 ##### `kernel_shape`: list of ints (optional, default value is the list of sizes of the spatial axis of W 
 
 This parameter specifies the shape of the convolution kernel `W`.
@@ -507,6 +511,9 @@ This parameter specifies the shape of the convolution kernel `W`.
       must be equal to the size of `W` for that axis.
 
     - Rationale: `kernel_shape` represents the shape of `W`.
+
+**Here I would propose to either enforce this attribute or not allow it and derive the kernel shape from $W$.**
+
 
 #### Outputs
 

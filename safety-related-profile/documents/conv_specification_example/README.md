@@ -278,7 +278,6 @@ This effect is illustrated on the following figure:
 
 ##### `auto_pad` : string (default is `NOTSET`)
 
-**Proposal: Do not allow `auto_pad`, enforce the pads attribute.**
 The `auto_pad` attribute determines if and how automatic padding is done
 for the input tensor X.
 

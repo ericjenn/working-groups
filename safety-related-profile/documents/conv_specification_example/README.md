@@ -140,8 +140,7 @@ The effect of the operator is depicted on the following picture.
 
 **I do not understand the computation in the image: 2 + 1 = 3.
 No explicit numbers are given in either the kernel or the bias.
-This might be confusing.
-**
+This might be confusing.**
 
 #### Inputs and outputs
 
@@ -176,13 +175,14 @@ For convolutions $Y.C = W.C_{out}$**
 
     - Rationale: This is a particular case of the more general relation
       $X.C=Y.C=W.C_{in}\cdot\mbox{\texttt{groups}}$ when
-      $\mbox{\texttt{groups}}=1$.
+      $\mbox{\texttt{groups}}=1$. **Again, this applies to Depthwise convolutions.**
 
 3. <a name="shape_consist"></a> Consistency between the shape of tensors `X`, `W`, `Y` and
     attributes `pads`, `dilations` and `strides`
     <span id="it:shape_consist" label="it:shape_consist"></span>
 
-    - Statement: If parameter `pads` is not empty **My view on this: Make pads a required property, the value (0, 0, 0, 0) then denotes no padding. Again, this removed ambiguities.**
+    - Statement: If parameter `pads` is not empty 
+**My view on this: Make pads a required property, the value (0, 0, 0, 0) then denotes no padding. Again, this removes ambiguities.**
  
        *  $$\lfloor{\frac{L.H-(\mbox{\texttt{dilations[0]}} \times W.H-1)}{\mbox{\texttt{stride[0]}}}} \rfloor +1 = \mbox{\texttt{Y.H}} \mbox{ with }  L.H=X.H+\mbox{\texttt{pads[0]}}+\mbox{\texttt{pads[2]}}$$
   
@@ -200,6 +200,7 @@ For convolutions $Y.C = W.C_{out}$**
       \[`DATA_BATCH`, `DATA_CHANNEL`, `DATA_FEATURE`, `DATA_FEATURE`\].
 
     - Rationale: Denotation convention
+**I am not aware of this feature, but again, I would enforce it.**
 
 ##### `W`
 

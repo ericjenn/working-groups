@@ -96,7 +96,7 @@ The model designers and implementers need to verify that some intrinsic properti
 #### Description
 The model implementation shall behave in a deterministic and possibly predictable manner. 
 
-All inputs that may have an impact on the functioncperformed by the model must be identified and documented. 
+All inputs that may have an impact on the function performed by the model must be identified and documented. 
 
 No operator having a stochastic or unpredictable behavior must be allowed.
 
@@ -120,6 +120,28 @@ Should formal verification of the implementation against the specification be im
 
 Provision of test cases to verify compliance of an implementation against the specification would be useful. Those test cases may be those used to verify compliance of the reference implementation against the formal or informal specification. Those test cases need to cover all aspects of the specification, including those related to precision and stablity (e.g., inputs and expected outputs for softmax under typical and edge cases). 
 
+### NEED XXX: `Precise, unique operator specifications (Bosch)`
+The default ONNX standard allows for a lot of variability in the definition of operators.
+
+For example, the 'Unsqueeze' operator needs to have information about the axes it needs to unsqueeze.
+This is sometimes stored as an attribute of the operator and sometimes as an input tensor.
+The SONNX standard should only allow one specific way to give such information for each operator,
+and it should not allow default values.
+Each required attribute or tensor must be explicitly set in the model.
+A bias tensor, for example, can of course be the zero vector, but it should be provided in any case.
+
+### NEED XXX: `Precise set of supported operators with precise set of supported configurations (Bosch)`
+For our use case code generation we require a precise set of operators that are supported within SONNX,
+and a precise set of configurations of these operators. 
+
+### NEED XXX: `Reference implementation (Bosch)`
+A reference implementation of each supported operator in a high-level language (e.g. Python) 
+to compare against would be very helpful, especially if SONNX shall contain support for quantized networks.
+
+Currently, we see discrepancies between tensorflow, LiteRT, 
+and tensorflow lite micro in the implementation of quantized networks.
+Important standard libraries like CMSIS-NN and ACL could be used as a reference 
+if they fulfill the requirements on code quality.
 
 
 

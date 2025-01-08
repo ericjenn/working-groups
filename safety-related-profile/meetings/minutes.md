@@ -1,3 +1,148 @@
+# 2024/12/18
+## Agenda
+- Sebastian's presentation on Bosch's code generation tool.
+- Review of actions
+- Results of last review of ``conv2d``
+- Overview of the first version of the [list of requirements](../documents/reqs.md)
+- Discussion about the operators to integrate in the profile (see the [list of operators](./operator_spec_sub_wg/SONNX_Operator_List.xlsx))
+- Call for contributors to reqs and description of ops. 
+- Output from ``conv2d`` last review.
+# Attendees
+Andreas Fehlner, Christophe Garion, Cong Liu, Edoardo Manino,  Eric Jenn, Jean Souyris, Jean-Baptiste Rouffet, Jean-Loup Farges, Sebastian Boblest, Mohammed, Anne-Sophie Lalloyer, Andreas Dittberner, Benjamin Wagner, Duy Khoi Vo, Julien Vidalie, Thiziri Belkacem, Nicolas Valot, Henri Belfy
+# Minutes
+(The meeting has been recorded and is available [here](https://zoom.us/rec/play/Gp1BMRCA01sUw-m0lXeewLgfPIPRlluJ3Cfi_AakBAruDRvm5CSWSf_bj19PHA6Ky99dXm2mlASBkEKu.Ws8R97q6D_W-k0a_?canPlayFromShare=true&from=share_recording_detail&continueMode=true&componentName=rec-play&originRequestUrl=https%3A%2F%2Fzoom.us%2Frec%2Fshare%2FPTdcIxVJaVSPh1Ze39mu3zmVqjYJ0sB33oR76VOsWpsKlbnaGtQwa7r4bkp1OF3a.5BpTwCuQlXolU4uC) for those who have an LFX account. Note that there is also a full textual transcript of the meeting, which includes all the Mmmm, the hesitations, the globbish, etc. Nevertheless, this is extremely handy, you can even click on the text and the video will move at the appropriate place. If we were able to cut /paste the transcript in ChatGPT to generate a synthesis, that'll be perfect...)
+- Sebastian's presentation on Bosch's Embedded Ai coder.
+  - Two things (please refer to the video for the full contents):
+    - Bosch is (in particular) targetting very small models (starting with a few hundrerds parameters) to be run on very small targets (microcontrollers).
+    - One important expectation for Bosch: having a tool to check the (S)ONNX model... 
+    - One important expectation for Bosch's customer: be able to reproduce results on a long time span. 
+- Brief overview of the first version of the [requirement list](../documents/reqs.md). There has been quite a few comments on reqs 19 and 20 about errors. This issue will be addressed in a separate discussion (see action 1812-2) 
+- Discussion about the list of operators and the way we have to "process them"
+  - We have to share the work! Eric will add a "complexoity" evaluation to the current list of operators (1812-4), then every contributor can put his/her name in front of the operator on which he/she can contribute (as a writer, a reviewer). See action (1812-5). Note that we will start the work when the specification of the ``conv`` operator is completed (since it will be used as a template).
+- Sebastian raised an important remark concerning the actual capability of people to contribute to the effort. Everyone has to check the legal aspects of contributing to the SONNX effort which, eventually, will be part of ONNX (exact modalities have to be addressed). See action (1812-6)
+#### New actions
+- [ ] (1812-1, Mariem et Eric) Process reviews of `conv2D`. 
+- [X] (1812-2, Eric) Complete the discussion about numerical accuracy and error management.
+  - See mail dated 19/12.
+- [ ] (1812-3, Mariem) Complete the formal specification of `conv2d` with the help of FM experts (Augustin, Christophe, Cong, Eduardo, Loïc, etc.)
+- [X] (1812-4, Eric) Provide a "complexity" estimation for each operator
+    - Done, see [Excel sheet](./operator_spec_sub_wg/SONNX_Operator_List.xlsx)
+- [ ] (1812-5, All) Indicate on which operator one can contribute (writer/reviewer). Put your id in this [table](./operator_spec_sub_wg/worksharing.md) The list of operators with their "complexity" and links to the ONNX doc are in this [Excel sheet](./operator_spec_sub_wg/SONNX_Operator_List.xlsx)
+- [ ] (1812-6, All) Check legal aspects of contributing to the SONNX effort ("clearance")
+#### Past actions
+- [X] (0412-1, Eric) Integrate CS' use case in the [list of use cases](../documents/usecases.md)
+- [X] (0412-2, Eric, Jean) Check Airbus's needs.
+- [X] (0412-3, Eric) Integrate Henri's comments in the list of questions to WG114. Integrate questions raised by Jean-Baptiste presentation about hyperparameters (what are those hyperparameters, precisely), why do they need to carry this information in the MLMD, for what purpose?
+- [ ] (0412-4, Thiziri, Nicolas, Jean, Sebastian, Jean-Loup) Review of the [updated version of CONV2D](../documents/conv_specification_example/README.md)
+    - Reviews from Henri, Nicolas and Jean-Loup received and processed.
+    - Review from Thiziri to be received on 2024/12/20.
+- [X] (0412-5, Mariem) Replace the sentence that uses "shifted" by "the kernel is applied to data 2 units on right in the first spatial axis and to data 3 units down in the second spatial axis"
+- [ ] (0412-6, Eric) Create a sub working group to analyse the existing standard in a systematic way...
+#### Past actions
+- [X] (0611-2 - Eric) Prepare a followup to the discussion about computation errors: what is the impact on the MLMD?
+  - Followup: (1218-2)
+- [ ] (231001 - All) Check Nicolas' classification proposal 
+- [ ] (231002 - Sebastian) Get in touch with other people in the automotive partners (e.g. ETAS).
+- [ ] (231002 - Luis) Provide contact(s) with other industrial domains (medical,...)
+  - On-going (see previous meeting)
+- [ ] (A008 - leads) Plan SC meetings
+- [ ] (A009 - Dumitru) Correct  / complete description of issue #2
+  - Dumitru will check this...
+- [ ] (A015) All : Complete description of use cases
+  - On-going
+- [ ] (A016) All : Complete description of needs
+  - On-going
+- [ ] (A004 - all) Propose a short communication during the next WG meetings. The list is [here](https://github.com/ericjenn/working-groups/blob/ericjenn-srpwg-wg1/safety-related-profile/meetings/presentation_proposals.md).
+  - On-going 
+
+
+# 2024/12/04
+## Agenda
+- Review of actions
+- Feedback on meeting about formal methods (see minutes [here](../meetings/formal_methods/minutes.md))
+- Review of [Airbus' needs](../documents/needs.md)
+- Review of [Jean-Baptiste's analysis of the ARP6983](../documents/analysis_of_standards/SONNX_requirements_draft1.docx)
+- Review of [questions about ARP6983](../documents/analysis_of_standards/clarification_replication.md)
+- Review of [CONV2D updated version](../documents/conv_specification_example/README.md)
+- Status about SONNX mailing list
+- Discussion about new modalities for meetings
+
+## Participants
+Eric, Mariem, Edoardo, Pierre B., Jean-Loup, Pierre G., Mohammed, Jean-Baptiste, Thiziri, Henri, Jean, Julien, Eric B., Andreas F., Nicolas, Cong, Dittberner Andreas D.,  Sebastian
+
+## Minutes
+- CS case study.
+  - Mohamed has provided a short description of CS' use case to be integrated in the [list of use cases](../documents/usecases.md). See action (0412-1).
+- Review of Airbus' needs.
+  - Current content is a raw integration of material provided by Sergei and discussed with Jean and Eric.
+  - The needs have first to be checked by the authors in oder to remove redundancy, ensure that the needs are clear (see e.g., need about resource usage). See action (0412-2)
+- Review of [Jean-Baptiste's analysis of the ARP6983](../documents/analysis_of_standards/SONNX_requirements_draft1.docx)\
+  Several questions were raised during the presentation:
+  - The standard requires the MLMD to carry the hyperparameters used during training...
+    - What do they call "hyperparameters", exactly? According to some interpretation, the architecture of the model is itself described by "hyperparameters" (in the sense that when using AutoML, the architecture is also "learnt"). This has to be clarified. 
+    - Why do they require this? To ensure the repeatability of the training process? But in that case, we need more that this. We need a complete description of the training environment, possibly the exact scheduling of the training operations, etc.  What is the exact intent of this requirement?
+      - Pseudo Random Number Generators must be "controlled" in order to ensure repeatabilty of training. There is a discussion in ONNX "operators" SIG about this subject. See Andreas F.'s [note](https://gist.github.com/Craigacp/883f7e628ce91a370ce4bc3519c9cca0). See also [here](https://github.com/onnx/onnx/issues/6302) and [there](https://github.com/onnx/onnx/issues/6408). Other discussions on theat subject took place in the ONNX Operators SIG's slack channel. Those interested could joint the [SIG's meeting](https://zoom-lfx.platform.linuxfoundation.org/meeting/93845487316?password=87cf871b-389e-416b-ae73-60fbe608bc6b).
+  - The standard is not very demanding concerning the relation between the model used during training and the MLMD (only "traceability" is required, not "conformity"). Is this really sufficient? If conformity is required, than this ** may ** require additional data to be put in the MLMD. 
+- [Comments fromon the ARP6983](../documents/analysis_of_standards/clarification_replication.md)
+  - Review of Henri's comments
+    - Questions were raised about
+      - the "inadequate or incorrect inputs detected during the ML Constituent architecture design process" (about what input are we talking? what does "inadequate" mean?).
+    - the comparison of the characteristics of the training and target platform (the platform must be "similar". What does "similar" mean? What is the intent of this requirement?)
+  - Jean-Loup's comments: not discussed.
+  - Eric to integrate Henri's and Jean-Loup's comments, complete the list of questions, propose a mail to the WG114. The objective is to have a feedback fro them ASAP. See action (0412-3)
+- CONV2D operator: Reviews from Jean-Loup and Sebastian have nee taken into account.See the [presentation of the modifications after review](./general/slides/2024-12-04-modifiedconv2Dinformalspec.pdf). A last review is necessary to obtain the "template" that will be used to do the work for the other operators. see action (0412-4).
+  - Integrate Jean-Loup proposal to avoid the terms "moved", "shifted": ""the kernel is shifted by 2 units in the first spatial axis and 3 units in the second spatial axis" => "the kernel is applied to data 2 units on right in the first spatial axis and to data 3 units down in the second spatial axis". See action (0412-5)
+- Formal methods:
+  - A meeting took place about the use of formal methods to describe operators. See the [presentation](./formal_methods/slides-29-11.pdf) that was done at that occasion, and the [incremental minutes](./formal_methods/minutes.md). The main conclusion are that (i) a formal specification is useful, (ii) ACSL could be the most appropriate formalism. 
+- Other subjects:
+  - Sub-group on Reqs: no new contributors besides Sebastian's and Henri...  
+  - Set-up a sub-group to analyse the ONNX standard to continue Nicolas' work which is collected in document [issues](../documents/issues.md). See action (0412-6)
+#### New actions
+- [ ] (0412-1, Eric) Integrate Cs' use case in the [list of use cases](../documents/usecases.md)
+- [ ] (0412-2, Eric, Jean) Check Airbus's needs.
+- [ ] (0412-3, Eric) Integrate Henri's comments in the list of questions to WG114. Integrate questions raised by Jean-Baptiste presentation about (i) hyperparameters (what are those hyperparameters, precisely), why do they need to carry this information in the MLMD, for what purpose?
+- [ ] (0412-4, Thiziri, Nicolas, Jean, Sebastian, Jean-Loup) Review of the [updated version of CONV2D](../documents/conv_specification_example/README.md)
+- [ ] (0412-5, Mariem) Replace the sentence that uses "shifted" by "the kernel is applied to data 2 units on right in the first spatial axis and to data 3 units down in the second spatial axis"
+- [ ] (0412-6, Eric) Create a sub working group to analyse the existing standard in a systematic way...
+#### Past actions
+- [X] (2011-1 - Jean, Eric) Integrate Airbus' additional needs/reqs.
+- [X] (2011-2 - Eric) Make a call for participation to the req core team. 
+- [X] (0611-1 - Eric, Nicolas, Jean-Loup) Finish the discussion about "reproducibility"...
+      - On going, see [this note](../documents/analysis_of_standards/2024-11-08%20-%20Replication%20criteria.md)
+- [ ] (0611-2 - Eric) Prepare a followup to the discussion about computation errors: what is the impact on the MLMD?
+- [X] (0611-5 - Eric, Mariem) Update conv2d spec from Sebastian's and Jean-Loup's reviews
+  - To be done by next meeting.
+- [ ] (231001 - All) Check Nicolas' classification proposal 
+- [X] (231002 - Mohammed) Propose a use case for CS, [here](https://github.com/ericjenn/working-groups/blob/ericjenn-srpwg-wg1/safety-related-profile/documents/usecases.md)
+  - In progress. The case study is drone tracking. Transformers are used, but the model remains "simple"  enough to be embedded...
+  - Done. The application is an object detection based on transformers. See [description](...)
+- [ ] (231002 - Sebastian) Get in touch with other people in the automotive partners (e.g. ETAS).
+- [ ] (231002 - Luis) Provide contact(s) with other industrial domains (medical,...)
+    - On-going (see previous meeting)
+- [ ] (A008 - leads) Plan SC meetings
+- [ ] (A009 - Dumitru) Correct  / complete description of issue #2
+      - Dumitru will check this...
+profile/meetings/numerical_issues/01_what_is_the_issue.md}. Please add your ideas / remarks...
+      - First discussion in the 11/06 WG meeting
+- [ ] (A015) All : Complete description of use cases
+      - On-going
+- [ ] (A016) All : Complete description of needs
+      - On-going
+- [ ] (A002 - all) Add / remove your name for the [participant list ](https://github.com/ericjenn/working-groups/blob/da1fb275bcbfb32af95fd8ef54589cde0e14f927/safety-related-profile/meetings/team.md) and provide information about your possible contribution
+- [ ] (A004 - all) Propose a short communication during the next WG meetings. The list is [here](https://github.com/ericjenn/working-groups/blob/da1fb275bcbfb32af95fd8ef54589cde0e14f927/safety-related-profile/meetings/presentation_proposals.md).
+  - Alexandre Eichenberger (IBM),  on onnx-mlir (2025/??/??)
+  - ??? on specification and verification of FP computations (2025/??/??)
+  - Eduardo (Manchester U) on "Evaluation and improvement of SW verifiers on FP Neural Networks" (2025/??/??)
+- [ ] (A006 - leads) Finalize the organization of the WG's repository. Define procedure to use it (inc. issues, wiki,...)
+  - Meeting with Nathan and Andreas to be organized (use of [Linux Foundations' LFX](https://sso.linuxfoundation.org/)) 
+  - Reply from Nathan on 11/05. Mailing list, etc. should be available by week 11/18
+  - Meeting moved to 2024/11/21
+- [X] (A007 - leads) Setup a mailing list
+  - Meeting with Nathan and Andreas to be organized (use of [Linux Foundations' LFX](https://sso.linuxfoundation.org/)) 
+  - Reply from Nathan on 11/05. Mailing list, etc. should be available by week 11/18
+  - Meeting moved to 2024/11/21
+
+
 # 2024/11/20
 
 ## Agenda

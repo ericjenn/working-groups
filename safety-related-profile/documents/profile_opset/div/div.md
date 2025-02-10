@@ -13,7 +13,7 @@ The following restrictions apply to the `Div` operator for the SONNX profile:
 - The operator does not support sparse tensors `[R2]`
 - All input elements `A` and `B` shall have numerical types `[R3]`
 - No broadcasting allowed for the tensors `A` and `B` even if they are broadcastable to a common shape, the broadcasting is forbidden because dynamic computation time according to the shape is not deterministic `[R4]`
-- if Elements of tensor `B` is zero, as division by zero is not valid the nemeric result will be infinite representation. `[R5]`
+- if Elements of tensor `B` is zero, as division by zero is not valid the numeric result will be infinite representation. `[R5]`
 
 ### Signature
 

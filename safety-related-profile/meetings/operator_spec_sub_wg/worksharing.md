@@ -23,7 +23,7 @@
 | Div                          | hb,     |                   |
 | Equal                        |         |                   |
 | Erf                          |         |                   |
-| Exp                          |         |                   |
+| Exp                          | sb      |                   |
 | Expand                       |         |                   |
 | Flatten                      |         |                   |
 | FullyConnected               |         |                   |

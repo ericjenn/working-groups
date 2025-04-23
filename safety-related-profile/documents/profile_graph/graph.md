@@ -1,6 +1,7 @@
 # Preamble
 
-This document gives a high level description of how the execution execution of an ONNX graph. How the graph graph elements are described in the ONNX file is given in the Intermediate Representation (IR) specification document.
+This document gives a high level description of how the execution of an ONNX graph. 
+How the graph elements are described in the ONNX file is given in the Intermediate Representation (IR) specification document.
 
 In the context of SONNX, the specification of the semantics of an ONNX graph is limited to the inference phase.  
 
@@ -59,7 +60,7 @@ graph Test (
 - Evaluating a node's output is done by executing the node.
 - Executing a node means computing its outputs based on the specification of the referenced operator.
 - A node can only be executed if all its input values are defined.
-- Initially, all input values are defined
+- Initially, all input of the graph values are defined
 - Initially, all output values are undefined
 - All inputs and outputs connected by an edge are either both undefined or have the same value.
 
@@ -76,19 +77,19 @@ graph Test (
 - ONNX provides a series of control flow operators such as `if`, `scan`, `loop`,...). 
 - Those nodes take one (e.g, operators `for`, `loop`, `scan`,...) or two graphs (`if`) as attributes and execute this graph or those graphs according to their specific semantics. 
 - An `if` node, for instance, takes one boolean input and two attributes, one specifying the graph to be executed when the boolean input is true (the `then_branch`) and another graph when the boolean is false (the `else_branch`). 
-  - Note that one of the graph is not executed. This seems to contradict the execution semantics of a graph bit but is not since executing the `then_branch` or the `else_branch` concerns the semantics of the `if` node, not of the graph. From the graph's perspective, the only node that is visible is the `if`. 
+  - Note that one of the graphs is not executed. This seems to contradict the execution semantics of a graph a bit but is not since executing the `then_branch` or the `else_branch` concerns the semantics of the `if` node, not of the graph. From the graph's perspective, the only node that is visible is the `if`. 
   - The same applies for the other control flow nodes.  
 
 
 ## Additional remarks
 
 ### Properties of a graph
-- If all operators are purely functional (stateless), a graph is also purely functional, i.e., the values of its outputs only only depends on the values of its inputs and the values of the attributes of its nodes. 
+- If all operators are purely functional (stateless), a graph is also purely functional, i.e., the values of its outputs only depends on the values of its inputs and the values of the attributes of its nodes. 
 - If all operators are deterministic, a graph is also deterministic, i.e., for a  given set of input values, the execution of the graph always gives the same output values.
 - A graph has no side effect, i.e., the only visible effects of a graph are via its outputs.
 
 Note:
-- The values of the outputs do not depend on the execution order of its nodes are executed.
+- The values of the outputs do not depend on the execution order in which its nodes are executed.
 - By construction, a graph makes it explicit the order according to which terms of expressions are computed. For instance, expression `a+b+c` is either represented by `(a+b)+c`or `(a+(b+c)`
 
 

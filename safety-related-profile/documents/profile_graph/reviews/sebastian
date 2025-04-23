@@ -1,0 +1,22 @@
+# Constraints
+The constraints section refers only to edges, right?
+
+It is a little hard to read it in the current structure.
+
+Also note that input and output are often in singular,
+although nodes can have arbitrarily many inputs and outputs.
+
+
+The illustration is a bit confusing, because I1 and I2 seem to be connected.
+
+# Behaviour
+- All inputs and outputs connected by an edge are either both undefined or have the same value.
+What does this mean?
+
+The "Behaviour" section does not really tell how a graph is usually evaluated by choosing a topological sort of the nodes and evaluating them in that order.
+
+# Note in additional remarks
+By construction... sentence is confusing in my opinion.
+I know why it is in there (numerical concerns in float computations) and it is correct, but readers might read it as "The execution order of a graph is fixed",
+which it clearly is not.
+Every topological sort is a legal execution order.

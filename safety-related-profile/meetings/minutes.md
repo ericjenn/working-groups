@@ -1,17 +1,51 @@
-# 2025/05/21
+# 2025/06/04
 ## Participants
-TBC
+- Nicolas, Salomé, Sebastian, Henri, Jean-Loup, Jean, Eric, Jean-Baptiste, Frédéric, Eduardo,...
 ## Agenda
 - Status of actions.
-- Presentation of the `concat` operator by Salomé
-- Brief presentation of the informal and formal specification of a `graph` by Eric
-- Review of the `graph` informal specification by Mohammed.
-- Overview of the [Specification guidelines](../documents/profile_opset/guidelines.md)
-- Status of specification
-- New on activities about formal specification...
+- Misc news: 
+  - ONNX meetup on June 9th: a ["video"](./general/2025-06-09%20-%20MEET-UP/SONNX%20-%20Meetup%202025.7z) has been prepared.
+  - The abstract of our [paper on SONNX](../documents/publications/ERTS2026/2025-06-02%20SONNX%20-%20ERTS%202026%20abstract%20-%20final.pdf) has been submitted to [ERTS 2026](https://conference-erts.org/).
+  - Salomé has updated the informal and formal specification of the ``concat`` operator. Will be pushed soon.
+  - Frédéric has presented his first attempt to specify errors for operators using floating point values. 
+    - As a proof of concept, it has been applied to the [``abs``](https://github.com/ericjenn/working-groups/blob/spec-with-numerical-accuracy-info/safety-related-profile/documents/profile_opset/add/abs.md) and [``add``](https://github.com/ericjenn/working-groups/blob/spec-with-numerical-accuracy-info/safety-related-profile/documents/profile_opset/add/add.md) operators.
+    - The specification specificies the properties that an implementation shall satisfy considering the errors due to the floating point arithmetic. Methods errors are not considered. The properties are "conservative" in the sense that they consider any floating point values. Tighter bounds could be obtained for smaller domains.
+    - A C++ implementation to compute the errors is provided (not fully implemented for the moment...). 
+    - This implementation evaluates (will eventually evaluate) the error **symbolically**.
+    - Verification of the assertion will also be done symbolically.
+    - The next step would be to address the ``conv`` operator. 
 ## Actions
 ### New actions
-No new action.
+### Past actions
+- [ ] (2105-1, Salomé) Provide answers (OK,KO, TBdiscussed) to [Eric's comments](../documents/profile_opset/concat/reviews/eric.md) for the `concat` operator. 
+- [ ] (0904-2, Jean-Baptiste) Complete the analysis of the ARP+Concept papers to collect potential reqs for SONNX 
+- [ ] (0904-5, Dumitru) Scrutinize the set of ONNX ops to see if there are other operator causing similar concerns as ``loop``.
+- [ ] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+- [X] (1203-5, Eric, Jean and Andreas) Organize a meeting with ONNX to present our first results (in order for them to have an idea of the expected end-result) and discuss what could be the integration modalities.
+  - Will be done during next ONNX team up
+- [ ] (1205-6, Eric, Jean) See how to proceed with tool implementation
+- [ ] (0412-6, Eric) Create a sub working group to analyze the existing standard in a systematic way...
+  - Contribution of Anne-Sophie. But WG to be set. 
+  - Take into account the new modality to manage and report issues to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  - [ ] Create a review form
+
+# 2025/05/21
+## Participants
+- At least: Salomé, Sabastian, Dumitru, Sergei, Jean, Eric, Mariem, Mohammed, Nicolas, ...
+## Agenda
+- Status of actions.
+- Misc news: 
+  - next workshop on formal specification + proof...
+  - discussion with WG114 and presentation to WG114 
+- Presentation of the `concat` operator by Salomé
+- Brief presentation of the informal and formal specification of a `graph` by Eric
+  - Review of the `graph` informal specification by Mohammed.
+- Overview of the [Specification guidelines](../documents/profile_opset/guidelines.md)
+- Status of operator specification
+## Actions
+### New actions
+- [ ] (2105-1, Salomé) Provide answers (OK,KO, TBdiscussed) to [Eric's comments](../documents/profile_opset/concat/reviews/eric.md) for the `concat` operator. 
+- [X] (2105-2, Mohammed) Upload graph review form 
 ### Past actions
 - [X] (2304-1, Eric+Jean) Plan presentation of SONNX to Christophe R.
   - Done on May 13th.

@@ -182,7 +182,8 @@ for (auto i : A.indexes()) {
    SymbolicDomainError a = A[i];
    SymbolicDomainError b = B[i];
    SymbolicDomainError c = result(i);
-   assert(std::abs(c.err - a.err - b.err) <= std::abs(a.real + b.real + a.err + b.err)*(pow(2.0LD, -(m+1))));
+   assert(std::abs(c.err - a.err - b.err) <= std::max(std::abs(a.float + b.float)*(pow(2.0LD, -(m+1)))),
+        (long double) std::numeric_limits<decltype(a.float)>::denorm_min / 2.0);
 }
 ```
 

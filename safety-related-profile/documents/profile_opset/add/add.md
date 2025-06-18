@@ -159,7 +159,9 @@ The error introduced by the `Add` operator shall be bound by the semi-ulp of the
 tensor component for a normalized result. For a hardware providing $m$ bits for floating-point mantissa, the semi-ulp
 of `1.0` is $2^{-(m+1)}$. Hence, for every indexes $I = (i_0,i_1,...,i_n)$ over the axes,
 
-- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A[I] + B[I] + A_{\textit{err}}[I] + B_{\textit{err}}[I]\right|\times2^{-(m+1)}, \frac{\texttt{denorm-min}}{2}\right)$
+- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A[I] + B[I] + A_{\textit{err}}[I] + B_{\textit{err}}[I]\right|\times 2^{-(m+1)}, \frac{\texttt{denorm-min}}{2}\right)$  
+- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A_{\textit{float}}[I] + B_{\textit{float}}[I]\right|\times 2^{-(m+1)}, \frac{\texttt{denorm-min}}{2}\right)$  
+- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A[I] + B[I]\right|\times 2^{-(m+1)}\times(1 + 2^{-m}), \frac{\texttt{denorm-min}}{2}\right)$
 
 #### Unit verification - floating-point IEEE-754 implementation
 

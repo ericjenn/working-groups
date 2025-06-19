@@ -199,7 +199,7 @@ std::function<TypeFloat (Indexes)>
       return sum;
     }
 
-for (auto indexes : Tensor<SymbolicDomainError>::Indexes(A.indexes()[0], B.indexes()[1])) {
+for (auto indexes : Indexes(A.indexes()[0], B.indexes()[1])) {
    int n = A.indexes()[1];
    SymbolicDomainError y = result(indexes);
    real propagated_error = 0;
@@ -208,7 +208,7 @@ for (auto indexes : Tensor<SymbolicDomainError>::Indexes(A.indexes()[0], B.index
      propagated_error += A[Indexes(indexes[0], k)].real * B[Indexes(k, indexes[1])].err;
      propagated_error += A[Indexes(indexes[0], k)].err * B[Indexes(k, indexes[1])].err;
    }
-   real bound_for_introduced_error = (real) std::numeric_limits<decltype(a.float)>::denorm_min() / 2.0);
+   real bound_for_introduced_error = (real) std::numeric_limits<decltype(y.float)>::denorm_min() / 2.0);
    for (int k = 0; k < n; ++k) {
      real bound_candidate = std::abs(A[Indexes(indexes[0], k)].real + A[Indexes(indexes[0], k)].err)
          * std::abs(B[Indexes(j, indexes[1])].real + B[Indexes(k, indexes[1])].err);

@@ -188,7 +188,7 @@ Tensor<SymbolicDomainError> A, B;
 
 /* A and B symbolic initialization */
 
-typedef typename Tensor<SymbolicDomainError>::Indexes Indexes;
+typedef Tensor<SymbolicDomainError>::Indexes Indexes;
 
 template <typename TypeFloat>
 std::function<TypeFloat (Indexes)>
@@ -199,7 +199,7 @@ std::function<TypeFloat (Indexes)>
       return sum;
     }
 
-for (auto indexes : typename Tensor<SymbolicDomainError>::Indexes(A.indexes()[0], B.indexes()[1])) {
+for (auto indexes : Tensor<SymbolicDomainError>::Indexes(A.indexes()[0], B.indexes()[1])) {
    int n = A.indexes()[1];
    SymbolicDomainError y = result(indexes);
    real propagated_error = 0;

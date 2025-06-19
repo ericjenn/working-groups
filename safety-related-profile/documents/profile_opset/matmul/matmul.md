@@ -158,8 +158,8 @@ floating-point mantissa, the relative error of any multiplication/addition is bo
 by $2^{-(m+1)}$. Hence, for every indexes $I = (i, j)$ over the two axes,
 
 - $\displaystyle \left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq \frac{n\times(n+1)}{2}\times
-   2^{-(m+1)}\times \max_{1 \leq k \leq n} \left(\max\left(\left|A[(i, k)]
-     + A_{\textit{err}}[(i, k)]\right| \times \left| B[(k, j)] + B_{\textit{err}}[(k, j)]\right|,
+   2^{-(m+1)}\times \max_{1 \leq k \leq n} \left(\max\left(\left|A[(i, k)] +
+     A_{\textit{err}}[(i, k)]\right| \times \left| B[(k, j)] + B_{\textit{err}}[(k, j)]\right|,
      \frac{\texttt{denorm-min}}{2}\right)\right)$  
 - $\displaystyle \left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq \frac{n\times(n+1)}{2}\times
    2^{-(m+1)}\times \max_{1 \leq k \leq n} \left(\max\left(\left|A_{\textit{float}}[(i, k)]\right|

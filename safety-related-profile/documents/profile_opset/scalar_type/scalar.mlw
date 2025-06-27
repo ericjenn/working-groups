@@ -1,0 +1,36 @@
+module ScalarType
+
+(* The declaration of an abstract type t *)
+type t
+
+(* Fondamental values for type t *)
+val constant zero : t 
+val constant one : t 
+
+(* Arithmetic operations *)
+val function add  t t : t  (* addition *)
+val function mul  t t : t  (* multiplication *)
+val function div  t t : t (* division *)
+val function sub  t t : t (* substruction *)
+
+(* Booleen comparision *)
+val function eq t t : bool (* Equality *)
+val function lt t t : bool (* Less than *)
+val function le t t : bool  (* Less or equal than *)
+val function gt t t : bool  (* Greater than *)
+val function ge t t : bool  (* Greater or equal than *)
+
+(* Addition properties *)
+axiom add_comm: forall x y: t. add x y = add y x (* Commutativity *)
+axiom add_assoc: forall x y z: t. add x (add y z) = add (add x y) (add x z) (* Associativity *)
+axiom add_zero_identity: forall x: t. add x zero = x (* add zero *)
+
+(* Multiplication properties *)
+
+(* Subtraction properties *)
+
+(* Comparision properties *)
+
+
+
+end

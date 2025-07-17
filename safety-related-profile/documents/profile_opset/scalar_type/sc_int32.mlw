@@ -1,0 +1,37 @@
+module ScalarInt32
+
+  use import mach.int.Int32 as Int32
+  use import scalar.ScalarType
+  
+  let constant zero : Int32.int32 = 0
+  
+
+  let function add (x y: Int32.int32) : Int32.int32 = Int32.(+) x y
+  let function sub (x y: Int32.int32) : Int32.int32 = Int32.(-) x y
+  let function mul (x y: Int32.int32) : Int32.int32 = Int32.( * ) x y
+  let function div (x y: Int32.int32) : Int32.int32 = Int32.(/) x y
+
+  let function eq  (x y: Int32.int32) : bool = Int32.(=) x y
+  let function lt  (x y: Int32.int32) : bool = Int32.(<) x y
+  let function le  (x y: Int32.int32) : bool = Int32.(<=) x y
+  let function gt  (x y: Int32.int32) : bool = Int32.(>) x y
+  let function ge  (x y: Int32.int32) : bool = Int32.(>=) x y
+  
+  
+ 
+  (* Clone and export ScalarType, filling in the concrete implementations *)
+  clone export scalar.ScalarType with
+    type t = Int32.int32,
+    constant zero = zero,
+    function add = add,
+    function sub = sub,
+    function mul = mul,
+    function div = div,
+    function eq = eq,
+    function lt = lt,
+    function le = le,
+    function gt = gt,
+    function ge = ge
+
+end
+

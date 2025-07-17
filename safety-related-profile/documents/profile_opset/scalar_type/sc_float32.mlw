@@ -1,0 +1,34 @@
+module ScalarFloat32
+
+  use import ieee_float.Float32 as Float32
+  use import scalar.ScalarType
+  
+  
+  let function add (x y: Float32.t) : Float32.t = Float32.(.+) x y
+  let function sub (x y: Float32.t) : Float32.t = Float32.(.-) x y
+  let function mul (x y: Float32.t) : Float32.t = Float32.(.* ) x y
+  let function div (x y: Float32.t) : Float32.t = Float32.(./) x y
+
+
+  let function eq (x y: Float32.t) : bool = Float32.(.=) x y
+  let function lt (x y: Float32.t) : bool = Float32.(.<) x y
+  let function le (x y: Float32.t) : bool = Float32.(.<=) x y
+  let function gt (x y: Float32.t) : bool = Float32.(.>) x y
+  let function ge (x y: Float32.t) : bool = Float32.(.>=) x y
+
+
+  (* Clone of the abstract ScalarType and fill in with the concrete/defined functions *)
+  clone export scalar.ScalarType with
+    type t = Float32.t,
+    constant zero = Float32.zeroF,
+    function add = add,
+    function sub = sub,
+    function mul = mul,
+    function div = div,
+    function eq  = eq,
+    function lt  = lt,
+    function le  = le,
+    function gt  = gt,
+    function ge  = ge
+
+end

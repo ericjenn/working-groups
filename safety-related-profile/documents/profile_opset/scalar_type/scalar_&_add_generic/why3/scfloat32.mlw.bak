@@ -1,0 +1,44 @@
+module ScalarFloat32
+  
+
+  use ieee_float.Float32 as Float32
+  use import scalar.ScalarType
+
+  
+  let  add_float32 (x y: Float32.t) : Float32.t = Float32.(.+) x y
+  let  sub_float32  (x y: Float32.t) : Float32.t = Float32.(.-) x y
+  let  mul_float32  (x y: Float32.t) : Float32.t = Float32.(.* ) x y
+  let  div_float32  (x y: Float32.t) : Float32.t = Float32.(./) x y
+
+
+  let function eq_float32  (x y: Float32.t) : bool = Float32.(.=) x y
+  let function lt_float32  (x y: Float32.t) : bool = Float32.(.<) x y
+  let function le_float32  (x y: Float32.t) : bool = Float32.(.<=) x y
+  let function gt_float32  (x y: Float32.t) : bool = Float32.(.>) x y
+  let function ge_float32  (x y: Float32.t) : bool = Float32.(.>=) x y
+
+
+  (* Clone of the abstract ScalarType and fill in with the concrete/defined functions *)
+  clone export scalar.ScalarType with
+    type t = Float32.t,
+    constant zero = Float32.zeroF,
+    val add = add_float32,
+    val sub = sub_float32,
+    val mul = mul_float32,
+    val div = div_float32,
+    val eq  = eq_float32,
+    val lt  = lt_float32,
+    val le  = le_float32,
+    val gt  = gt_float32,
+    val ge  = ge_float32
+
+  type scalar_f32 = t
+
+end
+
+module OpAdd_Float32
+  use import ScalarFloat32 as F32
+  clone export opadd.Add with 
+    type ScalarType.t = F32.scalar_f32
+    
+end

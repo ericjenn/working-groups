@@ -1,0 +1,27 @@
+module Add 
+
+  use int.Int
+  use map.Map
+  use tensor.Shape
+  use tensor.Tensor
+  use tensor.Index
+  use sequence.Seq
+  
+  type t
+  constant zero : t
+  val  add (x y: t) : t
+  
+
+  let tensor_add (a: tensor t) (b: tensor t) : tensor t
+    (*requires { Tensor.dim a = Tensor.dim b }
+    requires { forall i:int. 0 <= i < Tensor.dim a -> a.shape.dims[i] = b.shape.dims[i] }
+    Trivial case: Broadcasting is ignored *)
+  =
+    let result_shape = a.shape in
+    {
+      shape = result_shape;
+      value = fun (i: index) -> add (a.value i) (b.value i)
+    }
+end
+  
+  

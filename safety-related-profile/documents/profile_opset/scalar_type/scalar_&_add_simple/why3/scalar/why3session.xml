@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE why3session PUBLIC "-//Why3//proof session v5//EN"
+"https://www.why3.org/why3session.dtd">
+<why3session shape_version="6">
+<file format="whyml">
+<path name=".."/><path name="scalar.mlw"/>
+<theory name="Scalar">
+ <goal name="add&#39;vc" expl="VC for add">
+ </goal>
+</theory>
+</file>
+<file format="whyml">
+<path name=".."/><path name="opadd.mlw"/>
+<theory name="Add">
+ <goal name="add&#39;vc" expl="VC for add">
+ </goal>
+</theory>
+</file>
+<file format="whyml">
+<path name=".."/><path name="tensor.mlw"/>
+<theory name="Shape">
+ <goal name="product&#39;vc" expl="VC for product">
+ </goal>
+ <goal name="shift&#39;vc" expl="VC for shift">
+ </goal>
+ <goal name="product1&#39;vc" expl="VC for product1">
+ </goal>
+</theory>
+<theory name="Index">
+ <goal name="valid&#39;vc" expl="VC for valid">
+ </goal>
+</theory>
+<theory name="Tensor">
+ <goal name="mem&#39;vc" expl="VC for mem">
+ </goal>
+ <goal name="get&#39;vc" expl="VC for get">
+ </goal>
+</theory>
+</file>
+</why3session>

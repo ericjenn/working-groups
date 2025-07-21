@@ -1,0 +1,147 @@
+# dune runtest
+# OCAMLPARAM: unset
+# Shared cache: enabled-except-user-rules
+# Shared cache location: /home/smarpodz/.cache/dune/db
+# Workspace root: /home/smarpodz/stage/aip-sonnx/operators/add_v1/why3
+# Auto-detected concurrency: 4
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dev
+#  ; merlin = true
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; instrument_with = []
+#  }
+$ /usr/bin/ocamlc.opt -config > /tmp/dune_560d92_output
+$ (cd _build/default && /usr/bin/ocamldep.opt -modules -impl lib/tensor.ml) > _build/default/lib/.tensorlib.objs/tensorlib__Tensor.impl.d
+$ (cd _build/default && /usr/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I lib/.tensorlib.objs/byte -I lib/.tensorlib.objs/native -intf-suffix .ml -no-alias-deps -opaque -open Tensorlib -o lib/.tensorlib.objs/native/tensorlib__Tensor.cmx -c -impl lib/tensor.ml)
+$ (cd _build/default && /usr/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -a -o lib/tensorlib.cmxa lib/.tensorlib.objs/native/tensorlib.cmx lib/.tensorlib.objs/native/tensorlib__Sequence__Seq.cmx lib/.tensorlib.objs/native/tensorlib__Tensor__Shape.cmx lib/.tensorlib.objs/native/tensorlib__Tensor__Index.cmx lib/.tensorlib.objs/native/tensorlib__Tensor__Tensor.cmx lib/.tensorlib.objs/native/tensorlib__Scalar__Scalar.cmx lib/.tensorlib.objs/native/tensorlib__Opadd__Add.cmx lib/.tensorlib.objs/native/tensorlib__Tensor.cmx)
+$ (cd _build/default && /usr/bin/ocamlopt.opt -open Tensorlib -g -o test/test_add.exe lib/tensorlib.cmxa test/.test_add.eobjs/native/dune__exe__Test_add.cmx)
+$ (cd _build/default/test && ./test_add.exe) > _build/default/test/test_add.exe.output
+$ /usr/bin/git --no-pager diff --no-index --color=always -u _build/default/test/test_add.expected _build/default/test/test_add.exe.output
+> diff --git a/_build/default/test/test_add.expected b/_build/default/test/test_add.exe.output
+> index 9d6b0bb..dfd84a7 100644
+> --- a/_build/default/test/test_add.expected
+> +++ b/_build/default/test/test_add.exe.output
+> @@ -1,85 +1,34 @@
+> -W: (0) [
+> -   [ 1.00 2.00 3.00 10.00 ]
+> -   [ 4.00 5.00 6.00 11.00 ]
+> -   [ 7.00 8.00 9.00 12.00 ]
+> -    ]
+> -   (1) [
+> -   [ 11.00 12.00 13.00 20.00 ]
+> -   [ 14.00 15.00 16.00 21.00 ]
+> -   [ 17.00 18.00 19.00 22.00 ]
+> -    ]
+> -   
+> -V: (0) [
+> -   [ 101.00 102.00 103.00 110.00 ]
+> -   [ 104.00 105.00 106.00 120.00 ]
+> -   [ 107.00 108.00 109.00 130.00 ]
+> -    ]
+> -   (1) [
+> -   [ 111.00 112.00 113.00 120.00 ]
+> -   [ 114.00 115.00 116.00 121.00 ]
+> -   [ 117.00 118.00 119.00 122.00 ]
+> -    ]
+> -   
+> -X: [ 1.00 1.00 1.00 ][ 1.00 1.00 1.00 ]
+> -Y: [ 2.00 2.00 2.00 ][ 2.00 2.00 2.00 ][ 2.00 2.00 2.00 ][ 2.00 2.00 2.00 ]
+> -Z: [ 3.00 3.00 3.00 ][ 3.00 3.00 3.00 ][ 3.00 3.00 3.00 ]
+> -Axis: 0
+> -Result2D: [ 1.00 1.00 1.00 ]
+> -          [ 1.00 1.00 1.00 ]
+> -          [ 2.00 2.00 2.00 ]
+> -          [ 2.00 2.00 2.00 ]
+> -          [ 2.00 2.00 2.00 ]
+> -          [ 2.00 2.00 2.00 ]
+> -          [ 3.00 3.00 3.00 ]
+> -          [ 3.00 3.00 3.00 ]
+> -          [ 3.00 3.00 3.00 ]
+> -          
+> -Result3D: (0) [
+> -          [ 1.00 2.00 3.00 10.00 ]
+> -          [ 4.00 5.00 6.00 11.00 ]
+> -          [ 7.00 8.00 9.00 12.00 ]
+> -           ]
+> -          (1) [
+> -          [ 11.00 12.00 13.00 20.00 ]
+> -          [ 14.00 15.00 16.00 21.00 ]
+> -          [ 17.00 18.00 19.00 22.00 ]
+> -           ]
+> -          (2) [
+> -          [ 101.00 102.00 103.00 110.00 ]
+> -          [ 104.00 105.00 106.00 120.00 ]
+> -          [ 107.00 108.00 109.00 130.00 ]
+> -           ]
+> -          (3) [
+> -          [ 111.00 112.00 113.00 120.00 ]
+> -          [ 114.00 115.00 116.00 121.00 ]
+> -          [ 117.00 118.00 119.00 122.00 ]
+> -           ]
+> -          
+> -Result3D1: (0) [
+> -           [ 1.00 2.00 3.00 10.00 ]
+> -           [ 4.00 5.00 6.00 11.00 ]
+> -           [ 7.00 8.00 9.00 12.00 ]
+> -           [ 101.00 102.00 103.00 110.00 ]
+> -           [ 104.00 105.00 106.00 120.00 ]
+> -           [ 107.00 108.00 109.00 130.00 ]
+> -            ]
+> -           (1) [
+> -           [ 11.00 12.00 13.00 20.00 ]
+> -           [ 14.00 15.00 16.00 21.00 ]
+> -           [ 17.00 18.00 19.00 22.00 ]
+> -           [ 111.00 112.00 113.00 120.00 ]
+> -           [ 114.00 115.00 116.00 121.00 ]
+> -           [ 117.00 118.00 119.00 122.00 ]
+> -            ]
+> -           
+> -Result3D2: (0) [
+> -           [ 1.00 2.00 3.00 10.00 101.00 102.00 103.00 110.00 ]
+> -           [ 4.00 5.00 6.00 11.00 104.00 105.00 106.00 120.00 ]
+> -           [ 7.00 8.00 9.00 12.00 107.00 108.00 109.00 130.00 ]
+> -            ]
+> -           (1) [
+> -           [ 11.00 12.00 13.00 20.00 111.00 112.00 113.00 120.00 ]
+> -           [ 14.00 15.00 16.00 21.00 114.00 115.00 116.00 121.00 ]
+> -           [ 17.00 18.00 19.00 22.00 117.00 118.00 119.00 122.00 ]
+> -            ]
+> -           
+> +
+> +--- Int32 Tensors ---
+> +X:
+> +[ 1 1 ][ 1 1 ]
+> +Y:
+> +[ 2 2 ][ 2 2 ]
+> +Z:
+> +[ 3 3 ][ 3 3 ]
+> +Result2D1:
+> +[ 3 3 ][ 3 3 ]
+> +Result2D2:
+> +[ 4 4 ][ 4 4 ]
+> +Result2D3:
+> +[ 5 5 ][ 5 5 ]
+> +
+> +--- Float32 Tensors ---
+> +X (float):
+> +[ 1.000000 1.000000 ][ 1.000000 1.000000 ]
+> +Y (float):
+> +[ 2.000000 2.000000 ][ 2.000000 2.000000 ]
+> +Z (float):
+> +[ 3.000000 3.000000 ][ 3.000000 3.000000 ]
+> +Result (X+Y float):
+> +[ 3.000000 3.000000 ][ 3.000000 3.000000 ]
+> +Result (X+Z float):
+> +[ 4.000000 4.000000 ][ 4.000000 4.000000 ]
+> +
+> +--- FLoat32 Overflow Tensor ---
+> +Overflow float:
+> +440000000000000012762122340980846755840.000000
+> +
+> +--- Int32 Overflow Tensor ---
+> +Overflow int:
+> +-2147483648
+[1]

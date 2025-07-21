@@ -1,0 +1,12 @@
+package "__private__" (
+  directory = "__private__"
+  package "tensorlib" (
+    directory = "tensorlib"
+    description = ""
+    requires = ""
+    archive(byte) = "tensorlib.cma"
+    archive(native) = "tensorlib.cmxa"
+    plugin(byte) = "tensorlib.cma"
+    plugin(native) = "tensorlib.cmxs"
+  )
+)

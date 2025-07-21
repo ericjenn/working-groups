@@ -1,0 +1,4 @@
+(tests
+  (names test_add)
+  (flags ("-open" "Tensorlib"))
+  (libraries tensorlib))

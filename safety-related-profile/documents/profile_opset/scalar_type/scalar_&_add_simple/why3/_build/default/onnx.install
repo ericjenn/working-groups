@@ -1,0 +1,45 @@
+lib: [
+  "_build/install/default/lib/onnx/META"
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib.cmi" {"__private__/tensorlib/.public_cmi/tensorlib.cmi"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib.cmt" {"__private__/tensorlib/.public_cmi/tensorlib.cmt"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Opadd__Add.cmi" {"__private__/tensorlib/.public_cmi/tensorlib__Opadd__Add.cmi"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Opadd__Add.cmt" {"__private__/tensorlib/.public_cmi/tensorlib__Opadd__Add.cmt"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Scalar__Scalar.cmi" {"__private__/tensorlib/.public_cmi/tensorlib__Scalar__Scalar.cmi"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Scalar__Scalar.cmt" {"__private__/tensorlib/.public_cmi/tensorlib__Scalar__Scalar.cmt"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Sequence__Seq.cmi" {"__private__/tensorlib/.public_cmi/tensorlib__Sequence__Seq.cmi"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Sequence__Seq.cmt" {"__private__/tensorlib/.public_cmi/tensorlib__Sequence__Seq.cmt"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Tensor.cmi" {"__private__/tensorlib/.public_cmi/tensorlib__Tensor.cmi"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Tensor.cmt" {"__private__/tensorlib/.public_cmi/tensorlib__Tensor.cmt"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Tensor.cmti" {"__private__/tensorlib/.public_cmi/tensorlib__Tensor.cmti"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Tensor__Index.cmi" {"__private__/tensorlib/.public_cmi/tensorlib__Tensor__Index.cmi"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Tensor__Index.cmt" {"__private__/tensorlib/.public_cmi/tensorlib__Tensor__Index.cmt"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Tensor__Shape.cmi" {"__private__/tensorlib/.public_cmi/tensorlib__Tensor__Shape.cmi"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Tensor__Shape.cmt" {"__private__/tensorlib/.public_cmi/tensorlib__Tensor__Shape.cmt"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Tensor__Tensor.cmi" {"__private__/tensorlib/.public_cmi/tensorlib__Tensor__Tensor.cmi"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/.public_cmi/tensorlib__Tensor__Tensor.cmt" {"__private__/tensorlib/.public_cmi/tensorlib__Tensor__Tensor.cmt"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/extract/opadd__Add.ml" {"__private__/tensorlib/extract/opadd__Add.ml"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/extract/scalar__Scalar.ml" {"__private__/tensorlib/extract/scalar__Scalar.ml"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/extract/sequence__Seq.ml" {"__private__/tensorlib/extract/sequence__Seq.ml"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/extract/tensor__Index.ml" {"__private__/tensorlib/extract/tensor__Index.ml"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/extract/tensor__Shape.ml" {"__private__/tensorlib/extract/tensor__Shape.ml"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/extract/tensor__Tensor.ml" {"__private__/tensorlib/extract/tensor__Tensor.ml"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensor.ml" {"__private__/tensorlib/tensor.ml"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensor.mli" {"__private__/tensorlib/tensor.mli"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib.a" {"__private__/tensorlib/tensorlib.a"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib.cma" {"__private__/tensorlib/tensorlib.cma"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib.cmx" {"__private__/tensorlib/tensorlib.cmx"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib.cmxa" {"__private__/tensorlib/tensorlib.cmxa"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib.ml" {"__private__/tensorlib/tensorlib.ml"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib__Opadd__Add.cmx" {"__private__/tensorlib/tensorlib__Opadd__Add.cmx"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib__Scalar__Scalar.cmx" {"__private__/tensorlib/tensorlib__Scalar__Scalar.cmx"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib__Sequence__Seq.cmx" {"__private__/tensorlib/tensorlib__Sequence__Seq.cmx"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib__Tensor.cmx" {"__private__/tensorlib/tensorlib__Tensor.cmx"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib__Tensor__Index.cmx" {"__private__/tensorlib/tensorlib__Tensor__Index.cmx"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib__Tensor__Shape.cmx" {"__private__/tensorlib/tensorlib__Tensor__Shape.cmx"}
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib__Tensor__Tensor.cmx" {"__private__/tensorlib/tensorlib__Tensor__Tensor.cmx"}
+  "_build/install/default/lib/onnx/dune-package"
+  "_build/install/default/lib/onnx/opam"
+]
+libexec: [
+  "_build/install/default/lib/onnx/__private__/tensorlib/tensorlib.cmxs" {"__private__/tensorlib/tensorlib.cmxs"}
+]

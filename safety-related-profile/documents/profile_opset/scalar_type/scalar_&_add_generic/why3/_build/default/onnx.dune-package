@@ -1,0 +1,137 @@
+(lang dune 3.17)
+(name onnx)
+(sections (lib .) (libexec .))
+(files
+ (lib
+  (META
+   __private__/tensorlib/.public_cmi/tensorlib.cmi
+   __private__/tensorlib/.public_cmi/tensorlib.cmt
+   __private__/tensorlib/.public_cmi/tensorlib__Scfloat32__OpAdd_Float32.cmi
+   __private__/tensorlib/.public_cmi/tensorlib__Scfloat32__OpAdd_Float32.cmt
+   __private__/tensorlib/.public_cmi/tensorlib__Scfloat32__ScalarFloat32.cmi
+   __private__/tensorlib/.public_cmi/tensorlib__Scfloat32__ScalarFloat32.cmt
+   __private__/tensorlib/.public_cmi/tensorlib__Scint32__OpAdd_Int32.cmi
+   __private__/tensorlib/.public_cmi/tensorlib__Scint32__OpAdd_Int32.cmt
+   __private__/tensorlib/.public_cmi/tensorlib__Scint32__ScalarInt32.cmi
+   __private__/tensorlib/.public_cmi/tensorlib__Scint32__ScalarInt32.cmt
+   __private__/tensorlib/.public_cmi/tensorlib__Sequence__Seq.cmi
+   __private__/tensorlib/.public_cmi/tensorlib__Sequence__Seq.cmt
+   __private__/tensorlib/.public_cmi/tensorlib__Tensor.cmi
+   __private__/tensorlib/.public_cmi/tensorlib__Tensor.cmt
+   __private__/tensorlib/.public_cmi/tensorlib__Tensor.cmti
+   __private__/tensorlib/.public_cmi/tensorlib__Tensor__Index.cmi
+   __private__/tensorlib/.public_cmi/tensorlib__Tensor__Index.cmt
+   __private__/tensorlib/.public_cmi/tensorlib__Tensor__Shape.cmi
+   __private__/tensorlib/.public_cmi/tensorlib__Tensor__Shape.cmt
+   __private__/tensorlib/.public_cmi/tensorlib__Tensor__Tensor.cmi
+   __private__/tensorlib/.public_cmi/tensorlib__Tensor__Tensor.cmt
+   __private__/tensorlib/extract/scfloat32__OpAdd_Float32.ml
+   __private__/tensorlib/extract/scfloat32__ScalarFloat32.ml
+   __private__/tensorlib/extract/scint32__OpAdd_Int32.ml
+   __private__/tensorlib/extract/scint32__ScalarInt32.ml
+   __private__/tensorlib/extract/sequence__Seq.ml
+   __private__/tensorlib/extract/tensor__Index.ml
+   __private__/tensorlib/extract/tensor__Shape.ml
+   __private__/tensorlib/extract/tensor__Tensor.ml
+   __private__/tensorlib/tensor.ml
+   __private__/tensorlib/tensor.mli
+   __private__/tensorlib/tensorlib.a
+   __private__/tensorlib/tensorlib.cma
+   __private__/tensorlib/tensorlib.cmx
+   __private__/tensorlib/tensorlib.cmxa
+   __private__/tensorlib/tensorlib.ml
+   __private__/tensorlib/tensorlib__Scfloat32__OpAdd_Float32.cmx
+   __private__/tensorlib/tensorlib__Scfloat32__ScalarFloat32.cmx
+   __private__/tensorlib/tensorlib__Scint32__OpAdd_Int32.cmx
+   __private__/tensorlib/tensorlib__Scint32__ScalarInt32.cmx
+   __private__/tensorlib/tensorlib__Sequence__Seq.cmx
+   __private__/tensorlib/tensorlib__Tensor.cmx
+   __private__/tensorlib/tensorlib__Tensor__Index.cmx
+   __private__/tensorlib/tensorlib__Tensor__Shape.cmx
+   __private__/tensorlib/tensorlib__Tensor__Tensor.cmx
+   dune-package
+   opam))
+ (libexec (__private__/tensorlib/tensorlib.cmxs)))
+(library
+ (name onnx.__private__.tensorlib)
+ (kind normal)
+ (archives
+  (byte __private__/tensorlib/tensorlib.cma)
+  (native __private__/tensorlib/tensorlib.cmxa))
+ (plugins
+  (byte __private__/tensorlib/tensorlib.cma)
+  (native __private__/tensorlib/tensorlib.cmxs))
+ (native_archives __private__/tensorlib/tensorlib.a)
+ (main_module_name Tensorlib)
+ (modes byte native)
+ (obj_dir
+  (public_cmi_ocaml_dir .public_cmi)
+  (public_cmi_melange_dir melange/.public_cmi_melange))
+ (modules
+  (wrapped
+   (group
+    (alias
+     (obj_name tensorlib)
+     (visibility public)
+     (kind alias)
+     (source
+      (path Tensorlib)
+      (impl (path __private__/tensorlib/tensorlib.ml-gen))))
+    (name Tensorlib)
+    (modules
+     (module
+      (obj_name tensorlib__Scfloat32__OpAdd_Float32)
+      (visibility public)
+      (source
+       (path Scfloat32__OpAdd_Float32)
+       (impl (path __private__/tensorlib/extract/scfloat32__OpAdd_Float32.ml))))
+     (module
+      (obj_name tensorlib__Scfloat32__ScalarFloat32)
+      (visibility public)
+      (source
+       (path Scfloat32__ScalarFloat32)
+       (impl (path __private__/tensorlib/extract/scfloat32__ScalarFloat32.ml))))
+     (module
+      (obj_name tensorlib__Scint32__OpAdd_Int32)
+      (visibility public)
+      (source
+       (path Scint32__OpAdd_Int32)
+       (impl (path __private__/tensorlib/extract/scint32__OpAdd_Int32.ml))))
+     (module
+      (obj_name tensorlib__Scint32__ScalarInt32)
+      (visibility public)
+      (source
+       (path Scint32__ScalarInt32)
+       (impl (path __private__/tensorlib/extract/scint32__ScalarInt32.ml))))
+     (module
+      (obj_name tensorlib__Sequence__Seq)
+      (visibility public)
+      (source
+       (path Sequence__Seq)
+       (impl (path __private__/tensorlib/extract/sequence__Seq.ml))))
+     (module
+      (obj_name tensorlib__Tensor)
+      (visibility public)
+      (source
+       (path Tensor)
+       (intf (path __private__/tensorlib/tensor.mli))
+       (impl (path __private__/tensorlib/tensor.ml))))
+     (module
+      (obj_name tensorlib__Tensor__Index)
+      (visibility public)
+      (source
+       (path Tensor__Index)
+       (impl (path __private__/tensorlib/extract/tensor__Index.ml))))
+     (module
+      (obj_name tensorlib__Tensor__Shape)
+      (visibility public)
+      (source
+       (path Tensor__Shape)
+       (impl (path __private__/tensorlib/extract/tensor__Shape.ml))))
+     (module
+      (obj_name tensorlib__Tensor__Tensor)
+      (visibility public)
+      (source
+       (path Tensor__Tensor)
+       (impl (path __private__/tensorlib/extract/tensor__Tensor.ml))))))
+   (wrapped true))))

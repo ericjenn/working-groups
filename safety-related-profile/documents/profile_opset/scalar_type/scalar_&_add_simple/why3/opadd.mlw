@@ -1,0 +1,34 @@
+(**
+    Specification of Add operation on tensors.
+ *)
+
+module Add
+
+  use int.Int
+  use map.Map
+  use scalar.Scalar
+  use tensor.Shape
+  use tensor.Tensor
+  use tensor.Index
+  use sequence.Seq
+  
+
+
+
+let add (a: tensor scalar) (b: tensor scalar) : tensor scalar
+(* Trivial case: Broadcasting is ignored but should be taking in account later, so shapes must be identical. *)
+    requires { Tensor.dim a = Tensor.dim b}
+    requires { forall i:int. (0 <= i < Tensor.dim a) -> a.shape.dims[i] = b.shape.dims[i] } 
+    
+  =
+    let result_shape = a.shape in
+    {
+    
+       shape = result_shape;
+       value = fun (i: index) ->
+       (* Trivial case: Broadcasting is ignored but should be taking in account later. *)
+          let val_a = a.value i in
+          let val_b = b.value i in
+          Scalar.add val_a val_b 
+    }
+end

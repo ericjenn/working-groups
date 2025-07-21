@@ -1,0 +1,28 @@
+module ScalarType
+
+  use algebra.Ring
+
+  type t
+
+  constant zero : t
+  val  add (x y: t) : t
+  
+  val  sub (x y: t) : t
+  val  mul (x y: t) : t
+
+ (* clone import algebra.Ring as R with
+    type t = t,
+    constant zero = zero,
+    function (+)  = add,
+    function ()  = mul *)
+
+  
+  val  div (x y: t) : t
+  val  eq (x y: t) : bool
+  val  lt (x y: t) : bool
+  val  le (x y: t) : bool
+  val  gt (x y: t) : bool
+  val  ge (x y: t) : bool
+
+end
+

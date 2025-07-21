@@ -1,0 +1,33 @@
+(**
+    Specification of Add operation on tensors.
+ *)
+
+module Add
+
+  use int.Int
+  use map.Map
+  use scalar.Scalar
+  use tensor.Shape
+  use tensor.Tensor
+  use tensor.Index
+  use sequence.Seq
+  
+
+
+
+let add (a: tensor scalar) (b: tensor scalar) : tensor scalar
+    requires { Tensor.dim a = Tensor.dim b}
+    requires { forall i:int. (0 <= i < Tensor.dim a) -> a.shape.dims[i] = b.shape.dims[i] } 
+    (* This requires should in theory handle the raise exception but it is not working as expected *)
+    requires { forall i:index. Index.valid i a.shape -> Scalar.tag (a.value i) = Scalar.tag (b.value i) } 
+  =
+    let result_shape = a.shape in
+    {
+    
+       shape = result_shape;
+       value = fun (i: index) ->
+          let val_a = a.value i in
+          let val_b = b.value i in
+          Scalar.add val_a val_b (* Need to prove that val_a and val_b are the same type to not raise the exception*)
+    }
+end

@@ -1,0 +1,46 @@
+module ScalarInt32
+
+  use mach.int.Int32 as Int32
+  use  scalar.ScalarType
+  
+  let constant zero_int32 : Int32.int32 = Int32.of_int 0
+  
+
+  let  add_int32 (x y: Int32.int32) : Int32.int32 = Int32.(+) x y
+  let  sub_int32 (x y: Int32.int32) : Int32.int32 = Int32.(-) x y
+  let  mul_int32 (x y: Int32.int32) : Int32.int32 = Int32.( * ) x y
+  let  div_int32 (x y: Int32.int32) : Int32.int32 = Int32.(/) x y
+
+  let  eq_int32  (x y: Int32.int32) : bool = Int32.(=) x y
+  let  lt_int32  (x y: Int32.int32) : bool = Int32.(<) x y
+  let  le_int32  (x y: Int32.int32) : bool = Int32.(<=) x y
+  let  gt_int32  (x y: Int32.int32) : bool = Int32.(>) x y
+  let  ge_int32  (x y: Int32.int32) : bool = Int32.(>=) x y
+  
+  
+ 
+  (* Clone and export ScalarType, filling in the concrete implementations *)
+  clone export scalar.ScalarType with
+    type t = Int32.int32,
+    constant zero = zero_int32,
+    val add = add_int32,
+    val sub = sub_int32,
+    val mul = mul_int32,
+    val div = div_int32,
+    val eq = eq_int32,
+    val lt = lt_int32,
+    val le = le_int32,
+    val gt = gt_int32,
+    val ge = ge_int32
+    
+ type scalar_i32 = Int32.int32
+
+end
+
+module OpAdd_Int32
+  use import ScalarInt32 as I32
+  clone opadd.Add with 
+  type t = I32.scalar_i32, 
+  constant zero = I32.zero_int32,
+  val add = I32.add_int32
+end

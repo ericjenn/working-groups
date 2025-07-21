@@ -1,0 +1,73 @@
+(* ONNX driver extensions for OCaml extraction *)
+
+module mach.int.Byte
+  syntax type byte "int"
+  syntax val (+) "%1 + %2" 
+  syntax val (-) "%1 - %2" 
+  syntax val (=) "%1 = %2" 
+  syntax val to_int "Byte.to_int %1"
+end
+
+module mach.int.Int16
+  syntax type int16 "int"
+  syntax val (+) "%1 + %2" 
+  syntax val (-) "%1 - %2" 
+  syntax val (=) "%1 = %2" 
+  syntax val to_int "Int16.to_int %1"
+end
+
+module mach.int.UInt16
+  syntax type uint16 "int"
+  syntax val (+) "%1 + %2" 
+  syntax val (-) "%1 - %2" 
+  syntax val (=) "%1 = %2" 
+  syntax val to_int "UInt16.to_int %1"
+end
+
+module mach.int.Int32
+  syntax type int32 "int32"  
+  syntax val (+) "Int32.add %1 %2"
+  syntax val (-) "Int32.sub %1 %2"
+  syntax val (=) "Int32.eq %1 %2"
+  syntax val to_int "Int32.to_int %1"
+end
+
+module mach.int.UInt32
+  syntax type uint32 "int32"
+  syntax val (+) "Int32.add %1 %2"
+  syntax val (-) "Int32.sub %1 %2"
+  syntax val (=) "Int32.eq %1 %2"
+  syntax val to_int "UInt32.to_int %1"
+end
+
+module mach.int.Int64
+  syntax type int64 "int64"
+  syntax val (+) "Int64.add %1 %2"
+  syntax val (-) "Int64.sub %1 %2"
+  syntax val (=) "Int64.eq %1 %2"
+  syntax val to_int "Int64.to_int %1"
+end
+
+module mach.int.UInt64
+  syntax type uint64 "int64"
+  syntax val (+) "Int64.add %1 %2"
+  syntax val (-) "Int64.sub %1 %2"
+  syntax val (=) "Int64.eq %1 %2"
+  syntax val to_int "Int64.to_int %1"
+end
+
+module ieee_float.Float32
+  syntax type t "float"
+  syntax val (.+) "%1 +. %2"
+  syntax val (.-) "%1 -. %2"
+  syntax val (.*) "%1 *. %2"
+  syntax val (./) "%1 /. %2"
+  syntax val eq   "%1 = %2"  
+end
+
+module int.Int
+  syntax type int "int"
+  syntax literal int "%1"
+  syntax val zero "0"
+  syntax val one  "1"
+end

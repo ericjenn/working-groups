@@ -1,3 +1,75 @@
+# 2025/10/08
+## Participants
+  *To be completed*
+## Agenda
+  - Presentation on MLIR/ONNX-MLIR by [Alexandre EICHENBERGER](https://research.ibm.com/people/alexandre-eichenberger). Alexandre's presentation is available on [LFX](https://openprofile.dev/my-meetings). 
+  - New organization of repo [Mariem]
+  - Feedback on testing activities [Ricardo,João], see their [reviews](../documents/profile_opset/conv/reviews/review-joao-ricardo.md)
+  - Review of actions [Eric]
+  - Feedback on SONNX <=> ED 324 traceability [Jean-Baptiste], see [his document](../analyses/certification/SONNX_ED324_interest.docx)
+## Minutes
+See agenda and new actions
+## Actions
+### New actions
+- [ ] (0810-1, all) Review  [Jean-Baptiste's document on ED324](../analyses/certification/SONNX_ED324_interest.docx)
+- [ ] (0810-2, all) Review  [henri's spec of DIV](../documents/profile_opset/div/div.md)
+- [ ] (0810-3, all) Review [Mariem's proposal](tbc) for a new repo 
+### Past actions
+- [ ] (1009-1, Jean) Organize a technical discussion with DNN experts to conclude on the need of broadcasting.
+    - Among the questions to be discussed: Is broadcasting useful?  necessary? is it only a choice of model designers or does it come "naturally" during the export done by frameworks?   
+    - Waiting for Eric
+- [ ] (2708-3, Mariem, Salomé) Try to apply Loïc's approach to `conv` and `concat` 
+- [X] (1607-1, Jean-Baptiste, Sergei (?)) Produce a synthesis of SONNX <=> ED 324 traceability 
+    - In progress. To be reviewed during next meeting.
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+  - A prototype tool is currently being developed. Possibly available in October (this is **not** a commitment).   
+### Long term actions
+- [-] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  
+
+# 2025/09/24
+## Participants
+  *To be completed*
+## Agenda
+  - Review of actions
+  - News about work on formal specs [Mariem, Salomé]
+  - Presentation "Using Hypothesis to test SONNX operators" [João + Ricardo]
+  - Status on [contributions](./operator_spec_sub_wg/worksharing.md)
+## Minutes
+See agenda.
+## Actions
+### New actions
+No new action.
+### Past actions
+- [ ] (1009-1, Jean) Organize a technical discussion with DNN experts to conclude on the need of broadcasting.
+    - Among the questions to be discussed: Is broadcasting useful?  necessary? is it only a choice of model designers or does it come "naturally" during the export done by frameworks?   
+    - Waiting for Eric
+- [X] (1009-2, Eric) Mail to be send on SONNX mailing list for contributions
+  - Request sent: no answer... 
+- [X] (2708-1, Eric) Give short guidelines about error / failure conditions.
+  - See minutes of 2025/08/27 meeting. 
+  - Done. 
+- [ ] (2708-3, Mariem, Salomé) Try to apply Loïc's approach to `conv` and `concat` 
+- [ ] (1607-1, Jean-Baptiste, Sergei (?)) Produce a synthesis of SONNX <=> ED 324 traceability 
+    - In progress. To be reviewed during next meeting.
+- [-] (1806-3, Eric, Dumitru) Organize a presentation of Dumitru's approach to handle RNNs. (please complete [this document](./presentation_proposals.md))
+    - Cancelled
+- [X] (1806-4, Eric) Organize a "physical" working session on the graph specification 
+  - Poll link sent during meeting. Possibility to organize a "physical" meeting at IRT.
+  - Date fixed on Oct. 24th
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+  - A prototype tool is currently being developed. Possibly available in October (this is **not** a commitment).   
+### Long term actions
+- [-] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  - Cancelled
+- [-] (1205-6, Eric, Jean) See how to proceed with tool implementation
+    - Cancelled
+- [-] (0412-6, Eric) Create a sub working group to analyze the existing standard in a systematic way...
+  - Cancelled.
 
 # 2025/09/10
 ## Participants

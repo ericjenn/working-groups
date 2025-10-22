@@ -1,14 +1,395 @@
+# 2025/10/08
+## Participants
+  *To be completed*
+## Agenda
+  - Presentation on MLIR/ONNX-MLIR by [Alexandre EICHENBERGER](https://research.ibm.com/people/alexandre-eichenberger). Alexandre's presentation is available on [LFX](https://openprofile.dev/my-meetings). 
+  - New organization of repo [Mariem]
+  - Feedback on testing activities [Ricardo,João], see their [reviews](../documents/profile_opset/conv/reviews/review-joao-ricardo.md)
+  - Review of actions [Eric]
+  - Feedback on SONNX <=> ED 324 traceability [Jean-Baptiste], see [his document](../analyses/certification/SONNX_ED324_interest.docx)
+## Minutes
+See agenda and new actions
+## Actions
+### New actions
+- [ ] (0810-1, all) Review  [Jean-Baptiste's document on ED324](../analyses/certification/SONNX_ED324_interest.docx)
+- [ ] (0810-2, all) Review  [henri's spec of DIV](../documents/profile_opset/div/div.md)
+- [ ] (0810-3, all) Review [Mariem's proposal](tbc) for a new repo 
+### Past actions
+- [ ] (1009-1, Jean) Organize a technical discussion with DNN experts to conclude on the need of broadcasting.
+    - Among the questions to be discussed: Is broadcasting useful?  necessary? is it only a choice of model designers or does it come "naturally" during the export done by frameworks?   
+    - Waiting for Eric
+- [ ] (2708-3, Mariem, Salomé) Try to apply Loïc's approach to `conv` and `concat` 
+- [X] (1607-1, Jean-Baptiste, Sergei (?)) Produce a synthesis of SONNX <=> ED 324 traceability 
+    - In progress. To be reviewed during next meeting.
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+  - A prototype tool is currently being developed. Possibly available in October (this is **not** a commitment).   
+### Long term actions
+- [-] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  
+
+# 2025/09/24
+## Participants
+  *To be completed*
+## Agenda
+  - Review of actions
+  - News about work on formal specs [Mariem, Salomé]
+  - Presentation "Using Hypothesis to test SONNX operators" [João + Ricardo]
+  - Status on [contributions](./operator_spec_sub_wg/worksharing.md)
+## Minutes
+See agenda.
+## Actions
+### New actions
+No new action.
+### Past actions
+- [ ] (1009-1, Jean) Organize a technical discussion with DNN experts to conclude on the need of broadcasting.
+    - Among the questions to be discussed: Is broadcasting useful?  necessary? is it only a choice of model designers or does it come "naturally" during the export done by frameworks?   
+    - Waiting for Eric
+- [X] (1009-2, Eric) Mail to be send on SONNX mailing list for contributions
+  - Request sent: no answer... 
+- [X] (2708-1, Eric) Give short guidelines about error / failure conditions.
+  - See minutes of 2025/08/27 meeting. 
+  - Done. 
+- [ ] (2708-3, Mariem, Salomé) Try to apply Loïc's approach to `conv` and `concat` 
+- [ ] (1607-1, Jean-Baptiste, Sergei (?)) Produce a synthesis of SONNX <=> ED 324 traceability 
+    - In progress. To be reviewed during next meeting.
+- [-] (1806-3, Eric, Dumitru) Organize a presentation of Dumitru's approach to handle RNNs. (please complete [this document](./presentation_proposals.md))
+    - Cancelled
+- [X] (1806-4, Eric) Organize a "physical" working session on the graph specification 
+  - Poll link sent during meeting. Possibility to organize a "physical" meeting at IRT.
+  - Date fixed on Oct. 24th
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+  - A prototype tool is currently being developed. Possibly available in October (this is **not** a commitment).   
+### Long term actions
+- [-] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  - Cancelled
+- [-] (1205-6, Eric, Jean) See how to proceed with tool implementation
+    - Cancelled
+- [-] (0412-6, Eric) Create a sub working group to analyze the existing standard in a systematic way...
+  - Cancelled.
+
+# 2025/09/10
+## Participants
+  *To be completed*
+## Agenda
+  - Actions
+  - Code generation from Why3 spec. [Mariem + Salomé]
+  - Actions about testing? 
+  - Actions to reactivate the WG
+  - Workshop with Loïc
+
+## Minutes
+- About "failures" (see action 2708-1 below)
+  - Add in the specification that the implementer have to specify if they have actually done some kind of failure analysis or not. For instance "The conditions of occurrence of failure conditions (overflows, underflows, wraparound, etc.) have not been analyzed." 
+- Mariem: Presentation of the archive provided by Loïc's that covers the complete process, from formal specification to C code generation for the "where" operator. 
+  - See the [document](../meetings/c_code_generation/sources.md) explaining the content of the archive.
+  - The "interface" of the Tensor formal specification has slightly changed (use of `List`s instead of `Sequence`s. ). This will require some (slight) modifications of the existing formal specifications. *To be checked*. 
+  - Next step is to use this as an example to implement `concat` and other operators.
+
+## Actions
+- [ ] (1009-1, Eric+Jean) Organize a technical discussion with DNN experts to conclude on the need of broadcasting.
+    - Among the quesrtions to be discussed: Is broadcasting useful?  necessary? is it only a choice of model designers or does it come "naturally" during the export done by frameworks?   
+- [ ] (1009-2, Eric) Mail to be send on SONNX mailing list for contributions
+### New actions
+### Past actions
+- [ ] (2708-1, Eric) Give short guidelines about error / failure conditions.
+  - See minutes of 2025/08/27 meeting. The "rules" could be: 
+  > - If the conditions can be expressed on the inputs (e.g., $x \ge 0$ for `sqrt(x)`) , add a condition on the input domain in the specification
+  >  - If the condition cannot be expressed on (or "propagated to") the inputs, express the failure condition at the appropriate level (for instance:
+       "When computing a matrix multiplication, the result of the accumulation may overflow and the result may "wraparound", leading to an incorrect result."
+  >  - If possible, give a link to the location in the specification where this accumulation is done. 
+  >     - Note that some smart implementation may avoid the problem. For instance, when accumulating 2 bits values on a 2 bits accumulator, "3+3-3-3" overflows while "3-3+3-3" does not.
+  >  - So, the relevance of the warning (i.e., "When computing [...]") actually depends on the implementation, but we know that -- in principle -- there might be some cases where an overflow can occur. And this is due to the the very fact that the operation accumulates values. 
+  > - If no indication is given about occurrence of a "failure", this means that the specification is complete and defines what is the expected value for **any** input. 
+  > - In addition, provide "recommendations" about the implementation. A typical example is the one of `SoftMax` where we could recommend the use of the `-max(Xi)` trick.  
+- [X] (2708-2, Mariem) Put Loïc's contribution in the repo.
+- [ ] (2708-3, Mariem, Salomé) Try to apply Loïc's approach to `conv` and `concat` 
+- [ ] (1607-1, Jean-Baptiste, Sergei (?)) Produce a synthesis of SONNX <=> ED 324 traceability 
+    - In progress. To be reviewed during next meeting.
+- [X] (1607-2, Eric, Jean) Check what is the actual need in terms of broadcasting (ask users, checks models, check operators providing this capability). What would be the effort to integrate broadcasting in the specification of our operators?
+  - Introduce a specific "broadcast" operator to make the operation explicit in the spec. See 1607-3.
+  - Conclusion meetings at AI => do a dedicated meeting in SONNX to share the position (see followup 1009-1)) 
+- [ ] (1806-3, Eric, Dumitru) Organize a presentation of Dumitru's approach to handle RNNs. (please complete [this document](./presentation_proposals.md))
+- [ ] (1806-4, Eric) Organize a "physical" working session on the graph specification 
+  - Poll link sent during meeting. Possibility to organize a "physical" meeting at IRT.
+  - Date fixed end of next week.
+- [ ] (1806-5, Eric, Jean) Resend a "call for participation" to the mailing list (at least once we have a good template spec) 
+  - Modalities to be discussed
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+  - A prototype tool is currently being developed. Possibly available in October (this is **not** a commitment).   
+### Long term actions
+- [ ] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+- [ ] (1205-6, Eric, Jean) See how to proceed with tool implementation
+- [ ] (0412-6, Eric) Create a sub working group to analyze the existing standard in a systematic way...
+  - Contribution of Anne-Sophie. But WG to be set. 
+  - Take into account the new modality to manage and report issues to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  - [ ] Create a review form to support the analysis
+
+# 2025/08/27
+## Participants
+  *To be completed*
+## Agenda
+  - Actions [eric]
+  - Status of [guidelines](../documents/profile_opset/guidelines.md) and application to [`conv`](../documents/profile_opset/conv/conv.md) and [`concat`](../documents/profile_opset/concat/concat.md)
+  - Error / failure conditions; Eduardo's remarks on [discussion elements](../meetings/errror%20conditions/2025-07-30%20-%20Discussions.md) with Eduardo's comments. 
+  - Code generation
+  - Link with the DeepGreen project (see [slide](./slides/AIDGE.pptx))
+  - Events (Mobilit'AI)
+  - Presentation Alexandre Eichenberger on ONNX-MLIR on 08/10/2025
+## Minutes
+- Continuation of the discussion about [Failure modes / error conditions](../meetings/errror%20conditions/2025-07-30%20-%20Discussions.md) with Eduardo's comments.  on the basis of Edoardo's comments:
+  - It seems that we converge on a baseline where we would simply indicate whether or not the operator may fail (due to a division by zero, wrap-around, etc.) and, if possible, in which conditions such situation may occur. 
+    - If the conditions can be expressed on the inputs, this means that we could possibly add the condition in the specification (a conditions on the input domain)
+    - If the condition cannot be expressed on (or "propagated to") the inputs, we express the condition at the appropriate level (for instance:
+      > "When computing a matrix multiplication, the result of the accumulation may overflow and the result may "wraparound", leading to an incorrect result."
+    - We may give a link to the location in the formula where this accumulation is done. 
+    - Note that some smart implementation may avoid the problem. For instance, when accumulating 2 bits values on a 2 bits accumulator, "3+3-3-3" overflows while "3-3+3-3" does not.
+    - So, the relevance of the warning (i.e., "When computing [...]") actually depends on the implementation, but we know that -- in principle -- there might be some cases where an overflow can occur. And this is due to the the very fact that the operation accumulates values. 
+  - If no indication is given about occurrence of a "failure", this means that the specification is complete and defines what is the expected value for any input. 
+  - In addition, we will also provide "recommendations" about the implementation. A typical example is the one of `SoftMax` where we could recommend the use of the `-max(Xi)` trick.  
+- Concerning code generation from the Why3 spec.: Loïc has provided us with an example. We are currently analyzing it and will try to apply it on `conv` and `concat`.
+## Actions
+### New actions
+- [X] (2708-1, Eric) Give short guidelines about error / failure conditions.
+  - See minutes of 2025/08/27 meeting.
+- [ ] (2708-2, Mariem) Put Loïc's contribution in the repo.
+- [ ] (2708-3, Mariem, Salomé) Try to apply Loïc's approach to `conv` and `concat`
+### Past actions
+- [X] (3007-1, Eric, All) Collect ideas exchanged on Error Conditions during the meeting. To be discussed during next meeting. 
+  - Document is [here](../meetings/errror%20conditions/2025-07-30%20-%20Discussions.md) with Eduardo's comments. 
+- [ ] (1607-1, Jean-Baptiste, Sergei (?)) Produce a synthesis of SONNX <=> ED 324 traceability 
+- [ ] (1607-2, Eric, Jean) Check what is the actual need in terms of broadcasting (ask users, checks models, check operators providing this capability). What would be the effort to integrate broadcasting in the specification of our operators?
+  - Introduce a specific "broadcast" operator to make the operation explicit in the spec. See 1607-3.
+- [ ] (1806-3, Eric, Dumitru) Organize a presentation of Dumitru's approach to handle RNNs. (please complete [this document](./presentation_proposals.md))
+- [ ] (1806-4, Eric) Organize a "physical" working session on the graph specification 
+- [ ] (1806-5, Eric, Jean) Resend a "call for participation" to the mailing list (at least once we have a good template spec) 
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+  - A prototype tool is currently being developed. Possibly available in October (this is **not** a commitment).   
+- [-] (0904-5, Dumitru) Scrutinize the set of ONNX ops to see if there are other operator causing similar concerns as ``loop``.
+  - Cancelled
+### Long term actions
+- [ ] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+- [ ] (1205-6, Eric, Jean) See how to proceed with tool implementation
+- [ ] (0412-6, Eric) Create a sub working group to analyze the existing standard in a systematic way...
+  - Contribution of Anne-Sophie. But WG to be set. 
+  - Take into account the new modality to manage and report issues to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  - [ ] Create a review form to support the analysis
+
+
+# 2025/07/16
+## Participants
+  *To be completed*
+## Agenda
+  - Actions [eric]
+  - A few words about the idea of a core set of operators
+    - See note [here](./core_ops/core_ops.md) [eric]
+  - Guidelines 
+    - See [here](../documents/profile_opset/guidelines.md).
+  - Status of MLIR presentation by Alexandre. (2025/10/08) [eric]
+  - Status of work on formal spec [Mariem and Salomé]
+    - Presentation of work on the formalization of Scalar and the first results about C code generation. 
+  - Ideas on error condition spec [Franck]
+  - Status of discussions about tests (Andreas, Justin, Christian, Eric, Jean) [eric+jean]
+    - See [minutes](https://github.com/ericjenn/working-groups/blob/ericjenn-srpwg-wg1/safety-related-profile/meetings/testing/2025-07-29-tests.md)
+## Minutes
+  - See above.
+  - See Franck slides [here](./errror%20conditions/2025-07-30-SONNX_error.pdf)
+  - See elements discussed about the errors conditions [here](./errror%20conditions/2025-07-30%20-%20Discussions.md)
+## Actions
+### New actions
+- [ ] (3007-1, Eric, All) Collect ideas exchanged on Error Conditions during the meeting. To be discussed during next meeting. 
+### Past actions
+- [ ] (1607-1, Jean-Baptiste, Sergei (?)) Produce a synthesis of SONNX <=> ED 324 traceability 
+- [ ] (1607-2, Eric, Jean) Check what is the actual need in terms of broadcasting (ask users, checks models, check operators providing this capability). What would be the effort to integrate broadcasting in the specification of our operators?
+  - Introduce a specific "broadcast" operator to make the operation explicit in the spec. See 1607-3.
+- [X] (1607-3, Dumitru) Write a few lines to explain the "mixed approach" to handle broadcasting.
+  - Mail exchange collected in [here](./broadcasting/dumitru-2025-07-21.md) 
+- [X] (1607-4, Franck) Write a few lines to explain the approach to handle errors: ask implementers to provide error conditions 
+  - Description sent on 2025/07/16
+- [X] (0207-1, Eric) Do a "synthesis" of the discussion about overflows, etc., discuss with the WG, find a consensus, add to the guidelines... 
+    - First proposal in the [guidelines](../documents/profile_opset/guidelines.md). To be discussed (see Franck's pres.)
+- [ ] (1806-3, Eric, Dumitru) Organize a presentation of Dumitru's approach to handle RNNs. (please complete [this document](./presentation_proposals.md))
+- [ ] (1806-4, Eric) Organize a "physical" working session on the graph specification 
+- [ ] (1806-5, Eric, Jean) Resend a "call for participation" to the mailing list (at least once we have a good template spec) 
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+- [ ] (0904-5, Dumitru) Scrutinize the set of ONNX ops to see if there are other operator causing similar concerns as ``loop``.
+### Long term actions
+- [ ] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+- [ ] (1205-6, Eric, Jean) See how to proceed with tool implementation
+- [ ] (0412-6, Eric) Create a sub working group to analyze the existing standard in a systematic way...
+  - Contribution of Anne-Sophie. But WG to be set. 
+  - Take into account the new modality to manage and report issues to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  - [ ] Create a review form to support the analysis
+  
+
+
+# 2025/07/16
+## Participants
+  Salomé, Jean, Tomé, Cong, Jean-Baptiste, Franck, Eric, Dumitru, ...
+## Agenda
+  - Actions
+  - A few words about shape inference and broadcasting
+  - A few words about the "minimal corpus of operators"
+  - A few words about runtime errors
+  - Feedback on presentation to WG114 (see [slides](./Other_meetings/SONNX%20-%20WG114.pdf))
+    - ED324 = ARP 6983
+  - Feedback on meeting with DeepGreen
+  - Meeting with ONNX infra about testing
+  - Opportunities for presentation of our work:
+    - Mobilit'AI.
+  - Stragegy for next period
+## Minutes
+  - A few words about shape inference and broadcasting
+    - Forbidding broadcasting may reveal extremely penalizing because making it "explicit" boils down to creating actual tensors whereas broadcasting is essentially a manipulation of indexes done at operation level.
+    - We have to check if this restriction is necessary, sensible, and applicable.
+    - See actions (1607-2) and (1607-3)
+  - A few words about the "minimal corpus of operators"
+    - Some operators can be described on the basis of simpler, "atomic" operators. For instance, a `softmax` can be described as the composition of `Exp` and `ReduceSum`. It may also be described as $s(z_i) = {e^{z_i} \over \sum_{j=1}^K e^{z_j}}$. A `Relu` can also be described as a combination of operators, etc.  
+      - Do we want to apply this modular approach? 
+      - What would be the "minimal corpus of operators"? 
+      - Could we have a "non-modular" informal specification (that describes the operation using a mathematical formula) and a modular formal specification? 
+  - A few words about runtime errors
+    - See this [document](./errror%20conditions/error_conditions_2.md)
+    - The question is to define a strategy to specify the error condition that may occur during the execution of an operator.
+    - In the FP domain, we agree that no exception is considered but that we use the IEEE special values Inf, NaN to propagate the errors up to the operator's output. <off-meeting : note that this implicitly means that the implementation complies with IEEE. It shall be noticed that not all processors fully comply with IEEE (some do not support Nan, Inf) and software implementations may also behave slightly differently from IEEE /> 
+    - We have to do a systematic analysis of the error conditions and indicate what are the possible error conditions (e.g., in the case of the SoftMax : overflow). The specification may still indicate that no error shall occur (i.e., no NaNs) because we know (as it is the case for SoftMax) that there is a means to avoid it (e.g., in the case of SoftMax : substract the max value). This means that all implementations will have to apply this means (or something equivalent). Otherwise, the specificaton of the operator shall indicate in the "Error conditions" section what errors can happen (e.g., an overflow) with a NaN as a result. 
+    - Franck proposes an approach in which the implmeter would provide the description of error behaviour (see 1607-4)
+    - For integer operations, we will provide the **exact spec** of the operations. For signed ops, the specification will show the 2's complement description of the operation, see [here](./errror%20conditions/error_conditions_2.md))
+  - Feedback on presentation to WG114 (see [slides](./Other_meetings/SONNX%20-%20WG114.pdf))
+    - Presentation was appreciated.
+    - One slide or two on ED 324 <=> SONNX traceability must be done (see 1607-1)
+  - Feedback on meeting with DeepGreen
+    - SONNX will be used to specify (and partically provide code) for a C-code backend 
+  - Meeting with ONNX infra about testing
+    - Meeting planned on July 29th with people from the infra WG (Andreas, Justin, Christian).
+  - Opportunities for presentation of our work:
+    - Mobilit'AI.
+      - We will probably present a poster à that occasion.
+  - Stragegy for next period
+    - For the informal specification 
+      - Phase 1: Clean-up and ensure consistency between the guidelines and the 3 cononical examples (CONV2D, CONCAT, and aanother simple operator)
+      - Phase 2: mailing to the potential contributor to ask for condibution on the basis of the guidelines and existing examples
+      <off-meeting> - Phase 3: meeting to present the approach and share work </off-meeting>
+    - The same approach shall be followed for the formal specification.  
+  - Presentation of the `Add` operator by Salomé. 
+## Actions
+### New actions
+- [ ] (1607-1) Jean-Baptiste, Sergei (?)) Produce a synthesis of SONNX <=> ED 324 tracaibility 
+- [ ] (1607-2, Eric, Jean) Check what is the actual need in terms of broadcasting (ask users, checks models, check operators providing this capability). What would be the effort to integrate broadcasting in the specification of our operators?
+- [ ] (1607-3, Dumitru) Write a few lines to explain the "mixed approach" to handle broadcasting.
+- [ ] (1607-4, Franck) Write a few lines to explain the approach to handle errors: ask implementers to provide error conditions 
+- [X] (1607-6, Tomé) Provide the description of the 2 interships.
+  - Description sent on 2025/07/16
+### Past actions
+- [ ] (0207-1, Eric) Do a "synthesis" of the discussion about overflows, etc., discuss with the WG, find a consensus, add to the guidelines... 
+- [ ] (1806-3, Eric, Dumitru) Organize a presentation of Dumitru's approach to handle RNNs. (please complete [this document](./presentation_proposals.md))
+- [ ] (1806-4, Eric) Organize a "physical" working session on the graph specification 
+- [ ] (1806-5, Eric, Jean) Resend a "call for participation" to the mailing list (at least once we have a good template spec) 
+- [X] (1806-6, Eric) Initiate the specification of matrix multiplication 
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+- [ ] (0904-5, Dumitru) Scrutinize the set of ONNX ops to see if there are other operator causing similar concerns as ``loop``.
+### Long term actions
+- [ ] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+- [ ] (1205-6, Eric, Jean) See how to proceed with tool implementation
+- [ ] (0412-6, Eric) Create a sub working group to analyze the existing standard in a systematic way...
+  - Contribution of Anne-Sophie. But WG to be set. 
+  - Take into account the new modality to manage and report issues to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  - [ ] Create a review form to support the analysis
+  
+# 2025/07/02
+## Participants
+-  Salomé, Alexandre, Jean, Sebastian, Cong, Mariem, Jean-Baptiste, Eric,...
+## Agenda
+- Status of actions
+- Misc news:  
+  - Feedback on June 20th workshop on formal specification and verification (Eric, Mariem, Jean)
+  - Structure of repo for Why3 formal specifications (Mariem)  - A question about model readability (Eric)
+  - Slides for WG114 (see [here](./Other_meetings/SONNX%20-%20WG114.pdf) (draft), Eric)
+  - Issues [see [here](https://github.com/onnx/onnx/issues/3651)]
+    - Back to action 0412-6...
+  - Two questions
+    - What shall we "say" about inner overflows, division par zeros, etc.?
+    - *Do we need the model to be human-readable?*
+  - For information: SIONNX (see [here](https://github.com/alibaba/sionnx))
+      - Description of the algorithm (python). Example for [conv](https://github.com/alibaba/sionnx/blob/master/include/conv.algorithm)
+      - Description of the signature. Example for [cov](https://github.com/alibaba/sionnx/blob/master/include/onnx_conv.td)
+## Minutes
+- Long discussion about overflows etc. See action (0207-1).
+## Actions
+### New actions
+- [ ] (0207-1, Eric) Do a "synthesis" of the discussion about overflows, etc., discuss with the WG, find a consensus, add to the guidelines... 
+### Past actions
+- [X] (1806-1, Eric) Provide a complete (simple) spec example for 1 op that can be reproduced on the other ops...
+  - See [matmul](../documents/profile_opset/matmul/matmul.md)
+- [X] (1806-2, Mariem) Provide Franck with the C code of the conv2d operator.
+  - Done. The code is [here](./attachments/conv2d.c).
+- [ ] (1806-3, Eric, Dumitru) Organize a presentation of Dumitru's approach to handle RNNs. (please complete [this document](./presentation_proposals.md))
+- [ ] (1806-4, Eric) Organize a "physical" working session on the graph specification 
+- [ ] (1806-5, Eric, Jean) Resend a "call for participation" to the mailing list (at least once we have a good template spec) 
+- [ ] (1806-6, Eric) Initiate the specification of matrix multiplication 
+- [X] (1806-7, Jean-Baptiste) Provide Eric with ARP/SONNX analysis material 
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+- [ ] (0904-5, Dumitru) Scrutinize the set of ONNX ops to see if there are other operator causing similar concerns as ``loop``.
+### Long term actions
+- [ ] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+- [ ] (1205-6, Eric, Jean) See how to proceed with tool implementation
+- [ ] (0412-6, Eric) Create a sub working group to analyze the existing standard in a systematic way...
+  - Contribution of Anne-Sophie. But WG to be set. 
+  - Take into account the new modality to manage and report issues to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  - [ ] Create a review form to support the analysis
+  
+
 # 2025/06/18
 ## Participants
-- To be completed
+-  Eric, Mariem, Salomé, Alex, Henri, Dumitru, Jean-Baptiste, Mohammed, Franck, Jean-Loup, Jean
 ## Agenda
 - Status of actions.
 - Misc news:  
+  - Presentation to ONNX meetup (["video"](./general/2025-06-09%20-%20MEET-UP/SONNX%20-%20Meetup%202025.7z))
   - Review and update of ops...
+    - The existing specifications must be updated to comply with the [specification guidelines](../documents/profile_opset/guidelines.md). A first pass has been done on [`abs`](../documents/profile_opset/abs/abs.md).
+  - Request for participation to work on the graph execution
+    - Jean and Jean-Loup are OK to help. Eric to organize a working session.  (See action 1806-4)
+  - Eric to present SONNX to the WG114. One slide about the ARP/SONNX mapping could be useful. (see action 1806-7)
+- Numerical accuracy
+  - Franck is preparing some elements to be put in the guidelines.
+  - Franck is also working on the analysis of the matrix multiplication. It could be wise to specify this operator in order to have a complete example including numerical accuracy analysis (see action 1806-6). 
+  - He needs some C code for the conv2D. (see action 1806-2) 
+  - Numerical analysis verification will be computed by executing the C++ code. The C code of the operators (generated using Why3) will be integrated as is. The tool leverage's C++ operator overloading capability. 
+- The number of participants to the bi-weekly meetings is decreasing steadily... 
+  - Give a "good" example of spec and invite people in the mailing list to contribute...
+  - Organize new presentations (see action 1806-3) 
+- Discussion about June 20th second workshop on formal methods (off-main meeting).
+  - This workshop concerns those that have been involved in the first workshop (other may join, please contact me). It will take place at IRT. A link will be provided. 
+  - On the basis of what has been done on conv2D, concat, and graph, clarify/complete the method, obtain guidelines to carry out proofs, obtain material to support self-training, obtain guidelines to generate C code, etc. 
+
 ## Actions
 ### New actions
+- [ ] (1806-1, Eric) Provide a complete (simple) spec example for 1 op that can be reproduced on the other ops...
+- [X] (1806-2, Mariem) Provide Franck with the C code of the conv2d operator.
+  - Done. The code is [here](./attachments/conv2d.c).
+- [ ] (1806-3, Eric, Dumitru) Organize a presentation of Dumitru's approach to handle RNNs. (please complete [this document](./presentation_proposals.md))
+- [ ] (1806-4, Eric) Organize a "physical" working session on the graph specification 
+- [ ] (1806-5, Eric, Jean) Resend a "call for participation" to the mailing list (at least once we have a good template spec) 
+- [ ] (1806-6, Eric) Initiate the specification of matrix multiplication 
+- [ ] (1806-7, Jean-Baptiste) Provide Eric with ARP/SONNX analysis material 
+
 ### Past actions
 - [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
 - [ ] (0904-5, Dumitru) Scrutinize the set of ONNX ops to see if there are other operator causing similar concerns as ``loop``.
 ### Long term actions
 - [ ] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
@@ -29,7 +410,7 @@
   - Salomé has updated the informal and formal specification of the ``concat`` operator. Will be pushed soon.
   - Frédéric has presented his first attempt to specify errors for operators using floating point values. 
     - As a proof of concept, it has been applied to the [``abs``](https://github.com/ericjenn/working-groups/blob/spec-with-numerical-accuracy-info/safety-related-profile/documents/profile_opset/add/abs.md) and [``add``](https://github.com/ericjenn/working-groups/blob/spec-with-numerical-accuracy-info/safety-related-profile/documents/profile_opset/add/add.md) operators.
-    - The specification specificies the properties that an implementation shall satisfy considering the errors due to the floating point arithmetic. Methods errors are not considered. The properties are "conservative" in the sense that they consider any floating point values. Tighter bounds could be obtained for smaller domains.
+    - The specification gives the properties that an implementation shall satisfy considering the errors due to the floating point arithmetic. Methods errors are not considered. The properties are "conservative" in the sense that they consider any floating point values. Tighter bounds could be obtained for smaller domains.
     - A C++ implementation to compute the errors is provided (not fully implemented for the moment...). 
     - This implementation evaluates (will eventually evaluate) the error **symbolically**.
     - Verification of the assertion will also be done symbolically.

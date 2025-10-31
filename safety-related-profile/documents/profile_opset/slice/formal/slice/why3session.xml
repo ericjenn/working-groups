@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE why3session PUBLIC "-//Why3//proof session v5//EN"
+"https://www.why3.org/why3session.dtd">
+<why3session shape_version="6">
+<prover id="0" name="Alt-Ergo" version="2.6.2" timelimit="1" steplimit="0" memlimit="1000"/>
+<prover id="1" name="CVC5" version="1.2.1" timelimit="1" steplimit="0" memlimit="1000"/>
+<prover id="2" name="Z3" version="4.13.4" timelimit="1" steplimit="0" memlimit="1000"/>
+<file format="whyml">
+<path name=".."/><path name="slice.mlw"/>
+<theory name="OPSlice">
+ <goal name="normalize_axis&#39;vc" expl="VC for normalize_axis" proved="true">
+ <proof prover="2"><result status="valid" time="0.845018" steps="12580571"/></proof>
+ </goal>
+ <goal name="normalize_start&#39;vc" expl="VC for normalize_start" proved="true">
+ <proof prover="2"><result status="valid" time="0.014003" steps="58950"/></proof>
+ </goal>
+ <goal name="normalize_end&#39;vc" expl="VC for normalize_end" proved="true">
+ <proof prover="2"><result status="valid" time="0.013960" steps="60006"/></proof>
+ </goal>
+ <goal name="dY_shape_rec&#39;vc" expl="VC for dY_shape_rec" proved="true">
+ <proof prover="1"><result status="valid" time="0.120131" steps="31208"/></proof>
+ </goal>
+ <goal name="dY_shape&#39;vc" expl="VC for dY_shape" proved="true">
+ <proof prover="2"><result status="valid" time="0.012993" steps="54220"/></proof>
+ </goal>
+ <goal name="find_j&#39;vc" expl="VC for find_j" proved="true">
+ <proof prover="2"><result status="valid" time="0.013581" steps="51512"/></proof>
+ </goal>
+ <goal name="real_index_aux&#39;vc" expl="VC for real_index_aux" proved="true">
+ <proof prover="0"><result status="timeout" time="1.000000" steps="118703"/></proof>
+ <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+ <proof prover="2"><result status="timeout" time="1.000000" steps="4923402"/></proof>
+ <transf name="split_vc" proved="true" >
+  <goal name="real_index_aux&#39;vc.0" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.003684" steps="3986"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.1" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.003291" steps="3995"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.2" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.000001" steps="4000"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.3" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.011176" steps="40573"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.4" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.003255" steps="41911"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.5" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.003544" steps="5813"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.6" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.004628" steps="4194"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.7" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.003155" steps="4231"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.8" expl="precondition" proved="true">
+  <proof prover="0"><result status="valid" time="0.071238" steps="1111"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.9" expl="variant decrease" proved="true">
+  <proof prover="2"><result status="valid" time="0.010502" steps="48798"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.10" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.000001" steps="5593"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.11" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.004861" steps="5602"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.12" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.003471" steps="5607"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.13" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.008092" steps="50543"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.14" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.012377" steps="52106"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.15" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.008356" steps="48957"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.16" expl="precondition" proved="true">
+  <proof prover="0"><result status="timeout" time="1.000000" steps="129706"/></proof>
+  <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+  <proof prover="2"><result status="timeout" time="1.000000" steps="4414167"/></proof>
+  <transf name="split_vc" proved="true" >
+   <goal name="real_index_aux&#39;vc.16.0" expl="precondition" proved="true">
+   <proof prover="0" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="613844"/></proof>
+   <proof prover="1" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000"/></proof>
+   <proof prover="2" timelimit="5" memlimit="2000"><result status="timeout" time="4.308813" steps="16402733"/></proof>
+   <transf name="inline_goal" proved="true" >
+    <goal name="real_index_aux&#39;vc.16.0.0" expl="precondition" proved="true">
+    <transf name="split_all_full" proved="true" >
+     <goal name="real_index_aux&#39;vc.16.0.0.0" expl="precondition" proved="true">
+     <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="2307053"/></proof>
+     <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000"/></proof>
+     <proof prover="2" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="62833172"/></proof>
+     <transf name="instantiate" proved="true" arg1="axis_data_surjective" arg2="axis">
+      <goal name="real_index_aux&#39;vc.16.0.0.0.0" expl="precondition" proved="true">
+      <transf name="instantiate" proved="true" arg1="Hinst" arg2="x_rank">
+       <goal name="real_index_aux&#39;vc.16.0.0.0.0.0" expl="precondition" proved="true">
+       <transf name="instantiate" proved="true" arg1="Hinst" arg2="v">
+        <goal name="real_index_aux&#39;vc.16.0.0.0.0.0.0" expl="precondition" proved="true">
+        <proof prover="2"><result status="valid" time="0.010871" steps="74857"/></proof>
+        </goal>
+       </transf>
+       </goal>
+      </transf>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="real_index_aux&#39;vc.17" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.003252" steps="3990"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.18" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.006802" steps="3999"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.19" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.000001" steps="4004"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.20" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.007717" steps="40505"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.21" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.008266" steps="41726"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.22" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.005245" steps="5813"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.23" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.005518" steps="4198"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.24" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.003673" steps="4235"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.25" expl="precondition" proved="true">
+  <proof prover="0"><result status="valid" time="0.058154" steps="1116"/></proof>
+  </goal>
+  <goal name="real_index_aux&#39;vc.26" expl="postcondition" proved="true">
+  <proof prover="0"><result status="timeout" time="1.000000" steps="107050"/></proof>
+  <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+  <proof prover="2"><result status="timeout" time="1.000000" steps="3597933"/></proof>
+  <transf name="split_vc" proved="true" >
+   <goal name="real_index_aux&#39;vc.26.0" expl="postcondition" proved="true">
+   <proof prover="0"><result status="valid" time="0.059349" steps="1499"/></proof>
+   </goal>
+   <goal name="real_index_aux&#39;vc.26.1" expl="postcondition" proved="true">
+   <proof prover="1"><result status="valid" time="0.041571" steps="14713"/></proof>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="real_index_aux&#39;vc.27" expl="postcondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.013021" steps="60961"/></proof>
+  </goal>
+ </transf>
+ </goal>
+ <goal name="real_index&#39;vc" expl="VC for real_index" proved="true">
+ <proof prover="2"><result status="valid" time="0.007507" steps="8635"/></proof>
+ </goal>
+ <goal name="dX_coords_rec&#39;vc" expl="VC for dX_coords_rec" proved="true">
+ <proof prover="2"><result status="valid" time="0.003596" steps="30972"/></proof>
+ </goal>
+ <goal name="dX_coords&#39;vc" expl="VC for dX_coords" proved="true">
+ <proof prover="2"><result status="valid" time="0.007099" steps="25741"/></proof>
+ </goal>
+ <goal name="dslice&#39;vc" expl="VC for dslice" proved="true">
+ <proof prover="2"><result status="valid" time="0.000001" steps="3408"/></proof>
+ </goal>
+ <goal name="opslice&#39;vc" expl="VC for opslice">
+ <proof prover="0"><result status="timeout" time="1.000000" steps="34277"/></proof>
+ <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+ <proof prover="2"><result status="timeout" time="1.000000" steps="3879295"/></proof>
+ <transf name="split_vc" >
+  <goal name="opslice&#39;vc.0" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.009674" steps="22084"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.1" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.020585" steps="82511"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.2" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.004633" steps="22092"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.3" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.034133" steps="201304"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.4" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.025444" steps="202073"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.5" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.012170" steps="22235"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.6" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.010109" steps="22273"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.7" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.003661" steps="30080"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.8" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.008160" steps="30087"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.9" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.008466" steps="22300"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.10" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.036577" steps="203855"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.11" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.037533" steps="205209"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.12" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.029661" steps="204182"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.13" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.010106" steps="22532"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.14" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.003869" steps="22497"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.15" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.010329" steps="30530"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.16" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.008689" steps="30541"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.17" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.012006" steps="30548"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.18" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.033903" steps="206381"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.19" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.031242" steps="207889"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.20" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.033398" steps="206151"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.21" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.033496" steps="206998"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.22" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.033743" steps="207141"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.23" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.011735" steps="22934"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.24" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.010246" steps="22744"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.25" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.020519" steps="85864"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.26" expl="precondition">
+  <proof prover="0"><result status="timeout" time="1.000000" steps="6607"/></proof>
+  <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+  <proof prover="2"><result status="timeout" time="1.000000" steps="3386905"/></proof>
+  <transf name="split_vc" >
+   <goal name="opslice&#39;vc.26.0" expl="precondition">
+   <proof prover="0" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="49327"/></proof>
+   <proof prover="1" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000"/></proof>
+   <proof prover="2" timelimit="5" memlimit="2000"><result status="timeout" time="4.308854" steps="9206866"/></proof>
+   <transf name="inline_goal" >
+    <goal name="opslice&#39;vc.26.0.0" expl="precondition">
+    <transf name="split_all_full" >
+     <goal name="opslice&#39;vc.26.0.0.0" expl="precondition">
+     <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="219316"/></proof>
+     <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000"/></proof>
+     <proof prover="2" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="40211169"/></proof>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+   <goal name="opslice&#39;vc.26.1" expl="precondition">
+   <proof prover="0" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="46164"/></proof>
+   <proof prover="1" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000"/></proof>
+   <proof prover="2" timelimit="5" memlimit="2000"><result status="timeout" time="4.186221" steps="8816947"/></proof>
+   <transf name="inline_goal" >
+    <goal name="opslice&#39;vc.26.1.0" expl="precondition">
+    <transf name="split_all_full" >
+     <goal name="opslice&#39;vc.26.1.0.0" expl="precondition">
+     <proof prover="0"><result status="timeout" time="1.000000" steps="5827"/></proof>
+     <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+     <proof prover="2"><result status="timeout" time="1.000000" steps="2152794"/></proof>
+     <transf name="split_vc" >
+      <goal name="opslice&#39;vc.26.1.0.0.0" expl="precondition">
+      <proof prover="0" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="48614"/></proof>
+      <proof prover="1" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000"/></proof>
+      <proof prover="2" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="7520265"/></proof>
+      <transf name="inline_goal" >
+       <goal name="opslice&#39;vc.26.1.0.0.0.0" expl="precondition">
+       <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="271524"/></proof>
+       <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000"/></proof>
+       <proof prover="2" timelimit="30" memlimit="4000"><result status="outofmemory" time="24.178603"/></proof>
+       </goal>
+      </transf>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="opslice&#39;vc.27" expl="precondition">
+  <proof prover="0"><result status="timeout" time="1.000000" steps="28491"/></proof>
+  <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+  <proof prover="2"><result status="timeout" time="1.000000" steps="3375073"/></proof>
+  <transf name="split_vc" >
+   <goal name="opslice&#39;vc.27.0" expl="precondition">
+   <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="236005"/></proof>
+   <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000"/></proof>
+   <proof prover="2" timelimit="30" memlimit="4000"><result status="timeout" time="26.459190" steps="54802200"/></proof>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="opslice&#39;vc.28" expl="precondition">
+  <proof prover="0"><result status="timeout" time="1.000000" steps="5804"/></proof>
+  <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+  <proof prover="2"><result status="timeout" time="1.000000" steps="3104045"/></proof>
+  <transf name="split_vc" >
+   <goal name="opslice&#39;vc.28.0" expl="precondition">
+   <proof prover="0" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="38780"/></proof>
+   <proof prover="1" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000"/></proof>
+   <proof prover="2" timelimit="5" memlimit="2000"><result status="timeout" time="4.353324" steps="9576474"/></proof>
+   <transf name="inline_goal" >
+    <goal name="opslice&#39;vc.28.0.0" expl="precondition">
+    <transf name="split_all_full" >
+     <goal name="opslice&#39;vc.28.0.0.0" expl="precondition">
+     <proof prover="0"><result status="timeout" time="1.000000" steps="6161"/></proof>
+     <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+     <proof prover="2"><result status="timeout" time="1.000000" steps="2555663"/></proof>
+     <transf name="split_vc" >
+      <goal name="opslice&#39;vc.28.0.0.0.0" expl="precondition">
+      <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="280968"/></proof>
+      <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000"/></proof>
+      <proof prover="2" timelimit="30" memlimit="4000"><result status="timeout" time="26.842184" steps="55688427"/></proof>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="opslice&#39;vc.29" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.012292" steps="22820"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.30" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.040308" steps="270676"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.31" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.016940" steps="87273"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.32" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.013104" steps="31189"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.33" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.037355" steps="214817"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.34" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.184050" steps="483524"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.35" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.058976" steps="215794"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.36" expl="precondition">
+  <proof prover="0"><result status="timeout" time="1.000000" steps="5899"/></proof>
+  <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+  <proof prover="2"><result status="timeout" time="1.000000" steps="3324251"/></proof>
+  <transf name="split_vc" >
+   <goal name="opslice&#39;vc.36.0" expl="precondition">
+   <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="458279"/></proof>
+   <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000"/></proof>
+   <proof prover="2" timelimit="30" memlimit="4000"><result status="timeout" time="26.454935" steps="53719546"/></proof>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="opslice&#39;vc.37" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.043416" steps="213914"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.38" expl="postcondition">
+  <proof prover="0"><result status="timeout" time="1.000000" steps="5816"/></proof>
+  <proof prover="1"><result status="timeout" time="1.000000"/></proof>
+  <proof prover="2"><result status="timeout" time="1.000000" steps="3383998"/></proof>
+  <transf name="split_vc" >
+   <goal name="opslice&#39;vc.38.0" expl="postcondition">
+   <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="192482"/></proof>
+   <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000"/></proof>
+   <proof prover="2" timelimit="30" memlimit="4000"><result status="timeout" time="26.327888" steps="53080899"/></proof>
+   </goal>
+   <goal name="opslice&#39;vc.38.1" expl="postcondition" proved="true">
+   <proof prover="2"><result status="valid" time="0.007905" steps="23274"/></proof>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="opslice&#39;vc.39" expl="postcondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.006755" steps="23215"/></proof>
+  </goal>
+  <goal name="opslice&#39;vc.40" expl="postcondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.013632" steps="23228"/></proof>
+  </goal>
+ </transf>
+ </goal>
+</theory>
+</file>
+</why3session>

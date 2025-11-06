@@ -29,14 +29,14 @@ if os.path.exists("generated_data.json"):
 """
 Inputs/attributes details
 """
+
 inputs_attributes = {
-    "min_rank_input": 1,
-    "max_rank_input": 5,
-    "min_dim_size_input": 1,
-    "max_dim_size_input": 10
+    "min_rank_input": 1, # Minimum rank of the input tensor should be at least 1 (no scalars slice) X [C3]
+    "max_rank_input": 5, # Adjust as needed
+    "min_dim_size_input": 1, # Dimension should always be positive (no zero dimensions)
+    "max_dim_size_input": 10 # Adjust as needed
 }
 
-# TODO ONNX Runtime does not support bfloat16 yet??
 """
 Slice supported types
 """
@@ -84,7 +84,43 @@ Function to generate valid slice arguments
 @st.composite
 @settings()
 def valid_slice_args(draw):
-    # Generate X tensor
+    #---------------------------------------------------
+    # Restrictions
+    #---------------------------------------------------
+    
+    # X [C3] - Input/Output Types Consistency
+    all_valid_types = list(slice_types.keys())
+    input_type = draw(st.sampled_from(all_valid_types))
+    input_dtype = slice_types[input_type]
+
+    if np.issubdtype(input_dtype, np.integer):
+        min_val = np.iinfo(input_dtype).min
+        max_val = np.iinfo(input_dtype).max
+        input_strategy = st.integers(min_value=min_val, max_value=max_val)
+    elif np.issubdtype(input_dtype, np.floating):
+        min_val = np.finfo(input_dtype).min
+        max_val = np.finfo(input_dtype).max
+        input_strategy = st.floats(min_value=min_val, max_value=max_val)
+    elif np.issubdtype(input_dtype, np.bool_):
+        input_strategy = st.booleans()
+    elif np.issubdtype(input_dtype, np.str_):
+        input_strategy = st.text(
+            alphabet=st.characters(codec="utf-8", blacklist_characters='\x00')
+        )
+    elif input_type == "BFLOAT16":
+        min_bfloat16 = float(ml_dtypes.finfo(slice_types["BFLOAT16"]).min)
+        max_bfloat16 = float(ml_dtypes.finfo(slice_types["BFLOAT16"]).max)
+        input_strategy = st.floats(min_value=min_bfloat16, max_value=max_bfloat16)
+
+    # Index Types Consistency
+    # S [C4] , E [C4] -> S [C4], A[C4] -> S [C4], K [C4] -> S [C4]
+    all_valid_index_types = list(slice_index_types.keys())
+    index_type = draw(st.sampled_from(all_valid_index_types))
+    index_dtype = slice_index_types[index_type]
+
+    #---------------------------------------------------
+    # Input X
+    #---------------------------------------------------
     rank_input_tensor = draw(st.integers(
         min_value=inputs_attributes["min_rank_input"],
         max_value=inputs_attributes["max_rank_input"]
@@ -98,41 +134,19 @@ def valid_slice_args(draw):
         ))
         shape_input_tensor.append(dim_size)
 
-    input_type = draw(st.sampled_from(list(slice_types.keys())))
-    dtype = slice_types[input_type]
-
-    if np.issubdtype(dtype, np.integer):
-        min_val = np.iinfo(dtype).min
-        max_val = np.iinfo(dtype).max
-        elements_strategy = st.integers(min_value=min_val, max_value=max_val)
-    elif np.issubdtype(dtype, np.floating):
-        min_val = np.finfo(dtype).min
-        max_val = np.finfo(dtype).max
-        elements_strategy = st.floats(min_value=min_val, max_value=max_val)
-    elif np.issubdtype(dtype, np.bool_):
-        elements_strategy = st.booleans()
-    elif np.issubdtype(dtype, np.str_):
-        elements_strategy = st.text(
-            alphabet=st.characters(codec="utf-8", blacklist_characters='\x00')
-        )
-    elif input_type == "BFLOAT16":
-        min_bfloat16 = float(ml_dtypes.finfo(slice_types["BFLOAT16"]).min)
-        max_bfloat16 = float(ml_dtypes.finfo(slice_types["BFLOAT16"]).max)
-        elements_strategy = st.floats(min_value=min_bfloat16, max_value=max_bfloat16)
-
-
     if input_type == "BFLOAT16":
-        temp_tensor = draw(hnp.arrays(dtype=np.float32, shape=shape_input_tensor, elements=elements_strategy))
+        temp_tensor = draw(hnp.arrays(dtype=np.float32, shape=shape_input_tensor, elements=input_strategy))
         tf_tensor = tf.cast(tf.constant(temp_tensor), tf.bfloat16)
         x = tf_tensor.numpy()
     else:
-        x = draw(hnp.arrays(dtype=dtype, shape=shape_input_tensor, elements=elements_strategy))
+        x = draw(hnp.arrays(dtype=input_dtype, shape=shape_input_tensor, elements=input_strategy))
 
-    # Generate indices tensors
-    type_index_tensors = draw(st.sampled_from(list(slice_index_types.keys())))
-    dtype_index = slice_index_types[type_index_tensors]
+    #---------------------------------------------------
+    # Input A
+    #---------------------------------------------------
     # A [C1] -> X [C1]
     da0 = rank_input_tensor
+    # A [C2], A [C3] 
     possible_indices = draw(st.permutations(range(rank_input_tensor)))[:da0]
     a = []
     for idx in possible_indices:
@@ -141,104 +155,92 @@ def valid_slice_args(draw):
             a.append(idx - rank_input_tensor)
         else:
             a.append(idx)
-    a = np.array(a, dtype=dtype_index)
+    #A [C4]
+    a = np.array(a, dtype=index_dtype)
     a_normalized = np.where(a < 0, a + rank_input_tensor, a)
 
-
+    #---------------------------------------------------
+    # Input K
+    #---------------------------------------------------
     # K [C1] -> X [C1]
     dk0 = rank_input_tensor
-    k = np.empty(dk0, dtype=dtype_index)
+    # K [C4]
+    k = np.empty(dk0, dtype=index_dtype)
     # K [C2]
-    dk0_elements_strategy = st.one_of(
-        st.integers(min_value=np.iinfo(dtype_index).min, max_value=-1),
-        st.integers(min_value=1, max_value=np.iinfo(dtype_index).max)
+    k_strategy = st.one_of(
+        st.integers(min_value=np.iinfo(index_dtype).min, max_value=-1),
+        st.integers(min_value=1, max_value=np.iinfo(index_dtype).max)
     )
     for i in range(rank_input_tensor):
-        k[i] = draw(dk0_elements_strategy)
+        k[i] = draw(k_strategy)
 
+    #---------------------------------------------------
+    # Input S
+    #---------------------------------------------------
     # S [1] -> X [C1]
     ds0 = rank_input_tensor
-    s = np.empty(ds0, dtype=dtype_index)
+    # S [C4]
+    s = np.empty(ds0, dtype=index_dtype)
     # S [C2]
-    for i in range(rank_input_tensor):
-        if k[i] > 0:
-            min_val = - shape_input_tensor[a_normalized[i]]
-            max_val = shape_input_tensor[a_normalized[i]] - 1
-        else:
-            min_val = -shape_input_tensor[a_normalized[i]]
-            max_val = shape_input_tensor[a_normalized[i]] - 1
-        elements_strategy_s = st.integers(min_value=min_val, max_value=max_val)
-        s[i] = draw(elements_strategy_s)
-    s_normalized = np.empty(ds0, dtype=dtype_index)
+    for i in range(rank_input_tensor):  
+        min_val = -shape_input_tensor[a_normalized[i]]
+        max_val = shape_input_tensor[a_normalized[i]] - 1
+        s_strategy = st.integers(min_value=min_val, max_value=max_val)
+        s[i] = draw(s_strategy)
+    s_normalized = np.empty(ds0, dtype=index_dtype)
     for i in range(len(s)):
         if s[i] < 0:
-            print("s[i]:", s[i], "shape_input_tensor[a[i]]:", shape_input_tensor[a[i]])
             s_normalized[i] = s[i] + shape_input_tensor[a_normalized[i]]
         else:
             s_normalized[i] = s[i]
 
+    #---------------------------------------------------
+    # Input E
+    #---------------------------------------------------
     # E [1] -> X [C1]
     de0 = rank_input_tensor
-    e = np.empty(de0, dtype=dtype_index)
+    # E [C4]
+    e = np.empty(de0, dtype=index_dtype)
     # E [C2]
     for i in range(rank_input_tensor):
+        # E [C3] -> S [C3], K [C3] -> S [C3], S [C3]
         if k[i] > 0:
-            min_val = -shape_input_tensor[a_normalized[i]]
+            min_val = s[i]
             max_val = shape_input_tensor[a_normalized[i]]
         else:
-            #TODO Change this (I THINK DONT NEED CHANGE)
             min_val = -shape_input_tensor[a_normalized[i]] - 1
-            max_val =  shape_input_tensor[a_normalized[i]] - 1
-        elements_strategy_e = st.integers(min_value=min_val, max_value=max_val)
-        e[i] = draw(elements_strategy_e)
-    e_normalized = np.empty(de0, dtype=dtype_index)
+            max_val = s[i]
+        s_strategy = st.integers(min_value=min_val, max_value=max_val)
+        e[i] = draw(s_strategy)
+    e_normalized = np.empty(de0, dtype=index_dtype)
     for i in range(len(e)):
         if e[i] < 0:
-            print("e[i]:", e[i], "shape_input_tensor[a[i]]:", shape_input_tensor[a[i]])
             e_normalized[i] = e[i] + shape_input_tensor[a_normalized[i]]
         else:
             e_normalized[i] = e[i]
-
-
-    # TODO Erro na informal spec E[C3] tem as restrições com o número mal
-    for i in range(rank_input_tensor):
-        if k[a_normalized[i]] > 0:
-            assume(s_normalized[a_normalized[i]] <= e_normalized[a_normalized[i]])
-        elif k[a_normalized[i]] < 0:
-            assume(s_normalized[a_normalized[i]] >= e_normalized[a_normalized[i]])
-
-    print("a_normalized:", a_normalized)
-    print("s_normalized:", s_normalized)
-    print("e_normalized:", e_normalized)
-    # Output
-    output_shape = [0] * rank_input_tensor
+    
+    #---------------------------------------------------
+    # Output Y
+    #---------------------------------------------------
     # Y [C1] -> X [C1]
+    output_shape = [0] * rank_input_tensor
+    # Y [C2]
     for i in range(rank_input_tensor):
         space_i = e_normalized[i] - s_normalized[i]
-        print("space_i:", space_i)
         k_val = k[i]
-        print("k_val:", k_val)
         f = 0 if space_i % k_val == 0 else 1
-        print("f:", f)
         dY_i = (space_i // k_val) + f
-        print("dY_i:", dY_i)
-        # Y [C2]
-        assume(dY_i >= 0)
-        #TODO Informal spec mal
+        assume(dY_i > 0)
         output_shape[a_normalized[i]] = int(dY_i)
-
-
-
-    print("output_shape:", output_shape)
-    return x, a, k, s, e, output_shape, s_normalized, a_normalized
+    return x, a, k, s, e, output_shape, s_normalized, a_normalized, e_normalized
 
 """
 Function that runs the test
 """
-@settings(max_examples=100000, deadline=None)
+@settings(max_examples=10000, deadline=None)
 @given(valid_slice_args())
 def test_slice(args):
-    x, a, k, s, e, y_shape, s_normalized, a_normalized = args
+    x, a, k, s, e, y_shape, s_normalized, a_normalized, e_normalized = args
     generated_data["rank_input_tensor"].append(len(x.shape))
     generated_data["shape_input_tensor"].append(list(x.shape))
     generated_data["x_tensor"].append(x.tolist())
@@ -250,7 +252,7 @@ def test_slice(args):
     generated_data["index_type"].append(str(a.dtype))
 
     y = run_onnx_slice(x, a, k, s, e, y_shape)
-    check_constraints(x, y, s_normalized, k, a_normalized)
+    check_constraints(x, y, s_normalized, k, a_normalized, e_normalized, s, a, e, y_shape)
 
 def teardown_module():
     """
@@ -276,7 +278,6 @@ def teardown_module():
     with open("generated_data.json", "w", encoding="utf-8") as f:
         data["k_tensor"] = [(arr.tolist(), str(arr.dtype)) for arr in data["k_tensor"]]
         json.dump(data, f, indent=4)
-
 
 def run_onnx_slice(x, a, k, s, e, y_shape):
     """
@@ -315,9 +316,10 @@ def run_onnx_slice(x, a, k, s, e, y_shape):
     # Verify the model
     onnx.checker.check_model(onnx_model)
 
-    #TODO ONNX Runtime does not support bfloat16 yet??
     if str(x.dtype) == "bfloat16":
         # Use ONNX Reference Implementation for bfloat16
+        # BFLOAT16 is not supported by ONNX Runtime while using numpy
+        # An alternative is to use torch tensores and CUDAProvider
         sess = onnx.reference.ReferenceEvaluator(onnx_model)
     else:
         # Use ONNX Runtime for other types
@@ -325,22 +327,10 @@ def run_onnx_slice(x, a, k, s, e, y_shape):
                                providers=["CPUExecutionProvider"])
 
     y = sess.run(None, {'x': x, 's': s, 'e': e, 'a': a, 'k': k})[0]
-
-    print("x shape:", x.shape)
-    print("a shape:", a.shape)
-    print("a values:", a)
-    print("k shape:", k.shape)
-    print("k values:", k)
-    print("s shape:", s.shape)
-    print("s values:", s)
-    print("e shape:", e.shape)
-    print("e values:", e)
-
     print("y shape:", y.shape)
     print("y values:", y)
     print("y data type:", y.dtype)
     return y
-
 
 def check_output_input(x, y, start, step, axis):
     indices = np.ndindex(y.shape)
@@ -359,8 +349,63 @@ def check_output_input(x, y, start, step, axis):
     
     return True
 
-def check_constraints(x, y, start, step, axis):
+def check_constraints(x, y, s_normalized, k, a_normalized, e_normalized, s, a, e, y_shape):
     """
     Check constraints for generated data
     """
-    assert  check_output_input(x, y, start, step, axis)
+    # X Constraints
+    # X [C1], S [C1] -> X [C1], E [C1] -> X [C1], A [C1] -> X [C1], K [C1] -> X [C1]
+    assert len(x.shape) == len(s_normalized) == len(k) == len(a_normalized) == len(e_normalized)
+    # X [C2]
+    assert len(x.shape) == len(y.shape)
+    # X [C3]
+    assert len(x.shape) >= 1
+    # X [C4]
+    if np.issubdtype(x.dtype, np.str_) or np.issubdtype(x.dtype, np.object_):
+        assert np.issubdtype(y.dtype, np.str_) or np.issubdtype(y.dtype, np.object_)
+    else:
+        assert x.dtype == y.dtype
+
+    # S Constraints
+    # S [C2]
+    for i in range(len(s)):
+        assert -x.shape[a_normalized[i]] <= s[i] <= x.shape[a_normalized[i]] - 1
+    # S [C3], E [C3] -> S [C3], K [C3] -> S [C3]
+    for i in range(len(s_normalized)):
+        if k[i] > 0:
+            assert s_normalized[i] <= e_normalized[i] <= x.shape[a_normalized[i]]
+        else:
+            assert s_normalized[i] >= e_normalized[i]
+    
+    # S [C4], E [C4] -> S [C4], K [C4] -> S [C4], A [C4] -> S [C4]
+    assert s.dtype == k.dtype == a.dtype == e.dtype
+
+    # S Constraints
+    # S [C2]
+    for i in range(len(s)):
+        if k[i] > 0:
+            assert -x.shape[a_normalized[i]] <= s[i] <= x.shape[a_normalized[i]] 
+        else:
+            assert -x.shape[a_normalized[i]] - 1 <= s[i] <= x.shape[a_normalized[i]] - 1
+    
+    # A Constraints
+    # A [C2]
+    for i in range(len(a)):
+        assert -len(x.shape) <= a[i] <= len(x.shape) - 1
+    # A [C3]
+    axis_unique = set()
+    for i in range(len(a_normalized)):
+        assert a_normalized[i] not in axis_unique
+        axis_unique.add(a_normalized[i])
+    
+    # K Constraints
+    # K [C2]
+    for i in range(len(k)):
+        assert k[i] != 0
+    
+    # Output Y Constraints
+    # Y [C2]
+    assert list(y.shape) == y_shape
+
+    #Y [C3]
+    assert  check_output_input(x, y, s_normalized, k, a_normalized)

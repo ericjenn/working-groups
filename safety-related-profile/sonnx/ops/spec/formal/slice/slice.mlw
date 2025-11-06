@@ -1,166 +1,6 @@
-(** Formalization of coordinates and dimensions *)
-
-module Range
-  use int.Int
-  use std.List
-
-  function size (ds : list int) : int =
-    match ds with
-    | Nil -> 1
-    | Cons d ds -> d * size ds
-    end
-
-  predicate positive (ds : list int) =
-    match ds with
-    | Nil -> true
-    | Cons d ds -> 0 < d /\ positive ds
-    end
-
-  predicate valid (ks ds : list int) =
-    match ks , ds with
-    | Nil , Nil -> true
-    | Cons k ks , Cons d ds -> 0 <= k < d /\ valid ks ds
-    | _ -> false
-    end
-
-  let rec lemma valid_push (ks ds : list int) (k d : int)
-    requires { 0 <= k < d }
-    requires { valid ks ds }
-    ensures { valid (push ks k) (push ds d) }
-    (*proof*)
-    variant { ks }
-    = match ks , ds with
-      | Nil , Nil -> ()
-      | Cons _ ks , Cons _ ds -> valid_push ks ds k d
-      | _ -> absurd
-      end
-    (*qed*)
-
-  let rec lemma size_append (xs ys : list int)
-    ensures { size (xs ++ ys) = size xs * size ys }
-    (*proof*)
-    variant { xs }
-    = match xs with Cons _ rxs -> size_append rxs ys | Nil -> () end
-    (*qed*)
-
-  lemma size_push: forall xs x. size (push xs x) = size xs * x
-
-  let rec lemma positive_size (ds : list int)
-    requires { positive ds }
-    ensures { 0 < size ds }
-    (*proof*)
-    variant { ds }
-    = match ds with Nil -> () | Cons _ ds -> positive_size ds end
-    (*qed*)
-
-  let rec lemma positive_valid (ks ds : list int)
-    requires { valid ks ds }
-    ensures { positive ds }
-    ensures { 0 < size ds }
-    (*proof*)
-    variant { ds }
-    = match ks , ds with
-      | Cons _ ks , Cons _ ds -> positive_valid ks ds
-      | _ -> ()
-      end
-    (*qed*)
-
-end
-
-(** Formalization of Tensor *)
-module Tensor
-  use int.Int
-  use map.Map
-  use list.List
-  use Range
-
-  type data 'a = map (list int) 'a
-
-  type tensor 'a = {
-    dims : list int ;
-    data : data 'a ;
-    background : 'a ; (* default value, or value for 0-dimensions tensor *)
-  }
-  invariant { positive dims }
-  invariant { forall k. valid k dims \/ data k = background }
-  (*proof*)
-  by let d = any 'a in { dims = Nil ; data = (fun _ -> d) ; background = d }
-  (*qed*)
-
-  meta coercion function dims
-  meta coercion function data
-
-  (** Tensor with the same dimensions *)
-  predicate (~) (a : tensor 'a) (b : tensor 'b) = a.dims = b.dims
-
-  (** Tensor with the same dimensions and background value *)
-  predicate (~=) (a : tensor 'a) (b : tensor 'a) =
-    a ~ b /\ a.background = b.background
-
-  (** Equal tensors *)
-  predicate (==) (a b : tensor 'a) =
-    a ~= b /\ forall k. valid k a.dims -> a.data k = b.data k
-
-  (** Extensionality *)
-  lemma exteq: forall a b : tensor 'a. a == b <-> a = b
-  (*proof*) by tensor'eq a b (*qed*)
-
-  (** Scalar Tensor *)
-  let ghost function scalar (v : 'a) : tensor 'a
-    ensures { result.dims = Nil }
-    ensures { result.background = v }
-    ensures { forall k. result k = v }
-    (*proof*)
-    = { dims = Nil ; data = (fun _ -> v) ; background = v }
-    (*qed*)
-
-  (** Null Tensor *)
-  let ghost function zero (e : 'a) (ds : list int) : tensor 'a
-    requires { positive ds }
-    ensures { result.dims = ds }
-    ensures { result.background = e }
-    ensures { forall k. result k = e }
-    (*proof*)
-    = { dims = ds ; data = (fun _ -> e) ; background = e }
-    (*qed*)
-
-
-  (** Constant Tensor *)
-  let ghost function const (v : 'a) (bg : 'a) (ds : list int): tensor 'a
-    ensures { result.dims = ds }
-    requires { positive ds }
-    ensures { result.background = bg }
-    ensures { forall k. valid k ds -> result k = v }
-    (*proof*)
-    = { dims = ds ; data = pure { fun k -> if valid k ds then v else bg } ; background = bg }
-    (*qed*)
-
-  (** Constant & Null *)
-  goal zero_is_const: forall e : 'a, ds. positive ds -> zero e ds == const e e ds
-
-end
-
-(** OP-Where Tensor Operation *)
-module OPWhere
-  use Tensor
-
-  let ghost function dwhere (c : data bool) (a b : data 'a) : data 'a
-    = fun ks -> if c ks then a ks else b ks
-
-  let ghost function opwhere (c : tensor bool) (a b : tensor 'a) : tensor 'a
-    requires { a ~= b }
-    requires { c ~ a ~ b }
-    ensures { result ~= a ~= b }
-    ensures { result = dwhere c a b }
-    (*proof*)
-    = { dims = c.dims ; data = dwhere c.data a.data b.data ; background = a.background }
-    (*qed*)
-
-end
-
 module OPSlice
-  use Tensor 
-  use Range
+  use tensor.Tensor 
+  use tensor.Range
   use int.Int
   use int.EuclideanDivision
   use list.List
@@ -170,10 +10,7 @@ module OPSlice
   use list.Map
   use list.Mem
 
- (*Notas*)
- (*Possivelmente remover os contratos porque a função é pura*)
- (*As pre condições podem ser necessarias. Pos podem ser removidas à partida*)
- (*MUITO IMPORTANTE: usamos um axioma para ajudar com a sobrejetividade mas isto pode ser problemático.*)
+
   function get (o: option int): int =
     match o with
       | Some v -> v
@@ -311,7 +148,7 @@ module OPSlice
   let rec ghost function dY_shape_rec (x:tensor 'a) (s e k a: tensor int) (t: list int) (i: int) : list int
     (*1D Index Tensors*)
     requires { length s.dims =  length e.dims = length k.dims = length a.dims = 1 }
-    (*X Tensor as at least 1 dimension - CHECK THIS - Se manter adicionar nos requires que estão para cima*)
+    (*X Tensor as at least 1 dimension - CHECK THIS*)
     requires { length x.dims > 0}
     (*X [C1]*)
     requires {length x.dims = size s.dims = size e.dims = size k.dims = size a.dims = length t }
@@ -370,7 +207,7 @@ module OPSlice
   let ghost function dY_shape (x : tensor 'a) (s e k a: tensor int) (t: list int) : list int 
     (*1D Index Tensors*)
     requires { length s.dims =  length e.dims = length k.dims = length a.dims = 1 }
-    (*X Tensor as at least 1 dimension - CHECK THIS - Se manter adicionar nos requires que estão para cima*)
+    (*X Tensor as at least 1 dimension*)
     requires { length x.dims > 0}
     (*X [C1]*)
     requires {length x.dims = size s.dims = size e.dims = size k.dims = size a.dims = length t }
@@ -513,7 +350,7 @@ module OPSlice
   let rec ghost function dX_coords_rec (x: tensor 'a) (coords t: list int) (s k a: tensor int) (i: int) : list int
     (*1D Index Tensors*)
     requires { length s.dims = length k.dims = length a.dims = 1 }
-    (*X Tensor as at least 1 dimension - CHECK THIS - Se manter adicionar nos requires que estão para cima*)
+    (*X Tensor as at least 1 dimension*)
     requires { length x.dims > 0}
     (*X [C1]*)
     requires {length x.dims = size s.dims = size k.dims = size a.dims }
@@ -545,7 +382,7 @@ module OPSlice
   let ghost function dX_coords (x: tensor 'a) (coords t: list int) (s k a: tensor int): list int =
     (*1D Index Tensors*)
     requires { length s.dims = length k.dims = length a.dims = 1 }
-    (*X Tensor as at least 1 dimension - CHECK THIS - Se manter adicionar nos requires que estão para cima*)
+    (*X Tensor as at least 1 dimension*)
     requires { length x.dims > 0}
     (*X [C1]*)
     requires {length x.dims = size s.dims = size k.dims = size a.dims }
@@ -566,7 +403,7 @@ module OPSlice
   let ghost function dslice (x : tensor 'a) (s k a : tensor int) (dy_shape t: list int) : data 'a
     (*1D Index Tensors*)
     requires { length s.dims = length k.dims = length a.dims = 1 }
-    (*X Tensor as at least 1 dimension - CHECK THIS - Se manter adicionar nos requires que estão para cima*)
+    (*X Tensor as at least 1 dimension*)
     requires { length x.dims > 0}
     (*X [C1]*)
     requires {length x.dims = size s.dims = size k.dims = size a.dims }
@@ -647,7 +484,7 @@ module OPSlice
                e ~ a_normalized ~ k }
     (*1D Index Tensors*)
     requires {length s.dims = length e.dims  = length k.dims = length a.dims = 1 }
-    (*X Tensor as at least 1 dimension - CHECK THIS - Se manter adicionar nos requires que estão para cima*)
+    (*X Tensor as at least 1 dimension*)
     requires { length x.dims > 0}
     (*X [C1]*)
     requires {length x.dims = size s.dims = size e.dims = size k.dims = size a.dims }
@@ -717,58 +554,4 @@ module OPSlice
       let y_shape = dY_shape x s_normalized e_normalized k a_normalized t in
 
       { dims = y_shape; data = dslice x s_normalized k a_normalized y_shape t; background = x.background}
-end
-
-module OPClip
-  use Tensor
-  use int.Int
-  use list.List
-  use Range
-  use real.Real
-  use real.MinMax
-
-
-  predicate is_scalar_tensor (t : tensor real) =
-    t.dims = Nil /\ t.data = (fun _ -> t.background)
-
-  predicate ordered_bounds (l m y: tensor real) =
-    forall ks:list int. valid ks y.dims ->
-      (l.background <= m.background ->
-         l.background <= y.data ks /\ y.data ks <= m.background)
-
-  predicate inverted_bounds (l m y: tensor real) =
-    forall ks:list int. valid ks y.dims ->
-      (l.background > m.background ->
-         y.data ks = m.background) 
-
-  let ghost function dclip (x l m : tensor real): data real
-    (*proof*)
-    = fun ks ->
-        if valid ks x.dims then
-          min m.background (max (x.data ks) l.background)
-        else x.background
-
-  let ghost function opclip (x l m : tensor real): tensor real
-    requires { is_scalar_tensor l }
-    requires { is_scalar_tensor m }
-    ensures { result ~= x }
-    ensures { ordered_bounds l m result }
-    ensures { inverted_bounds l m result }
-    (*proof*)
-    = { dims = x.dims; data = dclip x l m; background = x.background }
-    (*qed*)
-
-  goal clip_correct:
-    forall x l m: tensor real.
-      is_scalar_tensor l /\ is_scalar_tensor m ->
-      let y = opclip x l m in
-        ordered_bounds l m y /\ inverted_bounds l m y
-        (* same as *)
-        (*
-          if l.background <= m.background then
-            ordered_bounds l m y
-          else
-            inverted_bounds l m y
-        *)
-
 end

@@ -32,7 +32,7 @@ The following restrictions apply to the **slice** operator for the SONNX profile
 | `[R5]`     <a id="R5"></a>     | Shape of tensors shall be explicit          | General restriction [GR2](../general_restrictions.md#GR2) |
 | `[R6]`     <a id="R6"></a>     | Positive steps must have starting positions lower or equal than ending positions | Transient |
 | `[R7]`     <a id="R7"></a>     | Negative steps must have starting positions greater or equal than ending positions | Transient |
-| `[R8]`     <a id="R8"></a>     | For a given axis of the input tensor, $dX_i$, $S[i]$ must be less than $dX_i$    | Transient |
+| `[R8]`     <a id="R8"></a>     | For all axis of the input tensor, the start value, on tensor `S`, that represent that axis must be lower than the axis dimension   | Transient |
 
 ## Informal specification
 
@@ -40,9 +40,9 @@ The following restrictions apply to the **slice** operator for the SONNX profile
 Operator **slice** extracts from `X` a subtensor defined by the axes listed in `A`. 
 
 For each axis, `i` of the input tensor, slicing: 
-- starts at $S[i]$ 
+- starts at $S'[i]$ 
 - slides with a step of $K[i]$ 
-- stops strictly before $E[i]$
+- stops strictly before $E'[i]$
 
 The result is stored in output tensor `Y`.
 
@@ -62,19 +62,24 @@ Where:
 - $b \in [0, dY_1-1]$ is the index along the second dimension of output tensor `Y`
 - $z \in [0, dY_{r-1}-1]$ is the index along the last dimension of output tensor `Y`
 - $i \in \{0, ...\ r-1\}$ is the index of the current axis
-- $S'$ is the clamped tensor `S`. For each entry S[i]:
-  - If $S[i] < 0$, then $S'[i] = S[i] + dX_{A[i]}$
+- $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+  - If $A[i] < 0$, then $A'[i] = A[i] + r$
+
+  - Otherwise, $A'[i] = A[i]$
+- $S'$ is the clamped tensor `S`. For each entry $S[i]$:
+  - If $S[i] < 0$, then $S'[i] = S[i] + dX_{A'[i]}$
 
   - Otherwise, $S'[i] = S[i]$
-- $E'$ is the clamped tensor `E`. For each entry E[i]:
-  - If $E[i] < 0$, then $E'[i] = E[i] + dX_{A[i]}$
+- $E'$ is the clamped tensor `E`. For each entry $E[i]$:
+  - If $E[i] < 0$, then $E'[i] = E[i] + dX_{A'[i]}$
 
   - Otherwise, $E'[i] = E[i]$
 
 - $space_{i} = E'[i] - S'[i]$ is the available space along axis `i` for slicing
 - <a id="f"></a> $f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}$ 
 $\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}$
-- <a id="dY"></a> $dY_{A[i]} = \left\lfloor \frac{\text{space}_{i}}{K[i]} \right\rfloor + f$ is the dimension of the output tensor `Y` along axis `i` 
+- $t_z \in [0, r-1]$ is the index in which axis `z` is represented in tensor $A'$
+- <a id="dY"></a> $dY_{A'[i]} = \left\lfloor \frac{\text{space}_{i}}{K[i]} \right\rfloor + f$ is the dimension of the output tensor `Y` along axis `i` 
 
 \
 \
@@ -90,21 +95,21 @@ Once there are no negative values for `S` and `E`, the clamped tensors `S'` and 
 
 Finally, the following figure illustrates operator Slice applied on input `X` with the above parameters, resulting in output `Y` with shape ($4, 3$).
 
-<img src="./imgs/example.png" alt="drawing" width="100%"/>
+<img src="./assets/imgs/example.png" alt="drawing" width="100%"/>
 
 In order to understand how the shape of output `Y` is computed, the following figure illustrates the slicing process along each axis.
 
 For the horizontal axis and starting from the black square we can do two steps and the third one is incomplete. Once there is an incomplete step we have to add one ( [<b><span style="font-family: 'Courier New', monospace">f</span></b>](#f) - ensuring that the dimension is equal to the total number of steps, completed or not). In this case it is clear that the dimension should be three yet only 2 steps were completed.
 
 For the vertical axes there is no incomplete steps and the dimension is the same as the number of steps completed.
-<img src="./imgs/m_explanation.png" alt="drawing" width="100%"/>
+<img src="./assets/imgs/m_explanation.png" alt="drawing" width="100%"/>
 
 ## Error conditions
 No error condition
 
 ## Inputs
 
-### $X$: real
+### $X$: `real tensor`
 Tensor `X` is the input tensor from which a subtensor will be extracted.
 
 ### Constraints
@@ -116,8 +121,11 @@ Tensor `X` is the input tensor from which a subtensor will be extracted.
 -  `[C2]`<a id="C2ra"></a> Rank consistency
    - Statement: The rank of tensor `X` and `Y` must be the same.
    - Rationale: Slicing does not change the rank of the tensor.
+- `[C3]`<a id= "C27ra"></a> Minimum rank
+    - Statement: The rank of tensor `X` must be at least 1.
+    - Rationale: Slicing is not defined for scalars.
 
-### $S$: real
+### $S$: `integer tensor`
 Tensor `S` is a tensor containing the starting indices for each axis specified in `A`.
 
 Tensor `S` must be a 1-D tensor.
@@ -127,20 +135,24 @@ Tensor `S` must be a 1-D tensor.
    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C1]</span></b>](#C1ra) on tensor `X`.
 
 - `[C2]` <a id="C3ra"></a> Value Domain
-    - Statement: The adjusted starting indices must be clamped to valid ranges based on the stepping direction.
+    - Statement: The adjusted starting indices must be clamped to valid ranges.
 
-       $$ \forall i \in [0, r-1], \quad S[i] \in [-d{X_{A_{[i]}}}, d{X_{A_{[i]}}}-1]  $$
+       $$ \forall i \in [0, r-1], \quad S[i] \in [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}-1]  $$
         Where
         - $r$ is the rank of tensor `X`.
         - $i$ is the axis index.
+        - $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+          - If $A[i] < 0$, then $A'[i] = A[i] + r$
+
+          - Otherwise, $A'[i] = A[i]$
     - Rationale: Starting indices must be within the valid range of indices for tensor `X`, adjusted for negative indexing. Accouting for start inclusivity the maximum valid index is $dX_i - 1$. [<b><span style="font-family: 'Courier New', monospace">[R8]</span></b>](#R8)
 
 - `[C3]`<a id="C8ra"></a> Steps and starting/ending indices consistency
-   - Statement: Ensuring that output dimensions are non negative and follow this [<b><span style="font-family: 'Courier New', monospace">formula</span></b>](#dY). [<b><span style="font-family: 'Courier New', monospace">[R6]</span></b>](#R6) [<b><span style="font-family: 'Courier New', monospace">[R7]</span></b>](#R7)
+   - Statement: Ensuring that output dimensions are positive and follow this [<b><span style="font-family: 'Courier New', monospace">formula</span></b>](#dY). [<b><span style="font-family: 'Courier New', monospace">[R6]</span></b>](#R6) [<b><span style="font-family: 'Courier New', monospace">[R7]</span></b>](#R7)
 
 
          
-### $E$: real
+### $E$: `integer tensor`
 Tensor `E` is a tensor containing the ending indices (exclusive) for each axis specified in `A`.
 
 Tensor `E` must be a 1-D tensor.
@@ -155,19 +167,23 @@ Tensor `E` must be a 1-D tensor.
        \forall i \in [0, r-1], \quad
        E[i] \in 
        \begin{cases} 
-       [-d{X_{A_{[i]}}}, d{X_{A_{[i]}}}] & \text{if } K[i] > 0 \\
-       [-d{X_{A_{[i]}}}-1, d{X_{A_{[i]}}} -1] & \text{if } K[i] < 0 
+       [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}] & \text{if } K[i] > 0 \\
+       [-d{X_{A'_{[i]}}}-1, d{X_{A'_{[i]}}} -1] & \text{if } K[i] < 0 
        \end{cases}
        $$
         Where
         - $r$ is the rank of tensor `X`.
         - $i$ is the axis index.
+        - $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+          - If $A[i] < 0$, then $A'[i] = A[i] + r$
+
+          - Otherwise, $A'[i] = A[i]$
 
 - `[C3]` Steps and starting/ending indices consistency
    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C8ra) on tensor `S`. [<b><span style="font-family: 'Courier New', monospace">[R6]</span></b>](#R6) [<b><span style="font-family: 'Courier New', monospace">[R7]</span></b>](#R7)
 
 
-### $A$: real
+### $A$: `integer tensor`
 Tensor `A` is a tensor containing the axes along which to slice.
 
 Tensor `A` must be a 1-D tensor.
@@ -190,7 +206,7 @@ Tensor `A` must be a 1-D tensor.
      $$\forall i, j \in [0, r-1], \; (A[i] + r) \bmod r = ((A[j] + r) \bmod r)\implies (i = j)$$
    - Rationale: Prevents ambiguity when the same axis is specified multiple times using different representations (negative and positive).
 
-### $K$: real
+### $K$: `integer tensor`
 Tensor `K` is a tensor containing the steps for each axis specified in `A`.
 
 Tensor `K` must be a 1-D tensor.
@@ -216,7 +232,7 @@ Tensor `K` must be a 1-D tensor.
 
 ## Outputs
 
-### $Y$: real
+### $Y$: `real tensor`
 Tensor `Y` is the output tensor containing the sliced subtensor from `X`.
 ### Constraints
  - `[C1]` Rank consistency
@@ -224,22 +240,26 @@ Tensor `Y` is the output tensor containing the sliced subtensor from `X`.
 
  - `[C2]` Consistency between the shape of tensors `S`, `E`, `A`, `K`, and `Y`  
    - Statement: 
-        - $\forall i \in [0, r-1], \quad  dY_{A[i]} = \left\lfloor \frac{\text{space}_{i}}{K[i]} \right\rfloor + f \ge 0$
+        - $\forall i \in [0, r-1], \quad  dY_{A'[i]} = \left\lfloor \frac{\text{space}_{i}}{K[i]} \right\rfloor + f \gt 0$
 
    - Rationale: The size of the output tensor `Y` is determined by the slicing parameters applied to tensor `X`.
 
    Where
-      - $S'$ is the clamped tensor `S`. For each entry S[i]:
-         - If $S[i] < 0$, then $S'[i] = S[i] + dX_{A[i]}$
+    - $A'$ is the clamped tensor `A`. For each entry A[i]:
+        - If $A[i] < 0$, then $A'[i] = A[i] + r$
+
+        - Otherwise, $A'[i] = A[i]$
+    - $S'$ is the clamped tensor `S`. For each entry S[i]:
+         - If $S[i] < 0$, then $S'[i] = S[i] + dX_{A'[i]}$
 
          - Otherwise, $S'[i] = S[i]$
-      - $E'$ is the clamped tensor `E`. For each entry E[i]:
-         - If $E[i] < 0$, then $E'[i] = E[i] + dX_{A[i]}$
+    - $E'$ is the clamped tensor `E`. For each entry E[i]:
+         - If $E[i] < 0$, then $E'[i] = E[i] + dX_{A'[i]}$
 
          - Otherwise, $E'[i] = E[i]$
 
-      - $space_{i} = E'[i] - S'[i]$ is the available space along axis `i` for slicing
-      - <a id="f"></a> $f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}$ 
+    - $space_{i} = E'[i] - S'[i]$ is the available space along axis `i` for slicing
+    - <a id="f"></a> $f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}$ 
       $\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}$
  - `[C3]` Value Consistency
    - Statement: Each element in tensor `Y` must correspond to the appropriate sliced element from tensor `X` based on the slicing parameters. [<b><span style="font-family: 'Courier New', monospace">Y</span></b>](#Y)
@@ -257,8 +277,7 @@ See the Why3 specification.
 
 ## Numerical Accuracy
 
-Operator **slice** does not introduce any numerical error. Hence, for all valid indexes $i$,
-
+Operator **slice** does not introduce any numerical error. Hence, for all valid indices the output values are exactly equal to the corresponding input values.
 <a id="types"></a>
 # **slice** (type, itype, itype, itype, itype)
 
@@ -290,7 +309,7 @@ The following restrictions apply to the **slice** operator for the SONNX profile
 | `[R5]`     <a id="tR5"></a>     | Shape of tensors shall be explicit          | General restriction [GR2](../general_restrictions.md#GR2) |
 | `[R6]`     <a id="tR6"></a>     | Positive steps must have starting positions lower or equal than ending positions | Transient |
 | `[R7]`     <a id="tR7"></a>     | Negative steps must have starting positions greater or equal than ending positions | Transient |
-| `[R8]`     <a id="tR8"></a>     | For a given axis of the input tensor, $dX_i$, $S[i]$ must be less than $dX_i$    | Transient |
+| `[R8]`     <a id="R8"></a>     | For all axis of the input tensor, the start value, on tensor `S`, that represent that axis must be lower than the axis dimension   | Transient |
 | `[R9]`     <a id="tR9"></a>     | `X` and `Y` tensor must have the same type   |  General restriction [GR3](../general_restrictions.md#GR3) |
 | `[R10]`     <a id="tR10"></a>     | `A`, `S`, `E` and `K` must have the same type |  General restriction [GR3](../general_restrictions.md#GR3) |
 
@@ -300,9 +319,9 @@ The following restrictions apply to the **slice** operator for the SONNX profile
 Operator **slice** extracts from `X` a subtensor defined by the axes listed in `A`. 
 
 For each axis, `i` of the input tensor, slicing: 
-- starts at $S[i]$ 
+- starts at $S'[i]$ 
 - slides with a step of $K[i]$ 
-- stops strictly before $E[i]$
+- stops strictly before $E'[i]$
 
 The result is stored in output tensor `Y`.
 
@@ -321,20 +340,25 @@ Where:
 - $a \in [0, dY_0-1]$ is the index along the first dimension of output tensor `Y`
 - $b \in [0, dY_1-1]$ is the index along the second dimension of output tensor `Y`
 - $z \in [0, dY_{r-1}-1]$ is the index along the last dimension of output tensor `Y`
-- $i \in \{0, ...\ r-1\}$ is the index of the current axis
-- $S'$ is the clamped tensor `S`. For each entry S[i]:
-  - If $S[i] < 0$, then $S'[i] = S[i] + dX_{A[i]}$
+- $i \in \{0, ...\ r-1\}$ is the index of the current axis~
+- $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+  - If $A[i] < 0$, then $A'[i] = A[i] + r$
+
+  - Otherwise, $A'[i] = A[i]$
+- $S'$ is the clamped tensor `S`. For each entry $S[i]$:
+  - If $S[i] < 0$, then $S'[i] = S[i] + dX_{A'[i]}$
 
   - Otherwise, $S'[i] = S[i]$
-- $E'$ is the clamped tensor `E`. For each entry E[i]:
-  - If $E[i] < 0$, then $E'[i] = E[i] + dX_{A[i]}$
+- $E'$ is the clamped tensor `E`. For each entry $E[i]$:
+  - If $E[i] < 0$, then $E'[i] = E[i] + dX_{A'[i]}$
 
   - Otherwise, $E'[i] = E[i]$
 
 - $space_{i} = E'[i] - S'[i]$ is the available space along axis `i` for slicing
 - <a id="tf"></a> $f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}$ 
 $\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}$
-- <a id="tdY"></a> $dY_{A[i]} = \left\lfloor \frac{\text{space}_{i}}{K[i]} \right\rfloor + f$ is the dimension of the output tensor `Y` along axis `i` 
+- $t_z \in [0, r-1]$ is the index in which axis `z` is represented in tensor $A'$
+- <a id="tdY"></a> $dY_{A'[i]} = \left\lfloor \frac{\text{space}_{i}}{K[i]} \right\rfloor + f$ is the dimension of the output tensor `Y` along axis `i` 
 
 \
 \
@@ -350,14 +374,14 @@ Once there are no negative values for `S` and `E`, the clamped tensors `S'` and 
 
 Finally, the following figure illustrates operator Slice applied on input `X` with the above parameters, resulting in output `Y` with shape ($4, 3$).
 
-<img src="./imgs/example.png" alt="drawing" width="100%"/>
+<img src="./assets/imgs/example.png" alt="drawing" width="100%"/>
 
 In order to understand how the shape of output `Y` is computed, the following figure illustrates the slicing process along each axis.
 
 For the horizontal axis and starting from the black square we can do two steps and the third one is incomplete. Once there is an incomplete step we have to add one ( [<b><span style="font-family: 'Courier New', monospace">f</span></b>](#f) - ensuring that the dimension is equal to the total number of steps, completed or not). In this case it is clear that the dimension should be three yet only 2 steps were completed.
 
 For the vertical axes there is no incomplete steps and the dimension is the same as the number of steps completed.
-<img src="./imgs/m_explanation.png" alt="drawing" width="100%"/>
+<img src="./assets/imgs/m_explanation.png" alt="drawing" width="100%"/>
 
 ## Error conditions
 No error condition
@@ -376,7 +400,10 @@ Tensor `X` is the input tensor from which a subtensor will be extracted.
 -  `[C2]`<a id="C2ta"></a> Rank consistency
    - Statement: The rank of tensor `X` and `Y` must be the same.
    - Rationale: Slicing does not change the rank of the tensor.
-- `[C3]` <a id="C20ta"></a> Type consistency
+- `[C3]`<a id= "C27ta"></a> Minimum rank
+    - Statement: The rank of tensor `X` must be at least 1.
+    - Rationale: Slicing is not defined for scalars.
+- `[C4]` <a id="C20ta"></a> Type consistency
    - Statement: Tensors `X` and `Y` must have the same type. [<b><span style="font-family: 'Courier New', monospace">[R9]</span></b>](#tR9)
 
 ### $S$: INT32, INT64
@@ -389,12 +416,16 @@ Tensor `S` must be a 1-D tensor.
    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C1]</span></b>](#C1ta) on tensor `X`.
 
 - `[C2]` <a id="C3ta"></a> Value Domain
-    - Statement: The adjusted starting indices must be clamped to valid ranges based on the stepping direction.
+    - Statement: The adjusted starting indices must be clamped to valid ranges.
 
-       $$ \forall i \in [0, r-1], \quad S[i] \in [-d{X_i}, d{X_i}-1]  $$
+        $$ \forall i \in [0, r-1], \quad S[i] \in [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}-1]  $$
         Where
         - $r$ is the rank of tensor `X`.
         - $i$ is the axis index.
+        - $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+          - If $A[i] < 0$, then $A'[i] = A[i] + r$
+
+          - Otherwise, $A'[i] = A[i]$
     - Rationale: Starting indices must be within the valid range of indices for tensor `X`, adjusted for negative indexing. Accouting for start inclusivity the maximum valid index is $dX_i - 1$. [<b><span style="font-family: 'Courier New', monospace">[R8]</span></b>](#tR8)
 
 - `[C3]`<a id="C8ta"></a> Steps and starting/ending indices consistency
@@ -419,13 +450,17 @@ Tensor `E` must be a 1-D tensor.
        \forall i \in [0, r-1], \quad
        E[i] \in 
        \begin{cases} 
-       [-d{X_i}, d{X_i}] & \text{if } K[i] > 0 \\
-       [-d{X_i}-1, d{X_i} -1] & \text{if } K[i] < 0 
+       [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}] & \text{if } K[i] > 0 \\
+       [-d{X_{A'_{[i]}}}-1, d{X_{A'_{[i]}}} -1] & \text{if } K[i] < 0 
        \end{cases}
        $$
         Where
         - $r$ is the rank of tensor `X`.
         - $i$ is the axis index.
+        - $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+          - If $A[i] < 0$, then $A'[i] = A[i] + r$
+
+          - Otherwise, $A'[i] = A[i]$
 
 - `[C3]` Steps and starting/ending indices consistency
    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C8ta) on tensor `S`. [<b><span style="font-family: 'Courier New', monospace">[R6]</span></b>](#tR6) [<b><span style="font-family: 'Courier New', monospace">[R7]</span></b>](#tR7)
@@ -494,17 +529,21 @@ Tensor `Y` is the output tensor containing the sliced subtensor from `X`.
 
  - `[C2]` Consistency between the shape of tensors `S`, `E`, `A`, `K`, and `Y`  
    - Statement: 
-        - $\forall i \in [0, r-1], \quad  dY_{A[i]} = \left\lfloor \frac{\text{space}_{i}}{K[i]} \right\rfloor + f \ge 0$
+        - $\forall i \in [0, r-1], \quad  dY_{A'[i]} = \left\lfloor \frac{\text{space}_{i}}{K[i]} \right\rfloor + f \gt 0$
 
    - Rationale: The size of the output tensor `Y` is determined by the slicing parameters applied to tensor `X`.
 
    Where
+      - $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+        - If $A[i] < 0$, then $A'[i] = A[i] + r$
+
+        - Otherwise, $A'[i] = A[i]$
       - $S'$ is the clamped tensor `S`. For each entry S[i]:
-         - If $S[i] < 0$, then $S'[i] = S[i] + dX_{A[i]}$
+         - If $S[i] < 0$, then $S'[i] = S[i] + dX_{A'[i]}$
 
          - Otherwise, $S'[i] = S[i]$
       - $E'$ is the clamped tensor `E`. For each entry E[i]:
-         - If $E[i] < 0$, then $E'[i] = E[i] + dX_{A[i]}$
+         - If $E[i] < 0$, then $E'[i] = E[i] + dX_{A'[i]}$
 
          - Otherwise, $E'[i] = E[i]$
 
@@ -516,7 +555,7 @@ Tensor `Y` is the output tensor containing the sliced subtensor from `X`.
 
    - Rationale: Ensures that the output tensor `Y` accurately reflects the slicing operation performed on tensor `X`.
  - `[C4]` Type consistency
-   - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C20ta) on tensor `X`.
+   - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C4]</span></b>](#C20ta) on tensor `X`.
 
 
 ## Attributes
@@ -529,4 +568,4 @@ See the Why3 specification.
 
 ## Numerical Accuracy
 
-Operator **slice** does not introduce any numerical error. Hence, for all valid indexes $i$,
+Operator **slice** does not introduce any numerical error. Hence, for all valid indices the output values are exactly equal to the corresponding input values.

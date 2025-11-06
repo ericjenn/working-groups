@@ -47,14 +47,14 @@ For each axis, `i` of the input tensor, slicing:
 The result is stored in output tensor `Y`.
 
 <a id="Y"></a>
-$$
-  \begin{align*}
+```math
+\begin{align*}
 Y[a, b, \ldots, z] = X[&\text{S'}[t_0] + a \cdot \text{K}[t_0], \\
                        &\text{S'}[t_1] + b \cdot \text{K}[t_1], \\
                        &\vdots \\
                        &\text{S'}[t_{r-1}] + z \cdot \text{K}[t_{r-1}]]
 \end{align*}
-$$
+```
 
 Where:
 - $r$ is the rank of tensor `X`
@@ -76,8 +76,10 @@ Where:
   - Otherwise, $E'[i] = E[i]$
 
 - $space_{i} = E'[i] - S'[i]$ is the available space along axis `i` for slicing
-- <a id="f"></a> $f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}$ 
-$\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}$
+```math
+<a id="f"></a> f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}
+\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}
+```
 - $t_z \in [0, r-1]$ is the index in which axis `z` is represented in tensor $A'$
 - <a id="dY"></a> $dY_{A'[i]} = \left\lfloor \frac{\text{space}_{i}}{K[i]} \right\rfloor + f$ is the dimension of the output tensor `Y` along axis `i` 
 
@@ -136,16 +138,17 @@ Tensor `S` must be a 1-D tensor.
 
 - `[C2]` <a id="C3ra"></a> Value Domain
     - Statement: The adjusted starting indices must be clamped to valid ranges.
+```math
+\forall i \in [0, r-1], \quad S[i] \in [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}-1]
+```
 
-       $$ \forall i \in [0, r-1], \quad S[i] \in [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}-1]  $$
-        Where
-        - $r$ is the rank of tensor `X`.
-        - $i$ is the axis index.
-        - $A'$ is the clamped tensor `A`. For each entry $A[i]$:
-          - If $A[i] < 0$, then $A'[i] = A[i] + r$
-
-          - Otherwise, $A'[i] = A[i]$
-    - Rationale: Starting indices must be within the valid range of indices for tensor `X`, adjusted for negative indexing. Accouting for start inclusivity the maximum valid index is $dX_i - 1$. [<b><span style="font-family: 'Courier New', monospace">[R8]</span></b>](#R8)
+Where:
+- $r$ is the rank of tensor `X`.
+- $i$ is the axis index.
+- $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+    - If $A[i] < 0$, then $A'[i] = A[i] + r$
+    - Otherwise, $A'[i] = A[i]$
+- Rationale: Starting indices must be within the valid range of indices for tensor `X`, adjusted for negative indexing. Accouting for start inclusivity the maximum valid index is $dX_i - 1$. [<b><span style="font-family: 'Courier New', monospace">[R8]</span></b>](#R8)
 
 - `[C3]`<a id="C8ra"></a> Steps and starting/ending indices consistency
    - Statement: Ensuring that output dimensions are positive and follow this [<b><span style="font-family: 'Courier New', monospace">formula</span></b>](#dY). [<b><span style="font-family: 'Courier New', monospace">[R6]</span></b>](#R6) [<b><span style="font-family: 'Courier New', monospace">[R7]</span></b>](#R7)
@@ -163,21 +166,21 @@ Tensor `E` must be a 1-D tensor.
 
 - `[C2]` <a id="C4ra"></a> Value Domain
     - Statement: The adjusted ending indices must be clamped to valid ranges based on the stepping direction.
-       $$
-       \forall i \in [0, r-1], \quad
-       E[i] \in 
-       \begin{cases} 
-       [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}] & \text{if } K[i] > 0 \\
-       [-d{X_{A'_{[i]}}}-1, d{X_{A'_{[i]}}} -1] & \text{if } K[i] < 0 
-       \end{cases}
-       $$
-        Where
-        - $r$ is the rank of tensor `X`.
-        - $i$ is the axis index.
-        - $A'$ is the clamped tensor `A`. For each entry $A[i]$:
-          - If $A[i] < 0$, then $A'[i] = A[i] + r$
+```math
+\forall i \in [0, r-1], \quad
+E[i] \in 
+\begin{cases} 
+[-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}] & \text{if } K[i] > 0 \\
+[-d{X_{A'_{[i]}}}-1, d{X_{A'_{[i]}}} -1] & \text{if } K[i] < 0 
+\end{cases}
+```
+Where
+- $r$ is the rank of tensor `X`.
+- $i$ is the axis index.
+- $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+  - If $A[i] < 0$, then $A'[i] = A[i] + r$
 
-          - Otherwise, $A'[i] = A[i]$
+  - Otherwise, $A'[i] = A[i]$
 
 - `[C3]` Steps and starting/ending indices consistency
    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C8ra) on tensor `S`. [<b><span style="font-family: 'Courier New', monospace">[R6]</span></b>](#R6) [<b><span style="font-family: 'Courier New', monospace">[R7]</span></b>](#R7)
@@ -193,14 +196,14 @@ Tensor `A` must be a 1-D tensor.
 
  - `[C2]` <a id="C5ra"></a> Value Domain
    - Statement: Each axis specified in `A` must be a valid axis index for tensor `X`.
-       $$
-       \forall i \in [0, r-1], \quad
-       A[i] \in [-r, r-1]
-       $$
-        Where
-        - $r$ is the rank of tensor `X`.
-        - $i$ is the axis index.
-    - Rationale: This ensures that the slicing axes are valid for the input tensor.
+```math
+   \forall i \in [0, r-1], \quad
+   A[i] \in [-r, r-1]
+```
+Where
+- $r$ is the rank of tensor `X`.
+- $i$ is the axis index.
+- Rationale: This ensures that the slicing axes are valid for the input tensor.
  - `[C3]` <a id="C6ra"></a> Uniqueness
    - Statement: After normalizing negative indices, all axes in `A` must be unique: 
      $$\forall i, j \in [0, r-1], \; (A[i] + r) \bmod r = ((A[j] + r) \bmod r)\implies (i = j)$$
@@ -217,14 +220,14 @@ Tensor `K` must be a 1-D tensor.
 
  - `[C2]` <a id="C7ra"></a> Value Domain
    - Statement: Each step in `K` must be a valid step size for the corresponding axis in `A`.
-       $$
-       \forall i \in [0, r-1], \quad
-       K[i] \in \mathbb{Z} \setminus \{0\}
-       $$
-       Where
-       - $r$ is the rank of tensor `X`.
-       - $i$ is the axis index.
-   - Rationale: This ensures that the steps are well-defined for each axis of `X`.
+```math
+ \forall i \in [0, r-1], \quad
+ K[i] \in \mathbb{Z} \setminus \{0\}
+ ```
+Where
+  - $r$ is the rank of tensor `X`.
+  - $i$ is the axis index.
+- Rationale: This ensures that the steps are well-defined for each axis of `X`.
   
  - `[C3]` Steps and starting/ending indices consistency
    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C8ra) on tensor `S`. [<b><span style="font-family: 'Courier New', monospace">[R6]</span></b>](#R6) [<b><span style="font-family: 'Courier New', monospace">[R7]</span></b>](#R7)
@@ -259,8 +262,10 @@ Tensor `Y` is the output tensor containing the sliced subtensor from `X`.
          - Otherwise, $E'[i] = E[i]$
 
     - $space_{i} = E'[i] - S'[i]$ is the available space along axis `i` for slicing
-    - <a id="f"></a> $f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}$ 
-      $\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}$
+```math
+<a id="f"></a> f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}
+\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}
+```
  - `[C3]` Value Consistency
    - Statement: Each element in tensor `Y` must correspond to the appropriate sliced element from tensor `X` based on the slicing parameters. [<b><span style="font-family: 'Courier New', monospace">Y</span></b>](#Y)
 
@@ -326,14 +331,14 @@ For each axis, `i` of the input tensor, slicing:
 The result is stored in output tensor `Y`.
 
 <a id="tY"></a>
-$$
+```math
   \begin{align*}
 Y[a, b, \ldots, z] = X[&\text{S'}[t_0] + a \cdot \text{K}[t_0], \\
                        &\text{S'}[t_1] + b \cdot \text{K}[t_1], \\
                        &\vdots \\
                        &\text{S'}[t_{r-1}] + z \cdot \text{K}[t_{r-1}]]
 \end{align*}
-$$
+```
 
 Where:
 - $r$ is the rank of tensor `X`
@@ -355,8 +360,10 @@ Where:
   - Otherwise, $E'[i] = E[i]$
 
 - $space_{i} = E'[i] - S'[i]$ is the available space along axis `i` for slicing
-- <a id="tf"></a> $f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}$ 
-$\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}$
+```math
+<a id="tf"></a> f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}
+\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}
+```
 - $t_z \in [0, r-1]$ is the index in which axis `z` is represented in tensor $A'$
 - <a id="tdY"></a> $dY_{A'[i]} = \left\lfloor \frac{\text{space}_{i}}{K[i]} \right\rfloor + f$ is the dimension of the output tensor `Y` along axis `i` 
 
@@ -417,16 +424,17 @@ Tensor `S` must be a 1-D tensor.
 
 - `[C2]` <a id="C3ta"></a> Value Domain
     - Statement: The adjusted starting indices must be clamped to valid ranges.
+```math
+\forall i \in [0, r-1], \quad S[i] \in [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}-1]
+```
+Where
+- $r$ is the rank of tensor `X`.
+- $i$ is the axis index.
+- $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+  - If $A[i] < 0$, then $A'[i] = A[i] + r$
 
-        $$ \forall i \in [0, r-1], \quad S[i] \in [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}-1]  $$
-        Where
-        - $r$ is the rank of tensor `X`.
-        - $i$ is the axis index.
-        - $A'$ is the clamped tensor `A`. For each entry $A[i]$:
-          - If $A[i] < 0$, then $A'[i] = A[i] + r$
-
-          - Otherwise, $A'[i] = A[i]$
-    - Rationale: Starting indices must be within the valid range of indices for tensor `X`, adjusted for negative indexing. Accouting for start inclusivity the maximum valid index is $dX_i - 1$. [<b><span style="font-family: 'Courier New', monospace">[R8]</span></b>](#tR8)
+  - Otherwise, $A'[i] = A[i]$
+- Rationale: Starting indices must be within the valid range of indices for tensor `X`, adjusted for negative indexing. Accouting for start inclusivity the maximum valid index is $dX_i - 1$. [<b><span style="font-family: 'Courier New', monospace">[R8]</span></b>](#tR8)
 
 - `[C3]`<a id="C8ta"></a> Steps and starting/ending indices consistency
    - Statement: Ensuring that output dimensions are non negative and follow this [<b><span style="font-family: 'Courier New', monospace">formula</span></b>](#tdY). [<b><span style="font-family: 'Courier New', monospace">[R6]</span></b>](#tR6) [<b><span style="font-family: 'Courier New', monospace">[R7]</span></b>](#tR7)
@@ -446,21 +454,21 @@ Tensor `E` must be a 1-D tensor.
 
 - `[C2]` <a id="C4ta"></a> Value Domain
     - Statement: The adjusted ending indices must be clamped to valid ranges based on the stepping direction.
-       $$
-       \forall i \in [0, r-1], \quad
-       E[i] \in 
-       \begin{cases} 
-       [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}] & \text{if } K[i] > 0 \\
-       [-d{X_{A'_{[i]}}}-1, d{X_{A'_{[i]}}} -1] & \text{if } K[i] < 0 
-       \end{cases}
-       $$
-        Where
-        - $r$ is the rank of tensor `X`.
-        - $i$ is the axis index.
-        - $A'$ is the clamped tensor `A`. For each entry $A[i]$:
-          - If $A[i] < 0$, then $A'[i] = A[i] + r$
+ ```math
+ \forall i \in [0, r-1], \quad
+ E[i] \in 
+ \begin{cases} 
+ [-d{X_{A'_{[i]}}}, d{X_{A'_{[i]}}}] & \text{if } K[i] > 0 \\
+ [-d{X_{A'_{[i]}}}-1, d{X_{A'_{[i]}}} -1] & \text{if } K[i] < 0 
+ \end{cases}
+ ```
+Where
+- $r$ is the rank of tensor `X`.
+- $i$ is the axis index.
+- $A'$ is the clamped tensor `A`. For each entry $A[i]$:
+  - If $A[i] < 0$, then $A'[i] = A[i] + r$
 
-          - Otherwise, $A'[i] = A[i]$
+  - Otherwise, $A'[i] = A[i]$
 
 - `[C3]` Steps and starting/ending indices consistency
    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C8ta) on tensor `S`. [<b><span style="font-family: 'Courier New', monospace">[R6]</span></b>](#tR6) [<b><span style="font-family: 'Courier New', monospace">[R7]</span></b>](#tR7)
@@ -478,14 +486,14 @@ Tensor `A` must be a 1-D tensor.
 
  - `[C2]` <a id="C5ta"></a> Value Domain
    - Statement: Each axis specified in `A` must be a valid axis index for tensor `X`.
-       $$
-       \forall i \in [0, r-1], \quad
-       A[i] \in [-r, r-1]
-       $$
-        Where
-        - $r$ is the rank of tensor `X`.
-        - $i$ is the axis index.
-    - Rationale: This ensures that the slicing axes are valid for the input tensor.
+```math
+\forall i \in [0, r-1], \quad
+A[i] \in [-r, r-1]
+```
+Where
+- $r$ is the rank of tensor `X`.
+- $i$ is the axis index.
+- Rationale: This ensures that the slicing axes are valid for the input tensor.
  - `[C3]` <a id="C6ta"></a> Uniqueness
    - Statement: After normalizing negative indices, all axes in `A` must be unique: 
      $$\forall i, j \in [0, r-1], \; (A[i] + r) \bmod r = ((A[j] + r) \bmod r)\implies (i = j)$$
@@ -504,14 +512,14 @@ Tensor `K` must be a 1-D tensor.
 
  - `[C2]` <a id="C7ta"></a> Value Domain
    - Statement: Each step in `K` must be a valid step size for the corresponding axis in `A`.
-       $$
-       \forall i \in [0, r-1], \quad
-       K[i] \in \mathbb{Z} \setminus \{0\}
-       $$
-       Where
-       - $r$ is the rank of tensor `X`.
-       - $i$ is the axis index.
-   - Rationale: This ensures that the steps are well-defined for each axis of `X`.
+```math
+ \forall i \in [0, r-1], \quad
+ K[i] \in \mathbb{Z} \setminus \{0\}
+ ```
+ Where
+ - $r$ is the rank of tensor `X`.
+ - $i$ is the axis index.
+- Rationale: This ensures that the steps are well-defined for each axis of `X`.
   
  - `[C3]` Steps and starting/ending indices consistency
    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C8ta) on tensor `S`. [<b><span style="font-family: 'Courier New', monospace">[R6]</span></b>](#tR6) [<b><span style="font-family: 'Courier New', monospace">[R7]</span></b>](#tR7)
@@ -548,8 +556,10 @@ Tensor `Y` is the output tensor containing the sliced subtensor from `X`.
          - Otherwise, $E'[i] = E[i]$
 
       - $space_{i} = E'[i] - S'[i]$ is the available space along axis `i` for slicing
-      - <a id="tf"></a> $f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}$ 
-      $\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}$
+```math
+<a id="tf"></a> f = \begin{cases} 0 & \text{if}\quad (space_{i} \bmod K[i] = 0) \\ 1 & \text{otherwise} \end{cases}
+\quad \text{is a flag indicating whether there is a remainder when dividing the available space by the step size along axis i}
+```
  - `[C3]` Value Consistency
    - Statement: Each element in tensor `Y` must correspond to the appropriate sliced element from tensor `X` based on the slicing parameters. [<b><span style="font-family: 'Courier New', monospace">Y</span></b>](#tY)
 

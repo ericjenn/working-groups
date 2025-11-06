@@ -55,16 +55,18 @@ The operator supports negative indexing for `A`, `S`, and `E` parameters, with p
 ### Mathematical Normalization
 
 The normalization process converts negative indices to positive equivalents:
-
-$$\text{normalized\_index\_axis} = \begin{cases} 
+```math
+\text{normalized\_index\_axis} = \begin{cases} 
 \text{index} & \text{if } \text{index} \geq 0 \\
 \text{index} + \text{rank} & \text{if } \text{index} < 0
-\end{cases}$$
-
-$$\text{normalized\_index\_start/end} = \begin{cases} 
+\end{cases}
+```
+```math
+\text{normalized\_index\_start/end} = \begin{cases} 
 \text{index} & \text{if } \text{index} \geq 0 \\
 \text{index} + \text{dimension of the respective index} & \text{if } \text{index} < 0
-\end{cases}$$
+\end{cases}
+```
 
 ### Open Questions
 

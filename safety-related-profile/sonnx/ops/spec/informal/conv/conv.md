@@ -314,7 +314,7 @@ We note $N$, the product of the dimensions of the kernel tensor $W$.
 For every indexes $I = (b, c, m, n)$ over the axes, 
 
 $$\begin{gathered}
-    Y_{\textit{err}}^{\textit{propag}}[b, c, m, n] = \sum_{i=0}^{dW_1-1} \sum_{j=0}^{dW_2-1} \sum_{z=0}^{dW_3-1} \\ \left(X_p_{\textit{err}}[b,i,m \cdot \text{strides}[0]+ j , n \cdot \text{strides}[1]+ z ] \cdot W_d[c, i, j, z] + X_p[b,i,m \cdot \text{strides}[0]+ j , n \cdot \text{strides}[1]+ z ] \cdot W_d_{\textit{err}}[c, i, j, z]\right) \\ + B_b_{\textit{err}}[c]
+    Y_{\textit{err}}^{\textit{propag}}[b, c, m, n] = \sum_{i=0}^{dW_1-1} \sum_{j=0}^{dW_2-1} \sum_{z=0}^{dW_3-1} \\ \left({X_p}_{\textit{err}}[b,i,m \cdot \text{strides}[0]+ j , n \cdot \text{strides}[1]+ z ] \cdot W_d[c, i, j, z] + X_p[b,i,m \cdot \text{strides}[0]+ j , n \cdot \text{strides}[1]+ z ] \cdot {W_d}_{\textit{err}}[c, i, j, z]\right) \\ + {B_b}_{\textit{err}}[c]
 \end{gathered}$$
 
 ### Error introduction - floating-point IEEE-754 implementation

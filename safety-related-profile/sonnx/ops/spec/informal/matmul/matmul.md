@@ -169,12 +169,14 @@ additions for each component of the tensor result. For a hardware providing $m$ 
 floating-point mantissa, the relative error of any multiplication/addition is bound
 by $2^{-(m+1)}$. Hence, for every indexes $I = (i, j)$ over the two axes,
 
-- $\displaystyle \left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq \frac{n\times(n+1)}{2}\times
-   2^{-(m+1)}\times \max_{1 \leq k \leq n} \left(\max\left(\left|A[(i, k)] +
+- $\displaystyle \left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq
+   \left((1+\frac{u}{2})^2\times \frac{2\times\left(1+\frac{u}{2}\right)^n-1}{u} - n\right)
+   \times \max_{1 \leq k \leq n} \left(\max\left(\left|A[(i, k)] +
      A_{\textit{err}}[(i, k)]\right| \times \left| B[(k, j)] + B_{\textit{err}}[(k, j)]\right|,
      \frac{\texttt{denorm-min}}{2}\right)\right)$  
-- $\displaystyle \left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq \frac{n\times(n+1)}{2}\times
-   2^{-(m+1)}\times \max_{1 \leq k \leq n} \left(\max\left(\left|A_{\textit{float}}[(i, k)]\right|
+- $\displaystyle \left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq
+   \left((1+\frac{u}{2})^2\times \frac{2\times\left(1+\frac{u}{2}\right)^n-1}{u} - n\right)
+   \times \max_{1 \leq k \leq n} \left(\max\left(\left|A_{\textit{float}}[(i, k)]\right|
      \times \left|B_{\textit{float}}[(k, j)]\right|, \frac{\texttt{denorm-min}}{2}\right)\right)$
 
 If $A$ or $B$ are diagonal matrices, only one multiplication is performed for each component of the
@@ -182,11 +184,11 @@ tensor result. The introduced error then supports smaller bounds and for any ind
 on both axes,
 
 - $\displaystyle \left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq
-   2^{-(m+1)}\times \max\left(\left|A_{\textit{float}}[(i, i)]\right|
+   \frac{u}{2}\times \max\left(\left|A_{\textit{float}}[(i, i)]\right|
      \times \left|B_{\textit{float}}[(i, j)]\right|, \frac{\texttt{denorm-min}}{2}\right)$
   if $A$ is diagonal  
 - $\displaystyle \left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq
-   2^{-(m+1)}\times \max\left(\left|A_{\textit{float}}[(i, j)]\right|
+   \frac{u}{2}\times \max\left(\left|A_{\textit{float}}[(i, j)]\right|
      \times \left|B_{\textit{float}}[(j, j)]\right|, \frac{\texttt{denorm-min}}{2}\right)$
   if $B$ is diagonal
 

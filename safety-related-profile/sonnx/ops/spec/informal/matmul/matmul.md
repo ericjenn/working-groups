@@ -170,12 +170,12 @@ floating-point mantissa, the relative error of any multiplication/addition is bo
 by $2^{-(m+1)}$. Hence, for every indexes $I = (i, j)$ over the two axes,
 
 - $\displaystyle \left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq
-   \left((1+\frac{u}{2})^2\times \frac{2\times\left(1+\frac{u}{2}\right)^n-1}{u} - n\right)
+   \left((1+\frac{u}{2})^2\times \frac{2\times\left(1+\frac{u}{2}\right)^n-2}{u} - n\right)
    \times \max_{1 \leq k \leq n} \left(\max\left(\left|A[(i, k)] +
      A_{\textit{err}}[(i, k)]\right| \times \left| B[(k, j)] + B_{\textit{err}}[(k, j)]\right|,
      \frac{\texttt{denorm-min}}{2}\right)\right)$  
 - $\displaystyle \left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq
-   \left((1+\frac{u}{2})^2\times \frac{2\times\left(1+\frac{u}{2}\right)^n-1}{u} - n\right)
+   \left((1+\frac{u}{2})^2\times \frac{2\times\left(1+\frac{u}{2}\right)^n-2}{u} - n\right)
    \times \max_{1 \leq k \leq n} \left(\max\left(\left|A_{\textit{float}}[(i, k)]\right|
      \times \left|B_{\textit{float}}[(k, j)]\right|, \frac{\texttt{denorm-min}}{2}\right)\right)$
 

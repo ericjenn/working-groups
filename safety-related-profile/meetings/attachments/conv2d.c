@@ -75,18 +75,18 @@ void conv2D( const float* input, float* output, const float* kernel, const float
     for (size_t f = 0; f < F; f++) {
         for (size_t i = 0; i < OH; i++) {
             for (size_t j = 0; j < OW; j++) {
-            output[i * OW * F + j * F + f] = 0.0;
+                output[i * OW * F + j * F + f] = 0.0;
                 for (size_t c = 0; c < C; c++) {
                     for (size_t m = 0; m < KH; m++) {
                         for (size_t n = 0; n < KW; n++) {
                             if (0 <= i * STRIDES + m * DILATATION - PAD_LEFT && i * STRIDES + m * DILATATION - PAD_LEFT < IH && (0 <= j * STRIDES + n * DILATATION - PAD_TOP && j * STRIDES + n * DILATATION - PAD_TOP < IW)) {
-                            output[i * OW * F + j * F + f] += input[(i * STRIDES + m * DILATATION - PAD_LEFT) * IW * C + (j * STRIDES + n * DILATATION - PAD_TOP) * C + c] * kernel[m * KW * C * F + n * C * F + c * F + f];
+                                output[i * OW * F + j * F + f] += input[(i * STRIDES + m * DILATATION - PAD_LEFT) * IW * C + (j * STRIDES + n * DILATATION - PAD_TOP) * C + c] * kernel[m * KW * C * F + n * C * F + c * F + f];
                             }
                         }
                     }
                 }
                 output[i * OW * F + j * F + f] += biases[f];
-                }
+            }
         }
     }
 }

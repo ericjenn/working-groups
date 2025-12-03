@@ -1,4 +1,4 @@
-This directory contains the reviews of the **CONV2D operator** description.
+This directory contains the reviews of the **CONV2D operator** description and tests.
 
 | Id       | Who                       |
 |----------|---------------------------|

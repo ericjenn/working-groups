@@ -1,3 +1,152 @@
+
+# 2025/11/19
+## Participants
+  - Eric, Edoardo, Franck, Ricardo Silva, João Machado, Henri, Mariem, Jean-Loup, Mohammed, Jean, Andreas
+## Agenda
+- Review of actions [Eric]
+- Review process [Jean]
+- Status on broadcasting [Jean-Loup]
+- Back to the factorization of operators...
+- Fun facts
+  - The case of NaNs in Clip [Ricardo and Joao] 
+  - The case of empty tensors... [Ricardo and Joao] (see [here](https://onnx.ai/onnx/repo-docs/IR.html#tensor-definition))
+- Management of work using github's "project management" [Eric] (see [here](../sonnx/ops/docs/guidelines/lifecycle.md))
+## Minutes
+  - All the above items minus "broadcasting" and "fun facts" and (to be addressed during next meeting).
+  - Jean's slides can be found [here](./slides/2025-11-20-Jean-verification-plan.pdf)
+  - Franck's slides can be found [there](./slides/2025-11-20-Franck-numerical-accuracy.pdf)
+  - In order to involve more people, we also have to provide more guidelines. This includes (procedure + example)
+    - Guidelines on test using 
+    - Guidelines on formal specification and proof
+    - Guidelines on specifying numerical errors 
+      - Franck's slides already provide a good example 
+## Actions
+### New actions
+- [ ](1911-1, Jean) Put the contents of the [presented slides]() into some nice markdown file to be put in [guidelines area](../sonnx/ops/docs/guidelines/)
+- [ ](1911-2, All) Review Jean's proposal (see above)
+### Previous actions
+- From work session 
+  - [ ] Modify existing operator specifications to comply with new conventions.
+    - Ensure that all existing operators (and pseudo-op such as $bc$) handles tensors with null  dimensions correctly. (To be added in the guidelines.)
+  - [X] (Eric) Create a side note about "empty tensors" (To be placed in "doc"). 
+    - Not necessary: tensors (including scalar and empty tensors) are well-defined in the ONNX IR documentation ([here](https://onnx.ai/onnx/repo-docs/IR.html#tensor-definition))
+  - [X] (Mariem) Give R&J a pointer to Why3 where NaN are handled.
+  - [ ] (Mariem) Give R&J a feedback ont the formal spec (in particular: recall a few principles to be followed).
+  - [X] (Jean-loup) Separate the spec of the pseudo op broadcasting and the max operator 
+  - [X] (Eric) Provide explanations about the new way to manage modifications (using Pull Requests).
+    - See this [note](../sonnx/ops/docs/guidelines/lifecycle.md)
+  - [ ] Check the display problem with LaTeX formulae in Markdown (see $\text{Add}$)
+  - [ ] (Eric) During next meeting ask participants if they know other issues similar to those raised by empty tensors...
+- [ ] (0511-1, Joao, Ricardo) Check how to handle NaN in Why3 (if possible!)... See Mariem's link.
+- [ ] (0511-2, Jean) Provide a first draft of the document about verification. 
+- [ ] (0511-3, Eric) Give access to the SONNX github project in order to facilitate the management of the artifacts statuses.
+- [ ] (0511-4, João, Ricardo, Eric) Investigate the problem of Clip
+  - Eric :
+    > See ORT issue #15304 that was asking for the support of int32, uint32 for Clip. Solved by #15306, so ORT supports at least `uint32` and `int32`.       
+      > Seems to work on Google Collab:
+      - ![alt text](./attachments/image.png)
+  - Ricardo & João: 
+    > We found this, onnxruntime/docs/OperatorKernels.md at main · microsoft/onnxruntime. 
+    > And for CPUProvider the following types are not supported: INT16, UINT16,BFLOAT16. 
+    > We were following ONNX documentation Clip - ONNX 1.21.0 documentation and 
+    > we didn’t expect that some types are only supported by specific providers. 
+    > For example, int16 and uint16 are not supported by CPUProvider but are supported by DmlExecutionProvider.
+    > BFloat16 is said to be supported by ONNX, although we didn’t find any provider that does so.
+    > Apparently, this is no longer a doubt but we will have to check both these documentation to ensure that our provider(CPUProvider) supports the respective types. In this context the test generation will also depend on the provider being used
+
+### Past actions
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+  - A prototype tool is currently being developed. Possibly available in October (this is **not** a commitment).   
+  
+
+# 2025/11/05
+## Participants
+Jean, Eric, Mariem, Ricardo, João, Jean-Loup, Franck, Dumitru, Henri, Jean-Baptiste, Mohammed.
+
+## Agenda
+  - Review of actions [Eric]
+  - Status on repo organization [Mariem]
+  - Status on operator informal and formal specs [All]
+  - Discussion about setting up a real and clear management of item status (update the existing [table](../meetings/operator_spec_sub_wg/worksharing.md), use Github features?) [All]
+  - A few words about the integration in AIDGE? [Mariem]
+  - Meeting on graph specification [Eric]
+  - Next work session...
+  - Discussion of the overall V&V strategy [Jean] 
+## Minutes
+  - Status on repo organization: operators have been moved. Problem to generate the C code fo the where op (Loïc will have a look at this)
+  - Jean, Eric, Marie: DIV, ADD, MUL, SUB / SOFTMAX, PAD, RELU
+  - João, Ricardo: CLIP (update + hypothesis + formal: pb with NaNs),  SLICE (informal, hypothesis, formal at high level, working on the proof)
+## Actions
+### New actions
+  - [ ] (0511-1, Joao, Ricardo) Check how to handle NaN in Why3 (if possible!)... See Mariem's link.
+  - [ ] (0511-2, Jean) Provide a first draft of the document about verification. 
+  - [ ] (0511-3, Eric) Give access to the SONNX github project in order to facilitate the management of the artifacts statuses.
+  - [ ] (0511-4, João, Ricardo, Eric) Investigate the problem of Clip
+
+### Past actions
+- [X] (2210-1, Mariem) Write a "readme.md" to explain the (new) organization of the repo (for the SONXX products) 
+- [X] (2210-2, Mariem) Move all operators to the new location 
+- [X] (2210-3, Eric, Jean-Baptiste, Jean) Review Hypothesis-based test cases description from João and Ricardo (on **conv**)
+  - Eric: [Done](../documents/onnx/ops/spec/informal/conv/reviews/eric_tests.py)
+- [X] (2210-4, Eric, Jean, Mariem) Review João and Ricardo's work on the operator **clip**
+  - [Done](../documents/profile_opset/clip/reviews/jean-eric.md)
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+  - A prototype tool is currently being developed. Possibly available in October (this is **not** a commitment).   
+### Long term actions
+- [-] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  
+
+
+# 2025/10/22
+## Participants
+  Jean, Eric, Franck Védrine, Ricardo Silva, Edoardo Manino, João Machado, Hugo, Jean-Baptiste Rouffet, Mariem, Henri Belfy, Jean-Loup Farges et Nicolas Valot
+## Agenda
+  - Events
+    - Technical presentation to WG114 on Oct. 16th ([see slides](./Other_meetings/SONNX%20-%20WG114-%20oct-2025.pdf))
+    - Poster at Mobilit'AI (Toulouse)
+  - Review of actions [Eric]
+  - Status on repo organization [Mariem]
+  - Status of testing activities [João, Ricardo]
+    - How to extend this work?
+  - Other activities
+    - Local activities on operators [Eric, Jean, Mariem]
+    - Meeting on graph [Eric]
+## Minutes
+  - See agenda.
+  - Jean-Baptiste attended the Mobilit'AI conference. He met people interestied by our work. They were wondering how we will ensure compliance between the design model (e.g., Pytorch) and the exported SONNX model and between the SONNX model and its implementation for a given target... These are very good question that we do not really address in SONNX. This may be something to be done collectively on the basis of some existing, open source training and implementation framework (such as CEA's [AIDGE](https://projects.eclipse.org/projects/technology.aidge) platform.).     
+  - Eric presented the SONNX work to the WG114. There was a great interest on the numerical aspect. Providing a working example of the approach developed by Franck would be very appreciated... 
+  - Ricardo and João have completely covered operator **clip** (from informal spe to formal with proof)... That's really GREAT!!! Kudos to those extremely efficient and proactive students (and their advisers)!!! 
+  - Jean propose that Ricardo and João next operator be one common to Thales and Airbus' use cases  (e.g., **maxpool**, **relu**, etc.).
+  - Jean-Loup's working on operator **max**. He is addressing  the question of broadcasting. For the moment, the broadcasting operating may be specified for **max**. if it can be "factorized" (i.e., be expressed in such as way it can apply to other operators), we will do it later.
+  - A meeting on the graph semantics is planned on Friday. It was initially planned to address the formal specification of an ONNX graph. I (eric) propose that we shorten the meeting and address, first, the informal specification of a graph, including control flow operators (such as **loop** and **if**...). 
+## Actions
+### New actions
+- [ ] (2210-1, Mariem) Write a "readme.md" to explain the (new) organization of the repo (for the SONXX products) 
+- [ ] (2210-2, Mariem) Move all operators to the new location 
+- [ ] (2210-3, Eric, Jean-Baptiste, Jean) Review Hypothesis-based test cases description from João and Ricardo (on **conv**)
+- [ ] (2210-4, Eric, Jean-Mariem) Review João and Ricardo's work on the operator **clip**
+### Past actions
+- [X] (0810-1, all) Review  [Jean-Baptiste's document on ED324](../analyses/certification/SONNX_ED324_interest.docx)
+  - Eric comments (in the doc)
+- [X] (0810-2, all) Review  [Henri's spec of DIV](../documents/profile_opset/div/div.md)
+  - See work done with Mariem and Jean on div, mul, add...
+- [X] (0810-3, all) Review [Mariem's proposal](tbc) for a new repo 
+- [ ] (1009-1, Jean) Organize a technical discussion with DNN experts to conclude on the need of broadcasting.
+    - Among the questions to be discussed: Is broadcasting useful?  necessary? is it only a choice of model designers or does it come "naturally" during the export done by frameworks?   
+    - Waiting for Eric
+- [X] (2708-3, Mariem, Salomé) Try to apply Loïc's approach to `conv` and `concat` 
+- [ ] (0406-1, Franck) Specify numerical accuracy for the `conv` operator.
+  - First trial on something simpler than the conv (matrix multiplication).
+  - Done on the [matmul](../documents/profile_opset/matmul/matmul.md)
+  - A prototype tool is currently being developed. Possibly available in October (this is **not** a commitment).   
+### Long term actions
+- [-] (2003-3, Eric) Initiate discussion in WG about ONNX integration and propose possible solutions to ONNX (from [2023/03/19 meeting](./Other_meetings/2025-03-20-An-Er-Se-Je.md))
+  
+
 # 2025/10/08
 ## Participants
   *To be completed*

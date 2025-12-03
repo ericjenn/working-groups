@@ -224,7 +224,6 @@ tensor component for a normalized result. Hence, for every indexes $I = (i_0,i_1
 
 - $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A[I] + B[I] + A_{\textit{err}}[I] + B_{\textit{err}}[I]\right|\times \frac{u}{2}, \frac{\texttt{denorm-min}}{2}\right)$  
 - $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A_{\textit{float}}[I] + B_{\textit{float}}[I]\right|\times \frac{u}{2}, \frac{\texttt{denorm-min}}{2}\right)$  
-- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A[I] + B[I]\right|\times \frac{2^{-(m+1)}}{1 - \frac{u}{2}}, \frac{\texttt{denorm-min}}{2}\right)$
 
 ### Unit verification
 

@@ -110,41 +110,22 @@ See Why3 specification.
 
 ## Numerical Accuracy
 
+The `Add` operation should not introduce any error for type `real`: $C_{\textit{err}}^{\textit{intro}} = [0]$.
+
+A model error may nevertheless exist on the input. In such a case, it propagates on the output.
+
+### Error propagation
+
 For every indexes $I = (i_0,i_1,...,i_n)$ over the axes, 
 
 - $C_{\textit{err}}^{\textit{propag}}[I] = A_{\textit{err}}[I] + B_{\textit{err}}[I]$
 
-### Error introduction - floating-point IEEE-754 implementation
-
-The error introduced by the `Add` operator shall be bound by the semi-ulp of the addition result for every
-tensor component for a normalized result. For a hardware providing $m$ bits for floating-point mantissa, the semi-ulp
-of `1.0` is $2^{-(m+1)}$. Hence, for every indexes $I = (i_0,i_1,...,i_n)$ over the axes,
-
-- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A[I] + B[I] + A_{\textit{err}}[I] + B_{\textit{err}}[I]\right|\times 2^{-(m+1)}, \frac{\texttt{denorm-min}}{2}\right)$  
-- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A_{\textit{float}}[I] + B_{\textit{float}}[I]\right|\times 2^{-(m+1)}, \frac{\texttt{denorm-min}}{2}\right)$  
-- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A[I] + B[I]\right|\times \frac{2^{-(m+1)}}{1 - 2^{-(m+1)}}, \frac{\texttt{denorm-min}}{2}\right)$
-
-### Unit verification - floating-point IEEE-754 implementation
-
-template <typename TypeFloat>
-std::function<TypeFloat (decltype(A.indexes()))>
-  result = [&A, &B](decltype(A.indexes()) list_of_indexes)
-    { return A[list_of_indexes] + B[list_of_indexes]; }
-
-for (auto i : A.indexes()) {
-   SymbolicDomainError a = A[i];
-   SymbolicDomainError b = B[i];
-   SymbolicDomainError c = result(i);
-   assert(std::abs(c.err - a.err - b.err) <= std::max(std::abs(a.float + b.float)*(pow(2.0LD, -(m+1)))),
-        (real) std::numeric_limits<decltype(a.float)>::denorm_min() / 2.0);
-}
-
-The `Add` operation should not introduce any error: $C_{\textit{err}}^{\textit{intro}} = [0]$.
 ---
 
 <a id="float"></a>
 # $\text{Add}$ (float, float)
-where float is in {float16, float, double}
+where float is in {float16, float, double}.
+The mantissa size is respectively $m = {10, 23, 52}$, the unit in the last place is $u = 2^{-m}$.
 
 ## Signature
 
@@ -230,7 +211,37 @@ The $\text{Add}$ operator has no attribute.
 
 ## Numerical Accuracy
 
-*(To be completed)*
+### Error propagation
+
+For every indexes $I = (i_0,i_1,...,i_n)$ over the axes, 
+
+- $C_{\textit{err}}^{\textit{propag}}[I] = A_{\textit{err}}[I] + B_{\textit{err}}[I]$
+
+### Error introduction
+
+The error introduced by the `Add` operator shall be bound by the semi-ulp of the addition result for every
+tensor component for a normalized result. Hence, for every indexes $I = (i_0,i_1,...,i_n)$ over the axes,
+
+- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A[I] + B[I] + A_{\textit{err}}[I] + B_{\textit{err}}[I]\right|\times \frac{u}{2}, \frac{\texttt{denorm-min}}{2}\right)$  
+- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A_{\textit{float}}[I] + B_{\textit{float}}[I]\right|\times \frac{u}{2}, \frac{\texttt{denorm-min}}{2}\right)$  
+- $\left|C_{\textit{err}}^{\textit{intro}}[I]\right| \leq \max\left(\left|A[I] + B[I]\right|\times \frac{2^{-(m+1)}}{1 - \frac{u}{2}}, \frac{\texttt{denorm-min}}{2}\right)$
+
+### Unit verification
+
+```c++
+template <typename TypeFloat>
+std::function<TypeFloat (decltype(A.indexes()))>
+  result = [&A, &B](decltype(A.indexes()) list_of_indexes)
+    { return A[list_of_indexes] + B[list_of_indexes]; }
+
+for (auto i : A.indexes()) {
+   SymbolicDomainError a = A[i];
+   SymbolicDomainError b = B[i];
+   SymbolicDomainError c = result(i);
+   assert(std::abs(c.err - a.err - b.err) <= std::max(std::abs(a.float + b.float)*(pow(2.0LD, -(m+1)))),
+        (real) std::numeric_limits<decltype(a.float)>::denorm_min() / 2.0);
+}
+```
 
 ---
 
@@ -358,7 +369,16 @@ The $\text{Add}$ operator has no attribute.
 See Why3 specification.
 
 ## Numerical Accuracy
-*(To be completed.)*
+
+### Error propagation
+
+For every indexes $I = (i_0,i_1,...,i_n)$ over the axes, 
+
+- $C_{\textit{err}}^{\textit{propag}}[I] = A_{\textit{err}}[I] + B_{\textit{err}}[I]$
+
+### Error introduction
+
+The `Add` operation should not introduce any error for integer types: $C_{\textit{err}}^{\textit{intro}} = [0]$.
 
 
 

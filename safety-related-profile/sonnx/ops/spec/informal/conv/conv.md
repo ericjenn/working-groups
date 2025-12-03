@@ -293,3 +293,41 @@ This parameter specifies the shape of the convolution kernel `W`.
 
 *(to be completed)*
 
+## Numerical Accuracy
+
+If tensor $X_{\textit{err}}$ is the numerical error of `X`,
+tensor $W_{\textit{err}}$ is the numerical error of `W`,
+tensor $B_{\textit{err}}$ is the numerical error of `B`, let us consider
+$Y_{\textit{err}}^{\textit{propag}}$ the propagated error of `conv`
+and $Y_{\textit{err}}^{\textit{intro}}$ the introduced error of `conv`.
+Hence the numerical error of `Y`, $Y_{\textit{err}} = Y_{\textit{err}}^{\textit{propag}} + Y_{\textit{err}}^{\textit{intro}}$.
+
+We note $|X| = \max\left|X_{\textit{float}}[\ldots]\right|$ the upper bound of the absolute
+values of the coefficients of the input $X$, $|W| = \max\left|W_{\textit{float}}[\ldots]\right|$ the upper bound of the absolute
+values of the coefficients of the kernel $W$, $|B| = \max\left|B_{\textit{float}}[\ldots]\right|$ the upper bound of the absolute
+values of the coefficients of the bias $B$.
+
+We note $N$, the product of the dimensions of the kernel tensor $W$.
+ 
+### Error propagation
+
+For every indexes $I = (b, c, m, n)$ over the axes, 
+
+$$\begin{gathered}
+    Y_{\textit{err}}^{\textit{propag}}[b, c, m, n] = \sum_{i=0}^{dW_1-1} \sum_{j=0}^{dW_2-1} \sum_{z=0}^{dW_3-1} \\ \left(X_p_{\textit{err}}[b,i,m \cdot \text{strides}[0]+ j , n \cdot \text{strides}[1]+ z ] \cdot W_d[c, i, j, z] + X_p[b,i,m \cdot \text{strides}[0]+ j , n \cdot \text{strides}[1]+ z ] \cdot W_d_{\textit{err}}[c, i, j, z]\right) \\ + B_b_{\textit{err}}[c]
+\end{gathered}$$
+
+### Error introduction - floating-point IEEE-754 implementation
+
+The error introduced by the `conv` operator comes from the $N$ multiplications and $N-1$
+additions for each component of the tensor result. For a hardware providing $m$ bits for
+floating-point mantissa, the relative error of any multiplication/addition is bound
+by $\frac{u}{2} = 2^{-(m+1)}$. Hence, for every indexes $I$ over the axes,
+
+$$\begin{gathered}
+\left|Y_{\textit{err}}^{\textit{intro}}[I]\right| \leq
+   \left((1+\frac{u}{2})^2\times \frac{2\times\left(1+\frac{u}{2}\right)^N-2}{u} - N\right)
+   \times |X| \times |W| \times \left(1 + \frac{u}{2}\right) + |B|\times\frac{u}{2}
+\end{gathered}$$
+
+

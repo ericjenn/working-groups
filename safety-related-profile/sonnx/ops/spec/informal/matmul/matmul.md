@@ -234,7 +234,3 @@ for (auto indexes : Indexes(A.indexes()[0], B.indexes()[1])) {
 }
 ```
 
-### Error introduction - fixed-point implementation
-
-The error introduced by the `MatMul` operator comes from the $n$ multiplications.
-

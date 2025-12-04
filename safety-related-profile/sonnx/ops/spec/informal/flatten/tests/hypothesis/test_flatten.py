@@ -195,7 +195,7 @@ def test_flatten(args):
     x_type_key = dtype_to_key.get(x.dtype.type, str(x.dtype))
     generated_data["x_type"].append(x_type_key)
     generated_data["axis"].append(axis)
-    y = run_onnx_flatten_test(x, axis, y_shape)
+    y = run_onnx_flatten_test(x, axis, y_shape, inputs_attributes["ONNXRuntime_Provider"])
     if axis < 0:
         axis += len(x.shape)
     check_constraints(y_shape, y, x, axis)
@@ -222,7 +222,7 @@ def teardown_module():
     with open("generated_data.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
 
-def run_onnx_flatten_test(x, axis, y_shape):
+def run_onnx_flatten_test(x, axis, y_shape, provider):
     """
     Function that runs the ONNX Slice operation
     """
@@ -266,7 +266,7 @@ def run_onnx_flatten_test(x, axis, y_shape):
     else:
         # Use ONNX Runtime for other types
         sess = InferenceSession(onnx_model.SerializeToString(),
-                               providers=["CPUExecutionProvider"])
+                               providers=[provider])
         
     y = sess.run(None, {'x': x})[0]
     print("y shape:", y.shape)

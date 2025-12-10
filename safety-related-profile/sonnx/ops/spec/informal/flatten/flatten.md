@@ -37,17 +37,18 @@ Where
 - $la$ is the length of attribute `axis`
 
 - $\text{axis'}$  is the normalized $\text{axis}$ and is calculated as follows:
-   - $\forall a \in [0, la -1]. \begin{cases}
+
+$$\forall a \in [0, la -1]. \begin{cases}
       \text{axis'[a]} = \text{axis[a]} & \text{if } \text{axis[a]} \geq 0 \\
       \text{axis'[a]} = \text{axis[a]} + rX & \text{if } \text{axis[a]} < 0
-  \end{cases}$
+\end{cases}$$
 
 Flatten operation can be expressed as:
 
 <a id="Y"></a>
-$$
-Y[a, b] = X[j_0, j_1, \ldots, j_{rX-1}]
-$$
+
+$$Y[a, b] = X[j_0, j_1, \ldots, j_{rX-1}]$$
+
 
 Where:
 - $z \in [0, rX-1]$
@@ -194,17 +195,17 @@ Where
 - $la$ is the length of attribute `axis`
 
 - $\text{axis'}$  is the normalized $\text{axis}$ and is calculated as follows:
-   - $\forall a \in [0, la -1]. \begin{cases}
+
+$$\forall a \in [0, la -1]. \begin{cases}
       \text{axis'[a]} = \text{axis[a]} & \text{if } \text{axis[a]} \geq 0 \\
       \text{axis'[a]} = \text{axis[a]} + rX & \text{if } \text{axis[a]} < 0
-  \end{cases}$
+\end{cases}$$
 
 Flatten operation can be expressed as:
 
 <a id="Yt"></a>
-$$
-Y[a, b] = X[j_0, j_1, \ldots, j_{rX-1}]
-$$
+
+$$Y[a, b] = X[j_0, j_1, \ldots, j_{rX-1}]$$
 
 Where:
 - $z \in [0, rX-1]$

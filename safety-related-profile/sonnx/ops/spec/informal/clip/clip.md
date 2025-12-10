@@ -42,6 +42,7 @@ The result is stored in output tensor $Y$.
 Clip operation can be expressed as:
 
 $$\forall i,\ Y[i] = \min(M, \max(X[i], L))$$
+
 where $i$ is a [tensor index](../common/definitions.md#tensor_index).
 
 
@@ -171,6 +172,7 @@ The result is stored in output tensor $Y$.
 Clip operation can be expressed as:
 
 $$\forall i,\ Y[i] = \min(M, \max(X[i], L))$$
+
 where $i$ is a [tensor index](../common/definitions.md#tensor_index).
 
 ### Example 1
@@ -312,6 +314,7 @@ Clip operation can be divided into two steps:
 - The clipping is then performed as:
 
 $$\forall i,\ Y[i] = \min(M, \max(X[i], L))$$
+
 where $i$ is a [tensor index](../common/definitions.md#tensor_index).
 
 

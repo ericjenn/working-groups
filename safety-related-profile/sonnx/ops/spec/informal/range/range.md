@@ -28,7 +28,7 @@ Operator $\text{Range}$ creates a sequence of numbers that begins at the specifi
 $$ Y[i] = S + i \cdot D $$
 
 Where:
-- $K = \displaystyle \max \left( \, \left\lceil \frac{L - S}{D} \right\rceil , 0 \right)$
+- $K = \displaystyle \max \left( \ \left\lceil \frac{L - S}{D} \right\rceil , 0 \right)$
 
 - $i \in [0, K - 1]$
 
@@ -151,7 +151,7 @@ Operator $\text{Range}$ creates a sequence of numbers that begins at the specifi
 $$ Y[i] = S + i \cdot D $$
 
 Where:
-- $K = \displaystyle \max \left( \, \left\lceil \frac{L - S}{D} \right\rceil , 0 \right)$
+- $K = \displaystyle \max \left( \ \left\lceil \frac{L - S}{D} \right\rceil , 0 \right)$
 
 - $i \in [0, K - 1]$
 

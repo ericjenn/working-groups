@@ -195,7 +195,7 @@ Operator **Clip** limit the given input within an interval.
 
 - If $L'$ $\gt$ $M'$:
 
-  - $ Y[i] = M'$
+  - $Y[i] = M'$
 
 where $i$ is a [tensor index](../common/definitions.md#tensor_index).
 

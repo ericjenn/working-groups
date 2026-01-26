@@ -135,11 +135,11 @@ Tensor $output$ is the element-wise result of clipping $input$ by the interval $
 
 ## Formal specification
  
-See the [Why3 specification](../../formal/clip/clip.mlw).
+See the [Why3 specification](../formal/clip).
 
 ## Numerical Accuracy
 
-See the [Numerical accuracy specification](clip_na.md).
+See the [Numerical accuracy specification](/clip_na.md).
 
 <a id="int"></a>
 # **Clip** (int, int, int)
@@ -174,28 +174,30 @@ The following restrictions apply to the **Clip** operator for the SONNX profile:
 
 Operator **Clip** limit the given input within an interval.
 
-- If $L$ $\leq$ $M$:
-
-  - if $X[i]$ $\lt$ $L$ then $Y[i]$ = $L$.
-
-  - If $X[i]$ $\gt$ $M$ then $Y[i]$ = $M$.
-
-  - Otherwise, $Y[i]$ = $X[i]$.
-
-- If $L$ $\gt$ $M$:
-
-  - $ Y[i] = M$
-
-where $i$ is a [tensor index](../common/definitions.md#tensor_index).
-
-
 **Clip** operation can be divided into two steps:
 
 - If any of the boundaries is $NaN$ it is readjusted to the respetive extreme value:
 
-  - If $L$ is $NaN$, it is set to $-\infty$
+  - If $L$ is $NaN$, then $L'$ = $-\infty$
 
-  - If $M$ is $NaN$, it is set to $+\infty$
+  - If $M$ is $NaN$, then $M'$ = $+\infty$
+
+  - Otherwise, $L'$ = $L$ and $M'$ = $M$
+
+- If $L'$ $\leq$ $M'$:
+
+  - if $X[i]$ $\lt$ $L'$ then $Y[i]$ = $L'$.
+
+  - If $X[i]$ $\gt$ $M'$ then $Y[i]$ = $M'$.
+  - Otherwise, $Y[i]$ = $X[i]$.
+
+- If $L'$ $\gt$ $M'$:
+
+  - $ Y[i] = M'$
+
+where $i$ is a [tensor index](../common/definitions.md#tensor_index).
+
+
 - The clipping is then performed as:
 
 $$ Y[i] = \min(M, \max(X[i], L))$$
@@ -340,8 +342,8 @@ Tensor $output$ is the element-wise result of clipping $input$ by the interval $
 
 ## Formal specification
  
-See the [Why3 specification](../../formal/clip/clip.mlw).
+See the [Why3 specification](../formal/clip).
 
 ## Numerical Accuracy
 
-See the [Numerical accuracy specification](clip_na.md).
+See the [Numerical accuracy specification](/clip_na.md).

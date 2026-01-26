@@ -39,7 +39,7 @@ Operator **Clip** limit the given input within an interval.
 
 - If $L$ $\gt$ $M$:
 
-  - $ Y[i] = M$
+  - $Y[i] = M$
 
 where $i$ is a [tensor index](../common/definitions.md#tensor_index).
 
@@ -47,6 +47,8 @@ where $i$ is a [tensor index](../common/definitions.md#tensor_index).
 **Clip** operation can be expressed as:
 
 $$ Y[i] = \min(M, \max(X[i], L))$$
+
+
 where $i$ is a [tensor index](../common/definitions.md#tensor_index).
 
 
@@ -201,6 +203,7 @@ where $i$ is a [tensor index](../common/definitions.md#tensor_index).
 - The clipping is then performed as:
 
 $$ Y[i] = \min(M, \max(X[i], L))$$
+
 where $i$ is a [tensor index](../common/definitions.md#tensor_index).
 
 

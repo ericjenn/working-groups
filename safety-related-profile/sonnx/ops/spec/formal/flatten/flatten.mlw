@@ -202,7 +202,11 @@ module OPFlatten
                         axis
                in
                let y_shape = calculate_output_dims x.dims a_normalized in
-               forall ks. valid ks y_shape -> length ks = 2 /\ non_negative ks }
+               forall ks:list int. valid ks y_shape -> (length ks = 2 /\ non_negative ks) }
+
+    ensures { result.background = x.background }
+    ensures { forall ks:list int. valid ks result.dims -> (non_negative ks /\ length ks = 2) }
+    ensures { result.dims = calculate_output_dims x.dims (if axis < 0 then axis + length (x.dims) else axis) }
     =
     let a_normalized =
         if axis < 0 then
@@ -210,6 +214,122 @@ module OPFlatten
         else
             axis
     in
-    { dims = calculate_output_dims x.dims a_normalized; data = dflatten x a_normalized; background = x.background }
+    { dims = calculate_output_dims x.dims a_normalized; data = dflatten x a_normalized ; background = x.background }
+
+end
+
+module IndexToMulti
+
+    use tensor.Range
+    use int.Int
+    use list.List
+    use int.EuclideanDivision
+    use list.Append
+    use list.Mem
+    use list.Length
+    use layout.CFlat
+
+
+    lemma div_property:
+        forall x:int, y:int, z:int.
+            z > 0 /\ y > 0 /\
+            0 <= x < y * z -> div x z < y
+
+    let rec ghost function my_nth (n: int) (l:list int) : int
+    requires { n >= 0 /\ n < length(l) }
+    requires { length(l) > 0 }
+    variant { length(l) }
+    =
+        match l with
+        | Cons h t ->
+            if n = 0 then
+                h
+            else
+                my_nth (n-1) t
+        end
+
+    let rec ghost function index_to_multi (index:int) (dims: list int) : list int
+    requires { positive dims }
+    requires { 0 <= index < size dims }
+    ensures { length result = length dims }
+    ensures { forall i: int. 0 <= i < length result ->
+                let d = my_nth i dims in
+                let coord = my_nth i result in
+                0 <= coord < d
+            }
+    ensures { valid result dims }
+    ensures { index = offset result dims }
+    =
+    match dims with
+        | Nil -> Nil
+        | Cons d ds ->
+            let prod = size ds in
+            let coords = div index prod in
+            assert { 0 <= coords < d };
+            let new_index = mod index prod in
+            Cons coords (index_to_multi new_index ds)
+    end
+
+end
+
+
+module COPFlatten
+    use libtensor.CTensor
+    use mach.int.Int32
+    use libvector.CIndex
+    use std.Clib
+    use int.Int
+    use tensor.Tensor
+    use tensor.Range
+    use list.Length
+    use list.List
+    use IndexToMulti
+    use OPFlatten
+
+
+    let cflatten (x: ctensor) (axis: int32) (y: ctensor) = 
+    (*Information need for tensor X*)
+    requires { x.t_rank = length (tensor x).dims }
+    (*X [C1] *)
+    requires { x.t_rank >= axis }
+    (*axis [C2]*)
+    requires { -x.t_rank <= axis <= x.t_rank }
+    (*Y -- add this?*)
+    requires { y.t_rank = 2 }
+    (*Y*)
+    requires { let a_normalized = 
+                    if (Int32.to_int axis) < 0 then
+                        (Int32.to_int axis) + length (tensor x).dims
+                    else
+                        (Int32.to_int axis)
+               in
+               let y_shape = calculate_output_dims (tensor x).dims a_normalized in
+               (tensor y).dims = y_shape /\ 
+               (forall ks. valid ks y_shape -> (length ks = 2 /\ non_negative ks))
+           }
+    requires { (tensor y).background = (tensor x).background }
+
+    (* Helpers *)
+    requires { valid_tensor x }
+    requires { valid_tensor y }
+
+    (*New but obvious*)
+    requires { vdim x.t_dims x.t_rank = vdim y.t_dims y.t_rank }
+
+    ensures { tensor y == flatten (tensor x) (Int32.to_int axis) }
+
+    let m = cdim_size y.t_dims y.t_rank in
+    for i = 0 to m - 1 do 
+        invariant {
+            forall k. 0 <= k < i ->
+                value_at y.t_data k = value_at x.t_data k
+        }
+        invariant{
+            forall k. 0 <= k < i ->
+                value_at y.t_data k = (tensor y).data (index_to_multi k ((tensor y).dims))
+        }
+        y.t_data[i] <- x.t_data[i]
+    done;
+    assert { tensor y == flatten (tensor x) (Int32.to_int axis) }
 
 end

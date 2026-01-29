@@ -5,7 +5,7 @@
 <prover id="0" name="Alt-Ergo" version="2.6.2" timelimit="1" steplimit="0" memlimit="1000"/>
 <prover id="1" name="Z3" version="4.13.4" timelimit="1" steplimit="0" memlimit="1000"/>
 <prover id="2" name="CVC5" version="1.2.1" timelimit="1" steplimit="0" memlimit="1000"/>
-<file format="whyml" proved="true">
+<file format="whyml">
 <path name=".."/><path name="flatten.mlw"/>
 <theory name="OPFlatten" proved="true">
  <goal name="my_nth_non_negative&#39;vc" expl="VC for my_nth_non_negative" proved="true">
@@ -24,7 +24,7 @@
  <proof prover="1"><result status="valid" time="0.061467" steps="202088"/></proof>
  </goal>
  <goal name="calculate_output_dims&#39;vc" expl="VC for calculate_output_dims" proved="true">
- <proof prover="2"><result status="valid" time="0.444505" steps="76816"/></proof>
+ <proof prover="2"><result status="valid" time="0.619130" steps="76816"/></proof>
  </goal>
  <goal name="productRangeGo&#39;vc" expl="VC for productRangeGo" proved="true">
  <proof prover="1"><result status="valid" time="0.008880" steps="40210"/></proof>
@@ -45,7 +45,93 @@
  <proof prover="1"><result status="valid" time="0.014852" steps="53541"/></proof>
  </goal>
  <goal name="flatten&#39;vc" expl="VC for flatten" proved="true">
- <proof prover="1"><result status="valid" time="0.084276" steps="384425"/></proof>
+ <proof prover="1"><result status="valid" time="0.202075" steps="453108"/></proof>
+ </goal>
+</theory>
+<theory name="IndexToMulti" proved="true">
+ <goal name="div_property" proved="true">
+ <proof prover="1"><result status="valid" time="0.022014" steps="32407"/></proof>
+ </goal>
+ <goal name="my_nth&#39;vc" expl="VC for my_nth" proved="true">
+ <proof prover="1"><result status="valid" time="0.007786" steps="33954"/></proof>
+ </goal>
+ <goal name="index_to_multi&#39;vc" expl="VC for index_to_multi" proved="true">
+ <proof prover="1"><result status="valid" time="0.015820" steps="126183"/></proof>
+ </goal>
+</theory>
+<theory name="COPFlatten">
+ <goal name="cflatten&#39;vc" expl="VC for cflatten">
+ <proof prover="0"><result status="timeout" time="1.000000" steps="9029"/></proof>
+ <proof prover="1"><result status="timeout" time="0.768439" steps="1765862"/></proof>
+ <proof prover="2"><result status="timeout" time="1.000000"/></proof>
+ <transf name="split_vc" >
+  <goal name="cflatten&#39;vc.0" expl="precondition" proved="true">
+  <proof prover="1"><result status="valid" time="0.049670" steps="167826"/></proof>
+  </goal>
+  <goal name="cflatten&#39;vc.1" expl="integer overflow" proved="true">
+  <proof prover="1"><result status="valid" time="0.023061" steps="156184"/></proof>
+  </goal>
+  <goal name="cflatten&#39;vc.2" expl="loop invariant init" proved="true">
+  <proof prover="1"><result status="valid" time="0.007349" steps="8926"/></proof>
+  </goal>
+  <goal name="cflatten&#39;vc.3" expl="loop invariant init" proved="true">
+  <proof prover="1"><result status="valid" time="0.009086" steps="9972"/></proof>
+  </goal>
+  <goal name="cflatten&#39;vc.4" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.129396" steps="28996"/></proof>
+  </goal>
+  <goal name="cflatten&#39;vc.5" expl="precondition" proved="true">
+  <proof prover="1"><result status="valid" time="0.040765" steps="192369"/></proof>
+  </goal>
+  <goal name="cflatten&#39;vc.6" expl="precondition" proved="true">
+  <proof prover="2"><result status="valid" time="0.148440" steps="29236"/></proof>
+  </goal>
+  <goal name="cflatten&#39;vc.7" expl="loop invariant preservation" proved="true">
+  <proof prover="2"><result status="valid" time="0.120591" steps="26487"/></proof>
+  </goal>
+  <goal name="cflatten&#39;vc.8" expl="loop invariant preservation" proved="true">
+  <proof prover="2"><result status="valid" time="0.251103" steps="45697"/></proof>
+  </goal>
+  <goal name="cflatten&#39;vc.9" expl="assertion">
+  <proof prover="0"><result status="timeout" time="1.000000" steps="11064"/></proof>
+  <proof prover="1"><result status="timeout" time="1.000000" steps="2037013"/></proof>
+  <proof prover="2"><result status="timeout" time="1.000000"/></proof>
+  <transf name="split_vc" >
+   <goal name="cflatten&#39;vc.9.0" expl="assertion">
+   <proof prover="0" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="45978"/></proof>
+   <proof prover="1" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000" steps="5896719"/></proof>
+   <proof prover="2" timelimit="5" memlimit="2000"><result status="timeout" time="5.000000"/></proof>
+   <transf name="inline_goal" >
+    <goal name="cflatten&#39;vc.9.0.0" expl="assertion">
+    <transf name="split_all_full" >
+     <goal name="cflatten&#39;vc.9.0.0.0" expl="VC for cflatten" proved="true">
+     <proof prover="2"><result status="valid" time="0.199565" steps="34287"/></proof>
+     </goal>
+     <goal name="cflatten&#39;vc.9.0.0.1" expl="VC for cflatten">
+     <proof prover="0"><result status="timeout" time="1.000000" steps="12889"/></proof>
+     <proof prover="1"><result status="timeout" time="1.000000" steps="2450553"/></proof>
+     <proof prover="2"><result status="timeout" time="1.000000"/></proof>
+     <transf name="split_vc" >
+      <goal name="cflatten&#39;vc.9.0.0.1.0" expl="VC for cflatten">
+      <proof prover="0" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="1466692"/></proof>
+      <proof prover="1" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000" steps="59775400"/></proof>
+      <proof prover="2" timelimit="30" memlimit="4000"><result status="timeout" time="30.000000"/></proof>
+      </goal>
+     </transf>
+     </goal>
+    </transf>
+    </goal>
+   </transf>
+   </goal>
+  </transf>
+  </goal>
+  <goal name="cflatten&#39;vc.10" expl="postcondition" proved="true">
+  <proof prover="1"><result status="valid" time="0.007920" steps="11346"/></proof>
+  </goal>
+  <goal name="cflatten&#39;vc.11" expl="out of loop bounds" proved="true">
+  <proof prover="1"><result status="valid" time="0.036691" steps="173449"/></proof>
+  </goal>
+ </transf>
  </goal>
 </theory>
 </file>

@@ -41,6 +41,7 @@ module tensor.libtensor.CTensor
   
 end
 
+
 module tensor.std.Cint
   syntax type int      "int"
   syntax val ( .+ )    "%1 + %2"  prec 8 8 7
@@ -53,10 +54,4 @@ module tensor.std.Cint
   syntax val malloc_int32 "malloc(sizeof(int32_t) * (size_t)(%1))"
 end
 
-module tensor.libtensor.CTensorInt
-  interface export "#include <stdlib.h>"
-  interface export "#include <stdint.h>"
-  interface "#include \"cindex.h\""
-
-end
 

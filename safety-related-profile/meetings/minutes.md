@@ -19,6 +19,8 @@
   - [ ] (090926-2, Eric) Initiate a "discussion" on the question of  accuracy. Why do we need it? For what purpose? What are the alternative? What are the impact? etc. 
 ## Actions
 ### New actions
+- [ ] (090926-1, Jean) Meeting to be organized with Jean's colleagues about precision
+- [ ] (090926-2, Eric) Initiate a "discussion" on the question of  accuracy. Why do we need it? For what purpose? What are the alternative? What are the impact? etc. 
 ### Previous actions
 - [ ] (010726-1, Edoardo) Get in touch with Franck to take into account his remarks on the accuracy evaluation guidelines.
     - On 15/07: Franck has just started integrating the Edoardo's and Eric's remarks. 

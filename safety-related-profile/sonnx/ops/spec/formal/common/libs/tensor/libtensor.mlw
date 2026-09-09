@@ -18,6 +18,7 @@ module CTensor
     t_data : farray ;
   }
 
+
   function tensor_dim (t : ctensor) : list int = ivector t.t_dims t.t_rank
   function tensor_size (t : ctensor) : int = vdim t.t_dims t.t_rank
   predicate valid_index (k : list int) (t : ctensor) = valid k (tensor_dim t)
@@ -114,3 +115,4 @@ module CTensor
 
 
 end
+

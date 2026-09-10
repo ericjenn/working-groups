@@ -1,14 +1,26 @@
 # 2026/09/09
 ## Participants
-- To be completed
+- Edoardo, Franck, Jean, Mariem, Andreas, Jean-Loup, Eric
 ## Agenda 
 - "State of the Union" (Eric)
-- Presentation of Matthew Daggitt's VNN-LIB (to be confirmed)
-- USual stuff: status of Aidge integration, status of actions, etc.
+  - Where are we now?
+  - Our "roadmap"?
+- Schedule of Matthew Daggitt's presentation on VNN-LIB (Sept. 23rd, 11:00-12:00 Paris time)
+- SONNX meetup (see proposal programme [here](./attachments/2026-meet-up-proposal-programme.md))
+- Usual stuff: status of Aidge integration, status of actions, etc.
 ## Minutes  
-- To be completed
+- See status of SONNX work [here](./attachments/2026-09-09-sonnx-status.md)
+- (Jean) AI is currently defining his process to comply with ED324 ; it takes some SONNX artifacts as inputs; few questions / problems are remaining concerning replication (exact / approximate...), focus on precision (which level? against what req? what tolerance, etc.) 
+	- Edoardo: Problem of replication during the verification process ; a counterexample may be found on one impl. and not on the other... 
+	- Two issues:
+		- Specifying the precision: *What do we expect?
+		- Demonstrating that the precision is reached. 
+		- [ ] (090926-1, Jean) Meeting to be organized with Jean's colleagues about precision
+  - [ ] (090926-2, Eric) Initiate a "discussion" on the question of  accuracy. Why do we need it? For what purpose? What are the alternative? What are the impact? etc. 
 ## Actions
 ### New actions
+- [ ] (090926-1, Jean) Meeting to be organized with Jean's colleagues about precision
+- [ ] (090926-2, Eric) Initiate a "discussion" on the question of  accuracy. Why do we need it? For what purpose? What are the alternative? What are the impact? etc. 
 ### Previous actions
 - [ ] (010726-1, Edoardo) Get in touch with Franck to take into account his remarks on the accuracy evaluation guidelines.
     - On 15/07: Franck has just started integrating the Edoardo's and Eric's remarks. 

@@ -18,7 +18,9 @@ where:
 - $Y$: output tensor
 
 ## Restrictions
-The following restrictions apply to the **conv** operator for the SONNX profile:
+[General restrictions](./../common/general_restrictions.md) are applicable.
+
+The following specific restrictions apply to the **Conv** operator:
 
 | Restriction    | Statement | Origin |
 | -------- | ------- | ------- |
@@ -26,9 +28,10 @@ The following restrictions apply to the **conv** operator for the SONNX profile:
 | `R2` | Attribute $auto\\_pad$ is set to `NOTSET`  | [No default values](../../../deliverables/reqs/reqs.md#no_default_value) |
 | `R3` | Attribute $group$ is set to 1 (standard convolution) or to the number of channels of the input tensor $X$ (depthwise convolution) | Transient |
 
- ## Informal specification
-  
-Operator **conv** computes the convolution of the input tensor $X$ with the kernel $W$ and adds bias $B$ to the result. Two types of convolutions are supported: _standard convolution_ and _depthwise convolution_.
+## Informal specification
+
+<span style="background: red; color: white; font-size:0.7em;">[E_CONV_REAL_FUNC_0010]</br></span>  
+Operator **Conv** computes the convolution of the input tensor $X$ with the kernel $W$ and adds bias $B$ to the result. Two types of convolutions are supported: _standard convolution_ and _depthwise convolution_.
 
 ### Standard convolution
 A _standard convolution_ applies a kernel (also called "filter") to the input tensor, aggregating information accross both spatial axes and channels. For a given output channel, the kernel operates accross all input channels and all contributions are summed to produce the output. This corresponds to the case where attribute $group= 1$. 
@@ -49,7 +52,7 @@ Where
 - $dW_1$ is the number of feature maps of kernel $W$
 - $dW_2$ is the size of the first spatial axis of kernel $W$
 - $dW_3$ is the size of the second spatial axis of kernel $W$
-- $strides$ is an attribute of the operator. It will be described later in this section.
+- $strides$ is an attribute of the operator, described in the [Attributes](#attributes) section.
 - $X_{p} = \text{pad}(X,pads)$ is the padded version of the input tensor $X$. Function $\text{pad}$ applies zero-padding as specified by the pads attribute (see ONNX **Pad** operator).
 - $W_{d} = \text{dilation}(W,dilations)$ is the dilated version of the kernel $W$. Function $\text{dilation}$ expands the kernel by inserting spaces between its elements as specified by the dilations attribute. Its definition is given later.
 - $B_{b} = \text{broadcast}(B,(dY_0 , dY_1 , dY_2 , dY_3))$ is the broadcasted version of bias $B$.  Function $\text{broadcast}$ replicates the bias value across the spatial dimensions and batch dimension of the output $Y$. It takes as argument the bias $B$ and the shape of output $Y$. Its definition is given later.
@@ -108,42 +111,50 @@ The effect of the operator is illustrated on the following figure. In this examp
 
 <img src="./assets/imgs/conv_dep_3ch_mod2.png" alt="drawing" width="100%"/>
 
+<span style="background: red; color: white; font-size:0.7em;">[END]</br></span>
+
 ## Error conditions
 In the domain of real numbers, the operator has no error condition.
 
 ## Attributes
 
+<a id="attributes"></a>
+
 ### $\text{strides}$: list of int
 
 Attribute $strides$ determines how the kernel is applied on tensor $X$ during the convolution.
 
-For instance, with $\mbox{\texttt{stride}}[0]=3$ and $\mbox{\texttt{stride}}[1]=2$, the kernel is applied to data 2 units on right in the first spatial axis and to data 3 units down in the second spatial axis at each step of the convolution.
+For instance, with $strides[0]=3$ and $strides[1]=2$, the kernel is applied to data 3 units down in the first spatial axis and 2 units to the right in the second spatial axis at each step of the convolution.
 
 The effect of the $strides$ attribute is illustrated on the following figure. In this example, $strides=(3,2)$.
 
 <img src="./assets/imgs/conv_stride3.png" width="300" />
 
 #### Constraints
-- `[C1]` <a id="C1rattr1"></a> Value domain
+<a id="E_CONV_REAL_CONSTR_STRIDES_0010"></a>
+- `[E_CONV_REAL_CONSTR_STRIDES_0010]` Value domain
     - Statement: $strides$ is a list of strictly positive integers.
     - Rationale: Stride values represent the number of applications of the kernel in the two spatial dimensions
-- `[C2]` <a id="C2rattr1"></a> Consistency between the shape of tensors $X$, $W$, $Y$ and  attributes $pads$, $dilations$ and $strides$
-    - Statement: 
-        *  $$\left\lfloor{\frac{alpha-((dilations[0] \cdot dW_2-1)+1)}{strides[0]}} \right\rfloor +1 = dY_2 \mbox{ with }  alpha=dX_2+pads[0]+pads[2]$$
-         
-      and
-      
-       * $$\left\lfloor{\frac{beta-((dilations[1] \cdot dW_3-1)+1)}{strides[1]}} \right\rfloor +1 = dY_3  \mbox{ with } beta=dX_3+pads[1]+pads[3]$$
-    - Rationale: The size of the output is determined by the number of times the kernel can be applied on a given spatial axis.
+<a id="E_CONV_REAL_CONSTR_STRIDES_0020"></a>
+- `[E_CONV_REAL_CONSTR_STRIDES_0020]` Consistency between the shape of tensors $X$, $W$, $Y$ and attributes $pads$, $dilations$ and $strides$
+     - Statement:
+    $$\left\lfloor{\frac{\alpha-((dilations[0] \cdot dW_2-1)+1)}{strides[0]}} \right\rfloor +1 = dY_2 \text{ with } \alpha=dX_2+pads[0]+pads[2]$$
+
+    and
+
+    $$\left\lfloor{\frac{\beta-((dilations[1] \cdot dW_3-1)+1)}{strides[1]}} \right\rfloor +1 = dY_3 \text{ with } \beta=dX_3+pads[1]+pads[3]$$
+  - Rationale: The size of the output is determined by the number of times the kernel can be applied on a given spatial axis.
 
 ### $auto\\_pad$: string
 
 The $auto\\_pad$ attribute determines if and how automatic padding is done for the input tensor $X$.
 
 #### Constraints
-- `[C1]` Value domain 
+<a id="E_CONV_REAL_CONSTR_AUTOPAD_0010"></a>
+- `[E_CONV_REAL_CONSTR_AUTOPAD_0010]` Value domain
     - Statement: $auto\\_pad$ shall be in set {`NOTSET`, `VALID`, `SAME_UPPER`, `SAME_LOWER`}.
-- `[C2]` Explicit padding 
+<a id="E_CONV_REAL_CONSTR_AUTOPAD_0020"></a>
+- `[E_CONV_REAL_CONSTR_AUTOPAD_0020]` Explicit padding
     - Statement: $auto\\_pad$ shall be set to `NOTSET` `[R2]`
     - Rationale: The SONNX profile imposes explicit padding.
 
@@ -160,15 +171,17 @@ The effect of the $pads$ attribute is illustrated on the following figure. In th
 <img src="./assets/imgs/conv_pad2.png" width="300" />
 
 #### Constraints
- - `[C1]` <a id="C1rattr2"></a> Value domain
+<a id="E_CONV_REAL_CONSTR_PADS_0010"></a>
+- `[E_CONV_REAL_CONSTR_PADS_0010]` Value domain
     - Statement: $pads$ is a list of positive or null integers.
     - Rationale: A padding value gives a *number of elements* to be added to some spatial axis.
- - `[C2]` <a id="C2rattr2"></a> Consistency between the shape of $X$ and the length of $pads$
+<a id="E_CONV_REAL_CONSTR_PADS_0020"></a>
+- `[E_CONV_REAL_CONSTR_PADS_0020]` Consistency between the shape of $X$ and the length of $pads$
     - Statement: The length of the $pads$ list is two times the number of spatial axes of $X$
     - Rationale: Padding shall be given for all spatial axes, and a begining value and an end value must be given for each axis.
- - `[C3]` <a id="C3rattr2"></a> Consistency between the shape of tensors $X$, $W$, $Y$ and  attributes $pads$, $dilations$ and $strides$  
-    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C2rattr1) on attribute $strides$.
-
+<a id="E_CONV_REAL_CONSTR_PADS_0030"></a>
+- `[E_CONV_REAL_CONSTR_PADS_0030]` Consistency between the shape of tensors $X$, $W$, $Y$ and attributes $pads$, $dilations$ and $strides$
+  - Statement: see constraint [`E_CONV_REAL_CONSTR_STRIDES_0020`](#E_CONV_REAL_CONSTR_STRIDES_0020) on attribute $strides$.
 ### $\text{dilations}$: list of int
 
 Attribute $dilations$ specifies the spacing between the kernel elements for each spatial axis of the filter $W$. The ith value in the list gives the dilation factor for spatial axis $i$. If the dilation factor is greater than 1 for axis $i$, then the kernel elements are spaced out by the dilation factor for that axis. 
@@ -181,14 +194,17 @@ The effect of the $dilations$ attribute for a tensor with two spatial axes is de
 
 
 #### Constraints
- - `[C1]` <a id="C1rattr3"></a> Value domain
+<a id="E_CONV_REAL_CONSTR_DILATIONS_0010"></a>
+- `[E_CONV_REAL_CONSTR_DILATIONS_0010]` Value domain
     - Statement: $dilations$ is a list of strictly positive integers
     - Rationale: The dilation is a *factor of expansion* along a certain axis. 
- - `[C2]` <a id="C2rattr3"></a> Relation between $dilations$ and $W$ 
+<a id="E_CONV_REAL_CONSTR_DILATIONS_0020"></a>
+- `[E_CONV_REAL_CONSTR_DILATIONS_0020]` Relation between $dilations$ and $W$
     - Statement: The length of the $dilations$ list is equal to number of spatial axes of $W$.
     - Rationale: Dilation is defined for all spatial axes of $W$.
- - `[C3]` <a id="C3rattr3"></a> Consistency between the shape of tensors $X$, $W$, $Y$ and  attributes $pads$, $dilations$ and $strides$  
-    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C2rattr1) on attribute $strides$.
+<a id="E_CONV_REAL_CONSTR_DILATIONS_0030"></a>
+- `[E_CONV_REAL_CONSTR_DILATIONS_0030]` Consistency between the shape of tensors $X$, $W$, $Y$ and attributes $pads$, $dilations$ and $strides$
+  - Statement: see constraint [`E_CONV_REAL_CONSTR_STRIDES_0020`](#E_CONV_REAL_CONSTR_STRIDES_0020) on attribute $strides$.
 
 ### $\text{group}$: int 
 
@@ -203,16 +219,19 @@ The effect of the $group$ attribute for a tensor with two spatial axes is depict
 In the example, with $group$ set to 3 and an input $X$ and an output $Y$ with 3 channels, the input and output channels will be divided into 3 groups of 1 channel.
 
 #### Constraints
- - `[C1]` <a id="C1rattr4"></a> Value domain
+<a id="E_CONV_REAL_CONSTR_GROUP_0010"></a>
+- `[E_CONV_REAL_CONSTR_GROUP_0010]` Value domain
     - Statement: $group$ is a strictly positive value.
     - Rationale: $group$ represent a grouping factor. 
- - `[C2]` <a id="C2rattr3"></a> Consistency between number of channels and groups
+<a id="E_CONV_REAL_CONSTR_GROUP_0020"></a>
+- `[E_CONV_REAL_CONSTR_GROUP_0020]` Consistency between the number of channels and `group`
     - Statement: 
       - $dX1 \text{ mod}$ $group= 0$
       - $dY1 \text{ mod}$ $group= 0$
     - Rationale: Each group shall have the same number of input channels and the shall be the same number of output channels assigned to each group.
-- `[C3]` <a id="C3rattr3"></a> Support for standard and depthwise convolutions
-    - Statement: $group=1$ or $group=dX_1$ `[R3]`
+<a id="E_CONV_REAL_CONSTR_GROUP_0030"></a>
+- `[E_CONV_REAL_CONSTR_GROUP_0030]` Support for standard and depthwise convolutions
+    - Statement: $group=1$ or $group=dX_1$ [[R3]](#R3)
     - Rationale: SONNX only supports the most usual types of convolutions: standard ($group=1$) and depthwise convolutions $group=dX_1$ 
 
 ### $kernel\\_shape$: list of int
@@ -221,12 +240,14 @@ This parameter specifies the shape of the convolution kernel $W$.
 
 #### Constraints
 
-- `[C1]` <a id="C1rattr4"></a> Value domain
-    - Statement: $kernel\\_shape$ is a list of strictly positive integers
+<a id="E_CONV_REAL_CONSTR_KERNELSHAPE_0010"></a>
+- `[E_CONV_REAL_CONSTR_KERNELSHAPE_0010]` Value domain
+    - Statement:`kernel_shape` is a list of strictly positive integers
     - Rationale: A dimension is always positive and cannot be null.
-- `[C2]` <a id="C2rattr4"></a> Consistency between $W$ and $kernel\\_shape$
-    - Statement:  The size of $W$ for an axis must bve equal to the value of $kernel\\_shape$ for that axis
-   - Rationale: $kernel\\_shape$ represents the shape of $W$, where $kernel\\_shape[0] = dW_3$ and $kernel\\_shape[1] = dW_2$.
+<a id="E_CONV_REAL_CONSTR_KERNELSHAPE_0020"></a>
+- `[E_CONV_REAL_CONSTR_KERNELSHAPE_0020]` Consistency between $W$ and `kernel_shape`
+    - Statement:  The size of $W$ for an axis must bve equal to the value of `kernel_shape` for that axis
+   - Rationale: `kernel_shape` represents the shape of $W$, where $kernel\\_shape[0] = dW_3$ and $kernel\\_shape[1] = dW_2$.
 
 
 ## Inputs
@@ -242,16 +263,20 @@ The shape of tensor $X$ is $(dX_0 , dX_1 , dX_2 , dX_3)$, where
 
 #### Constraints
 
-- `[C1]` <a id="C1rx"></a> Number of spatial axes of tensor $X$
-    - Statement: The number of spatial axes of tensor $X$ is 2. `R1`
-    - Rationale: This restriction is introduced to reduce the specification effort. It matches the industrial use cases considered in the profule.
-- `[C2]` <a id="C2rx"></a> Consistency between the number of channels of $X$ and $W$
+<a id="E_CONV_REAL_CONSTR_X_0010"></a>
+- `[E_CONV_REAL_CONSTR_X_0010]` Number of spatial axes of tensor $X$
+  - Statement: The number of spatial axes of tensor $X$ is 2. [[R1]](#R1)
+  - Rationale: This restriction is introduced to reduce the specification effort. It matches the industrial use cases considered in the profule.
+<a id="E_CONV_REAL_CONSTR_X_0020"></a>
+- `[E_CONV_REAL_CONSTR_X_0020]` Consistency between the number of channels of $X$ and $W$
     - Statement:  $dW_1=\frac{dX_1}{group}$
-- `[C3]` <a id="C3rx"></a> Consistency between the shape of tensors $X$, $W$, $Y$ and attributes $pads$, $dilations$ and $strides$
-    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C2rattr1) on attribute $strides$.
-- `[C4]` <a id="C4rx"></a> Axis denotations 
-    - Statement: If axis denotation is in effect, the operation expects input data tensor to have axis denotation \[`DATA_BATCH`, `DATA_CHANNEL`, `DATA_FEATURE`, `DATA_FEATURE`\].
-    - Rationale: Denotation convention
+<a id="E_CONV_REAL_CONSTR_X_0030"></a>
+- `[E_CONV_REAL_CONSTR_X_0030]` Consistency between the shape of tensors $X$, $W$, $Y$ and attributes $pads$, $dilations$ and $strides$
+  - Statement: see constraint [`E_CONV_REAL_CONSTR_STRIDES_0020`](#E_CONV_REAL_CONSTR_STRIDES_0020) on attribute $strides$.
+<a id="E_CONV_REAL_CONSTR_X_0040"></a>
+- `[E_CONV_REAL_CONSTR_X_0040]` Axis denotations
+  - Statement: If axis denotation is in effect, the operation expects the input data tensor to have axis denotation [`DATA_BATCH`, `DATA_CHANNEL`, `DATA_FEATURE`, `DATA_FEATURE`].
+  - Rationale: Denotation convention.
 
 ### $\text{W}$: tensor of real
 
@@ -263,17 +288,25 @@ The shape of tensor $W$ is $(dW_0 , dW_1 , dW_2 , dW_3)$, where
 - $dW_2$ and $dW_3$ are the sizes of the kernel for the two spatial axes.
 
 #### Constraints
-- `[C1]` <a id="C1rw"></a> Consistency between the number of channels of $X$ and $W$
-   - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C2]</span></b>](#C2rx) on tensor $X$.
-- `[C2]` <a id="C2rw"></a> Consistency between the shape of tensors $X$, $W$, $Y$ and  attributes $pads$, $dilations$ and $strides$
-   - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C3rx) on tensor $X$.
-- `[C3]` <a id="C3rw"></a> Consistency between $W$ and $kernel\\_shape$
-   - Statement:  The size of $W$ for an axis must bve equal to the value of $kernel\\_shape$ for that axis
-   - Rationale: $kernel\\_shape$ represents the shape of $W$, where $kernel\\_shape[0] = dW_3$ and $kernel\\_shape[1] = dW_2$.
-- `[C4]` <a id="C4rw"></a> Compliance with axis denotations
-    - Statement: If axis denotation is in effect, the operation expects the weight tensor to have axis denotation \[`FILTER_OUT_CHANNEL`, `FILTER_IN_CHANNEL`, `FILTER_SPATIAL`, `FILTER_SPATIAL`\].
-- `[C5]` <a id="C5rw"></a> Consistency between output channels and group
-     - Statement: $dW_0 \mod group == 0$
+<a id="E_CONV_REAL_CONSTR_W_0010"></a>
+- `[E_CONV_REAL_CONSTR_W_0010]` Consistency between the number of channels of $X$ and $W$
+  - Statement: see constraint [`E_CONV_REAL_CONSTR_X_0020`](#E_CONV_REAL_CONSTR_X_0020) on tensor $X$.
+
+<a id="E_CONV_REAL_CONSTR_W_0020"></a>
+- `[E_CONV_REAL_CONSTR_W_0020]` Consistency between the shape of tensors $X$, $W$, $Y$ and attributes $pads$, $dilations$ and $strides$
+  - Statement: see constraint [`E_CONV_REAL_CONSTR_X_0030`](#E_CONV_REAL_CONSTR_X_0030) on tensor $X$.
+  
+<a id="E_CONV_REAL_CONSTR_W_0030"></a>
+- `[E_CONV_REAL_CONSTR_W_0030]` Consistency between $W$ and `kernel_shape`
+  - Statement: see constraint [`E_CONV_REAL_CONSTR_KERNELSHAPE_0020`](#E_CONV_REAL_CONSTR_KERNELSHAPE_0020) on attribute `kernel_shape`.
+
+<a id="E_CONV_REAL_CONSTR_W_0040"></a>
+- `[E_CONV_REAL_CONSTR_W_0040]` Axis denotations
+  - Statement: If axis denotation is in effect, the operation expects the weight tensor to have axis denotation [`FILTER_OUT_CHANNEL`, `FILTER_IN_CHANNEL`, `FILTER_SPATIAL`, `FILTER_SPATIAL`].
+
+<a id="E_CONV_REAL_CONSTR_W_0050"></a>
+- `[E_CONV_REAL_CONSTR_W_0050]` Consistency between the output channels and `group`
+  - Statement: $dW_0 \mod \text{group} = 0$
 
 ### $\text{B}$: tensor of real
 
@@ -282,7 +315,8 @@ Tensor $B$ is the bias.
 The shape of tensor $B$ is $dB_0$.
 
 #### Constraints
-- `[C1]` <a id="C1rb"></a> Consistency between the number of channels of $B$ and $W$
+<a id="E_CONV_REAL_CONSTR_B_0010"></a>
+- `[E_CONV_REAL_CONSTR_B_0010]` Consistency between the number of channels of $B$ and $W$
     - Statement:  $dB_0 = dW_0$.
 
 
@@ -296,8 +330,9 @@ The size of the output $Y$ will be $(dY_0 , dY_1 , dY_2 , dY_3)$ where
 - $dY_2$ and $dY_3$ are the sizes of the output for the two spatial axes
 
 #### Constraints.
-- `[C1]` <a id="C1ry"></a> Consistency between the shape of tensors $X$, $W$, $Y$, attributes $pads$ and  $strides$
-    - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C3rx) on tensor $X$.
+<a id="E_CONV_REAL_CONSTR_Y_0010"></a>
+- `[E_CONV_REAL_CONSTR_Y_0010]` Consistency between the shape of tensors $X$, $W$, $Y$ and attributes $pads$, $dilations$ and $strides$
+  - Statement: see constraint [`E_CONV_REAL_CONSTR_X_0030`](#E_CONV_REAL_CONSTR_X_0030) on tensor $X$.
 
 ## Formal specification
 
@@ -321,25 +356,26 @@ where:
 
 ## Restrictions
 
-See the restrictions defined in the real-number specification.
+See the restrictions defined in the [real-number specification](#real).
 
 ## Informal specification
 
+<span style="background: red; color: white; font-size:0.7em;">[E_CONV_FLOAT_FUNC_0010]</br></span>
 Operator **Conv** computes the convolution of the input tensor $X$ with the kernel $W$ and adds bias $B$ to produce output tensor $Y$.
 
 The computation follows IEEE754 floating-point arithmetic. Consequently, floating-point rounding, overflow, underflow, infinities and NaN values follow IEEE754 semantics.
 
-Apart from the IEEE754 floating-point semantics, the behaviour of the operator is identical to the real-number specification.
+Apart from the IEEE754 floating-point semantics, the behaviour of the operator is identical to the [real-number specification](#real).
 
-
+<span style="background: red; color: white; font-size:0.7em;">[END]</br></span>
 
 ## Error conditions
 
-Floating-point computations follow IEEE754 semantics.
+Floating-point computations follow IEEE 754 semantics.
 
 - If one or more operands contain NaN, the corresponding output values may be NaN.
-- Overflow may produce `+inf` or `-inf`.
-- Underflow may produce subnormal values or signed zero.
+- Overflow may produce $+inf$ or $-inf$.
+- Underflow may produce subnormal values or a signed zero.
 
 ## Attributes
 
@@ -353,10 +389,12 @@ Tensor $X$ is the input tensor on which convolution with kernel $W$ is computed.
 
 #### Constraints
 
-- `[C1]` <a id="C1fx"></a> Shape consistency
-  - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C3]</span></b>](#C3rx) on tensor $X$ in the real section.
-- `[C2]` <a id="C2fx"></a> Type consistency
-  - Statement: Tensors $X$, $W$, $B$ when present, and $Y$ shall have the same floating-point type.
+<a id="E_CONV_FLOAT_CONSTR_X_0010"></a>
+- `[E_CONV_FLOAT_CONSTR_X_0010]` Shape consistency
+  - Statement: see constraint [`E_CONV_REAL_CONSTR_X_0030`](#E_CONV_REAL_CONSTR_X_0030) on tensor $X$ in the real-number section.
+<a id="E_CONV_FLOAT_CONSTR_X_0020"></a>
+- `[E_CONV_FLOAT_CONSTR_X_0020]` Type consistency
+  - Statement: Tensors $X$, $W$, $B$ (when present), and $Y$ shall have the same floating-point type.
 
 ### $\text{W}$: floating-point tensor
 
@@ -364,10 +402,13 @@ Tensor $W$ is the convolution kernel.
 
 #### Constraints
 
-- `[C1]` <a id="C1fw"></a> Shape consistency
-  - Statement: see constraints [<b><span style="font-family: 'Courier New', monospace">C1</span></b>](#C1rw), [<b><span style="font-family: 'Courier New', monospace">C2</span></b>](#C2rw), [<b><span style="font-family: 'Courier New', monospace">C3</span></b>](#C3rw), [<b><span style="font-family: 'Courier New', monospace">C4</span></b>](#C4rw) and [<b><span style="font-family: 'Courier New', monospace">C5</span></b>](#C5rw) on tensor $W$.
-- `[C2]` <a id="C2fw"></a> Type consistency
-  - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C2]</span></b>](#C2fx) on tensor $X$.
+<a id="E_CONV_FLOAT_CONSTR_W_0010"></a>
+- `[E_CONV_FLOAT_CONSTR_W_0010]` Shape consistency
+  - Statement: see constraints [`E_CONV_REAL_CONSTR_W_0010`](#E_CONV_REAL_CONSTR_W_0010), [`E_CONV_REAL_CONSTR_W_0020`](#E_CONV_REAL_CONSTR_W_0020), [`E_CONV_REAL_CONSTR_W_0030`](#E_CONV_REAL_CONSTR_W_0030), [`E_CONV_REAL_CONSTR_W_0040`](#E_CONV_REAL_CONSTR_W_0040) and [`E_CONV_REAL_CONSTR_W_0050`](#E_CONV_REAL_CONSTR_W_0050) on tensor $W$ in the real-number section.
+
+<a id="E_CONV_FLOAT_CONSTR_W_0020"></a>
+- `[E_CONV_FLOAT_CONSTR_W_0020]` Type consistency
+  - Statement: see constraint [`E_CONV_FLOAT_CONSTR_X_0020`](#E_CONV_FLOAT_CONSTR_X_0020) on tensor $X$.
 
 ### $\text{B}$: floating-point tensor
 
@@ -375,10 +416,13 @@ Tensor $B$ is the optional bias.
 
 #### Constraints
 
-- `[C1]` <a id="C1fb"></a> Shape consistency
-  - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">C1</span></b>](#C1rb) on tensor $B$.
-- `[C2]` <a id="C2fb"></a> Type consistency
-  - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C2]</span></b>](#C2fx) on tensor $X$.
+<a id="E_CONV_FLOAT_CONSTR_B_0010"></a>
+- `[E_CONV_FLOAT_CONSTR_B_0010]` Shape consistency
+  - Statement: see constraint [`E_CONV_REAL_CONSTR_B_0010`](#E_CONV_REAL_CONSTR_B_0010) on tensor $B$ in the real-number section.
+
+<a id="E_CONV_FLOAT_CONSTR_B_0020"></a>
+- `[E_CONV_FLOAT_CONSTR_B_0020]` Type consistency
+  - Statement: see constraint [`E_CONV_FLOAT_CONSTR_X_0020`](#E_CONV_FLOAT_CONSTR_X_0020) on tensor $X$.
 
 ## Outputs
 
@@ -388,10 +432,13 @@ Tensor $Y$ is the output tensor of the convolution.
 
 #### Constraints
 
-- `[C1]` <a id="C1fy"></a> Shape consistency
-  - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">C1</span></b>](#C1ry) on tensor $Y$.
-- `[C2]` <a id="C2fy"></a> Type consistency
-  - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">[C2]</span></b>](#C2fx) on tensor $X$.
+<a id="E_CONV_FLOAT_CONSTR_Y_0010"></a>
+- `[E_CONV_FLOAT_CONSTR_Y_0010]` Shape consistency
+  - Statement: see constraint [`E_CONV_REAL_CONSTR_Y_0010`](#E_CONV_REAL_CONSTR_Y_0010) on tensor $Y$ in the real-number section.
+
+<a id="E_CONV_FLOAT_CONSTR_Y_0020"></a>
+- `[E_CONV_FLOAT_CONSTR_Y_0020]` Type consistency
+  - Statement: see constraint [`E_CONV_FLOAT_CONSTR_X_0020`](#E_CONV_FLOAT_CONSTR_X_0020) on tensor $X$.
 
 ## Formal specification
 

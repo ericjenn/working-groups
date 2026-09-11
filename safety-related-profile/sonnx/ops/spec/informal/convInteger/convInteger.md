@@ -121,7 +121,37 @@ W_d[c,0,j,z]-W_0[c]
 \right)
 $$
 
+### Example : standard convolution, single channel
+In this example
+- shape of $X$ is $(1,1,3,3)$, type `int8`
+- shape of $W$ is $(1,1,2,2)$, type `int8`
+- `x_zero_point` $=1$ (scalar, type `int8`)
+- `w_zero_point` $=1$ (scalar, type `int8`)
+- $pads=(0,0,0,0)$, $dilations=(1,1)$, $strides=(1,1)$, $group=1$
 
+$$
+X[0,0] = \begin{bmatrix} 2 & 4 & 6 \\ 8 & 10 & 12 \\ 14 & 16 & 18 \end{bmatrix}
+\qquad
+W[0,0] = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}
+$$
+
+Since $pads=(0,0,0,0)$, $X_p=X$; since $dilations=(1,1)$, $W_d=W$. With $group=1$, $dW_1=dX_1=1$, so the general formula reduces, for each output position $(m,n)$, to a single term $i=0$:
+
+$$
+Y[0,0,m,n] = \sum_{j=0}^{1}\sum_{z=0}^{1} \big(X[0,0,m+j,n+z]-1\big)\cdot\big(W[0,0,j,z]-1\big)
+$$
+
+The output shape is $dY_2=dY_3=\left\lfloor\dfrac{3-2}{1}\right\rfloor+1=2$, so $Y[0,0]$ has shape $(2,2)$.
+
+For instance, for $(m,n)=(0,0)$, the $2\times2$ patch of $X$ is $\begin{bmatrix}2&4\\8&10\end{bmatrix}$; subtracting `x_zero_point` gives $\begin{bmatrix}1&3\\7&9\end{bmatrix}$, and subtracting `w_zero_point` from $W$ gives $\begin{bmatrix}0&-1\\-1&0\end{bmatrix}$, so $Y[0,0,0,0]=1\cdot0+3\cdot(-1)+7\cdot(-1)+9\cdot0=-10$.
+
+Applying the same computation to the three remaining output positions gives:
+
+$$
+Y[0,0] = \begin{bmatrix} -10 & -14 \\ -22 & -26 \end{bmatrix}
+$$
+
+Tensor $Y$ has shape $(1,1,2,2)$ and type `int32`.
 ## Error conditions
 No error condition.
 
@@ -137,10 +167,12 @@ When `auto_pad` is `NOTSET`, explicit padding is specified by `pads`. In the SON
 
 #### Constraints
 
-- <a id="E_CONVINTEGER_INT_CONSTR_AUTOPAD_0010"></a> Value domain
+<a id="E_CONVINTEGER_INT_CONSTR_AUTOPAD_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_AUTOPAD_0010]` Value domain
   - Statement: `auto_pad` shall be in the set {`NOTSET`, `VALID`, `SAME_UPPER`, `SAME_LOWER`}.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_AUTOPAD_0020"></a> Explicit padding
+<a id="E_CONVINTEGER_INT_CONSTR_AUTOPAD_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_AUTOPAD_0020]` Explicit padding
   - Statement: `auto_pad` shall be set to `NOTSET` `[R2]`.
   - Rationale: The SONNX profile imposes explicit padding.
 
@@ -152,15 +184,18 @@ A dilation value of 1 means that consecutive kernel elements are adjacent. A val
 
 #### Constraints
 
-- <a id="E_CONVINTEGER_INT_CONSTR_DILATION_0010"></a> Value domain
+<a id="E_CONVINTEGER_INT_CONSTR_DILATIONS_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_DILATIONS_0010]` Value domain
   - Statement: `dilations` is a list of strictly positive integers.
   - Rationale: A dilation is a positive expansion factor.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_DILATION_0020"></a> Relation with $W$
+<a id="E_CONVINTEGER_INT_CONSTR_DILATIONS_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_DILATIONS_0020]` Relation with $W$
   - Statement: The length of `dilations` is equal to the number of spatial axes of $W$.
   - Rationale: A dilation factor is specified for every spatial axis of the kernel.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_DILATION_0030"></a> Consistency between $X$, $W$, $Y$, `pads`, `dilations` and `strides`
+<a id="E_CONVINTEGER_INT_CONSTR_DILATIONS_0030"></a>
+- `[E_CONVINTEGER_INT_CONSTR_DILATIONS_0030]` Consistency between $X$, $W$, $Y$, `pads`, `dilations` and `strides`
   - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">E_CONVINTEGER_INT_CONSTR_STRIDES_0020</span></b>](#E_CONVINTEGER_INT_CONSTR_STRIDES_0020) on attribute `strides`.
 
 ### `group`: int
@@ -171,17 +206,20 @@ When `group = 1`, a standard convolution is performed. When `group = dX_1`, a de
 
 #### Constraints
 
-- <a id="E_CONVINTEGER_INT_CONSTR_GROUP_0010"></a> Value domain
+<a id="E_CONVINTEGER_INT_CONSTR_GROUP_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_GROUP_0010]` Value domain
   - Statement: `group` is a strictly positive integer.
   - Rationale: `group` represents the number of channel groups.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_GROUP_0020"></a> Consistency between channels and groups
+<a id="E_CONVINTEGER_INT_CONSTR_GROUP_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_GROUP_0020]` Consistency between channels and groups
   - Statement:
     - $dX_1 \bmod \text{group}=0$
     - $dW_0 \bmod \text{group}=0$
   - Rationale: Input and output channels must be evenly distributed between groups.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_GROUP_0030"></a> Support for standard and depthwise convolutions
+<a id="E_CONVINTEGER_INT_CONSTR_GROUP_0030"></a>
+- `[E_CONVINTEGER_INT_CONSTR_GROUP_0030]` Support for standard and depthwise convolutions
   - Statement: `group = 1` or `group = dX_1` `[R3]`.
   - Rationale: The SONNX profile supports standard and depthwise convolution.
 
@@ -191,11 +229,13 @@ The `kernel_shape` attribute specifies the spatial shape of the convolution kern
 
 #### Constraints
 
-- <a id="E_CONVINTEGER_INT_CONSTR_KERNELSHAPE_0010"></a> Value domain
+<a id="E_CONVINTEGER_INT_CONSTR_KERNELSHAPE_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_KERNELSHAPE_0010]` Value domain
   - Statement: `kernel_shape` is a list of strictly positive integers.
   - Rationale: A kernel dimension is positive.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_KERNELSHAPE_0020"></a> Consistency between $W$ and `kernel_shape`
+<a id="E_CONVINTEGER_INT_CONSTR_KERNELSHAPE_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_KERNELSHAPE_0020]` Consistency between $W$ and `kernel_shape`
   - Statement: The size of $W$ along each spatial axis shall be equal to the corresponding value of `kernel_shape`.
   - Rationale: `kernel_shape` represents the spatial shape of $W$.
 
@@ -213,15 +253,18 @@ The padding value is 0.
 
 #### Constraints
 
-- <a id="E_CONVINTEGER_INT_CONSTR_PAD_0010"></a> Value domain
+<a id="E_CONVINTEGER_INT_CONSTR_PADS_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_PADS_0010]` Value domain
   - Statement: `pads` is a list of positive or null integers.
   - Rationale: A padding value represents a number of elements added to an axis.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_PAD_0020"></a> Consistency with the shape of $X$
+<a id="E_CONVINTEGER_INT_CONSTR_PADS_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_PADS_0020]` Consistency with the shape of $X$
   - Statement: The length of `pads` is two times the number of spatial axes of $X$.
   - Rationale: Both the beginning and the end of every spatial axis must be specified.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_PAD_0030"></a> Consistency between $X$, $W$, $Y$, `pads`, `dilations` and `strides`
+<a id="E_CONVINTEGER_INT_CONSTR_PADS_0030"></a>
+- `[E_CONVINTEGER_INT_CONSTR_PADS_0030]` Consistency between $X$, $W$, $Y$, `pads`, `dilations` and `strides`
   - Statement:  see constraint [<b><span style="font-family: 'Courier New', monospace">E_CONVINTEGER_INT_CONSTR_STRIDES_0020</span></b>](#E_CONVINTEGER_INT_CONSTR_STRIDES_0020) on attribute `strides`.
 
 ### `strides`: list of int
@@ -230,11 +273,13 @@ The `strides` attribute determines the displacement of the kernel between two co
 
 #### Constraints
 
-- <a id="E_CONVINTEGER_INT_CONSTR_STRIDES_0010"></a> Value domain
+<a id="E_CONVINTEGER_INT_CONSTR_STRIDES_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_STRIDES_0010]` Value domain
   - Statement: `strides` is a list of strictly positive integers.
   - Rationale: A stride represents the displacement of the kernel.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_STRIDES_0020"></a> Consistency between $X$, $W$, $Y$, `pads`, `dilations` and `strides`
+<a id="E_CONVINTEGER_INT_CONSTR_STRIDES_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_STRIDES_0020]` Consistency between $X$, $W$, $Y$, `pads`, `dilations` and `strides`
   - Statement:
 
 $$
@@ -287,18 +332,22 @@ where:
 #### Constraints
 
 
-- <a id="E_CONVINTEGER_INT_CONSTR_X_0010"></a> Number of spatial axes
+<a id="E_CONVINTEGER_INT_CONSTR_X_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_X_0010]` Number of spatial axes
   - Statement: The number of spatial axes of $X$ is 2 `[R1]`.
   - Rationale: This restriction limits the SONNX specification to two-dimensional image convolutions.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_X_0020"></a> Consistency between the number of channels of $X$ and $W$
+<a id="E_CONVINTEGER_INT_CONSTR_X_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_X_0020]` Consistency between the number of channels of $X$ and $W$
   - Statement: $dW_1=dX_1/\text{group}$.
   - Rationale: Each filter processes the number of input channels assigned to one group.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_X_0030"></a> Consistency between $X$, $W$, $Y$, `pads`, `dilations` and `strides`
+<a id="E_CONVINTEGER_INT_CONSTR_X_0030"></a>
+- `[E_CONVINTEGER_INT_CONSTR_X_0030]` Consistency between $X$, $W$, $Y$, `pads`, `dilations` and `strides`
   - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">E_CONVINTEGER_INT_CONSTR_STRIDES_0020</span></b>](#E_CONVINTEGER_INT_CONSTR_STRIDES_0020) on attribute `strides`.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_X_0040"></a> Type of $X$ and `x_zero_point`
+<a id="E_CONVINTEGER_INT_CONSTR_X_0040"></a>
+- `[E_CONVINTEGER_INT_CONSTR_X_0040]` Type of $X$ and `x_zero_point`
   - Statement: $X$ and `x_zero_point` shall have type `int8` or `uint8`.
   - Rationale: These are the types allowed for ONNX ConvInteger input data and its zero point.
 
@@ -319,21 +368,26 @@ where:
 
 #### Constraints
 
-- <a id="E_CONVINTEGER_INT_CONSTR_W_0010"></a> Consistency between the number of channels of $X$ and $W$
+<a id="E_CONVINTEGER_INT_CONSTR_W_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_W_0010]` Consistency between the number of channels of $X$ and $W$
   - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">E_CONVINTEGER_INT_CONSTR_X_0020</span></b>](#E_CONVINTEGER_INT_CONSTR_X_0020) on tensor $X$.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_W_0020"></a> Consistency between $X$, $W$, $Y$, `pads`, `dilations` and `strides`
+<a id="E_CONVINTEGER_INT_CONSTR_W_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_W_0020]` Consistency between $X$, $W$, $Y$, `pads`, `dilations` and `strides`
   - Statement: see constraint [<b><span style="font-family: 'Courier New', monospace">E_CONVINTEGER_INT_CONSTR_X_0030</span></b>](#E_CONVINTEGER_INT_CONSTR_X_0030) on tensor $X$.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_W_0030"></a> Consistency between $W$ and `kernel_shape`
+<a id="E_CONVINTEGER_INT_CONSTR_W_0030"></a>
+- `[E_CONVINTEGER_INT_CONSTR_W_0030]` Consistency between $W$ and `kernel_shape`
   - Statement: The spatial size of $W$ shall be equal to `kernel_shape`.
   - Rationale: `kernel_shape` describes the spatial dimensions of $W$.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_W_0040"></a> Output channels and groups
+<a id="E_CONVINTEGER_INT_CONSTR_W_0040"></a>
+- `[E_CONVINTEGER_INT_CONSTR_W_0040]` Output channels and groups
   - Statement: $dW_0\bmod\text{group}=0$.
   - Rationale: Output channels must be evenly distributed among groups.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_W_0040"></a> Type of $W$ and `w_zero_point`
+<a id="E_CONVINTEGER_INT_CONSTR_W_0050"></a>
+- `[E_CONVINTEGER_INT_CONSTR_W_0050]` Type of $W$ and `w_zero_point`
   - Statement: $W$ and `w_zero_point` shall have type `int8` or `uint8`.
   - Rationale: These are the types allowed for ONNX ConvInteger weights and their zero point.
 
@@ -345,10 +399,12 @@ It is optional and, when absent, its value is 0.
 
 #### Constraints
 
-- <a id="E_CONVINTEGER_INT_CONSTR_XZEROPOINT_0010"></a> Scalar shape
+<a id="E_CONVINTEGER_INT_CONSTR_XZEROPOINT_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_XZEROPOINT_0010]` Scalar shape
   - Statement: `x_zero_point` is a scalar.
   - Rationale: Input zero-point quantization is per tensor.
-- <a id="E_CONVINTEGER_INT_CONSTR_XZEROPOINT_0020"></a> Type consistency
+<a id="E_CONVINTEGER_INT_CONSTR_XZEROPOINT_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_XZEROPOINT_0020]` Type consistency
   - Statement: `x_zero_point` has the same type as $X$.
   - Rationale: The zero point is subtracted from values of $X$ before multiplication.
 
@@ -362,10 +418,12 @@ It may be either a scalar or a one-dimensional tensor with one element for each 
 
 #### Constraints
 
-- <a id="E_CONVINTEGER_INT_CONSTR_WZEROPOINT_0010"></a> Shape
+<a id="E_CONVINTEGER_INT_CONSTR_WZEROPOINT_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_WZEROPOINT_0010]` Shape 
   - Statement: `w_zero_point` is either a scalar or a one-dimensional tensor with $dW_0$ elements.
   - Rationale: Weight zero-point quantization may be per tensor or per output channel.
-- <a id="E_CONVINTEGER_INT_CONSTR_WZEROPOINT_0020"></a> Type consistency
+<a id="E_CONVINTEGER_INT_CONSTR_WZEROPOINT_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_WZEROPOINT_0020]` Type consistency
   - Statement: `w_zero_point` has the same type as $W$.
   - Rationale: The zero point is subtracted from values of $W$ before multiplication.
 
@@ -389,10 +447,12 @@ where:
 
 #### Constraints
 
-- <a id="E_CONVINTEGER_INT_CONSTR_Y_0010"></a> Shape consistency
+<a id="E_CONVINTEGER_INT_CONSTR_Y_0010"></a>
+- `[E_CONVINTEGER_INT_CONSTR_Y_0010]` Shape consistency
   - Statement: $dY_0=dX_0$, $dY_1=dW_0$, and $dY_2,dY_3$ satisfy the output-dimension equations defined by constraint [<b><span style="font-family: 'Courier New', monospace">E_CONVINTEGER_INT_CONSTR_STRIDES_0020</span></b>](#E_CONVINTEGER_INT_CONSTR_STRIDES_0020) on attribute `strides`.
 
-- <a id="E_CONVINTEGER_INT_CONSTR_Y_0020"></a> Type
+<a id="E_CONVINTEGER_INT_CONSTR_Y_0020"></a>
+- `[E_CONVINTEGER_INT_CONSTR_Y_0020]` Type
   - Statement: $Y$ has type `int32`.
   - Rationale: ConvInteger produces a 32-bit integer output.
 

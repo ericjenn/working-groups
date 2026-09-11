@@ -1,7 +1,3 @@
-```table-of-contents
-title: **Table of contents**
-hideWhenEmpty: true
-```
 ## Introduction
 This document proposes an approach to develop tests of the SONNX operators. 
 

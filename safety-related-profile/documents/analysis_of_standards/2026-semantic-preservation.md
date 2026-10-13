@@ -18,24 +18,27 @@ Note that in what follows, when I use "implemented model", I mean the implemente
 
 #### The problem
 
-The problem is to demonstrate that if I verify some property P on the trained model (TM), is it preserved (or "is it still valid") on the implemented model (IM), and with what level of confidence? 
+The problem is to demonstrate that if I verify some property P on the trained model (TM), - is it preserved (or "it is still valid") on the implemented model (IM)?
+- with what level of confidence? 
 
-Stated differently, if P holds on the trained model then it holds on the implemented model.  
+Stated differently, if P holds on the trained model, does it holds on the implemented model?
 
-This shows that the problem is related to the property at stake. 
+This shows that the problem is related to the property at stake. (Some properties may be preserved and others not.) 
 
-Demonstrating "bit-to-bit" equivalence seams to guarantee that any property verified on TM will be preserved on IM since the only output of the execution of a model being a vector of numerical values (represented by bit vectors).
+Demonstrating "bit-to-bit" equivalence seams to guarantee that any functional property (*) verified on TM will be preserved on IM since the only output of the execution of a model is a vector of numerical values represented by bit vectors.
+
+(*) This doesn't hold for temporal properties. 
 
 Stated differently, if bit-to-bit equivalence can be demonstrated, then problem is solved.
 
-The difficulty lies in the fact that "bit-to-bit" equivalence can usually not be demonstrated . (Also note that bit-to-bit equivalence does does not cover temporal properties.)
+The difficulty lies in the fact that "bit-to-bit" equivalence can usually not be demonstrated. 
 
 The next questions are then
 
-- Q1: Are there any properties P_i that can only be verified on the training model? Indeed, in that case, there is no other solution than to check those properties on the trained model and to demonstrate that the property is preserved. Reciprocally, if I have no such property, then it means that all verification activities can be done -- in principle, see below -- on the implemented model. 
-- Q2: Are there any property P'_i for which it is much more economical (measured in €) to verify on the trained model than on the implemented model, even when integrating the cost of demonstrating property preservation. Note that the economy may be due to the technical environment that facilitate verification activities, but it may simply be due the fact that the verification is done earlier in the process, so that error are found earlier too...
+- Q1: Are there any properties $P_i$ that can only be verified on the training model? Indeed, in that case, there is no other solution than to check those properties on the TM and to demonstrate that the property is preserved by the IM. Reciprocally, if I have no such property, then it means that all verification activities can be done -- in principle, see below -- on the IM. 
+- Q2: Are there any property $P'_i$ for which it is much more economical (measured in €) to verify on the TM than on the IM, even when integrating the cost of demonstrating property preservation. Note that the economy may be due to the technical environment that facilitate verification activities, but it may simply be due the fact that the verification is done earlier in the process, so that error are found earlier too...
   
-Concerning Q1, {P_i} contains at least properties that concern the training process itself such as:
+Concerning Q1, the set ${P_1, P_2,...,P_i}$ contains at least properties that concern the training process itself such as:
 - Training stability, 
 - Generalization capability, 
 - etc.
@@ -50,13 +53,13 @@ Concerning Q2, there are many good reasons to perform verification activities on
 - observability is greater;
 - gradients and internal activations are available;
 - debugging is easier;
-- considering that the verification of some properties may be very computationally expensive (adversarial searches, ODD exploration, etc.)
+- the verification of some properties may be very computationally expensive (adversarial searches, ODD exploration, etc.)
 
-In addition, some verification methods using specific tools (e.g., some formal verification methods) can only be applied in the host context, on the trained model.
+In addition, some verification methods using specific tools (e.g., some formal verification methods) may be only applicable in the host context, on the trained model.
 
 So, I end up with:  
-- our problem depends on the properties at stake, so we have to identify the properties we are interested in,
-- our problem is essentially an industrial problem, not a development assurance problem, which means that there is no fundamental reason to ensure that all properties are preserved ; again, the problem must be addressed on a per property basis, considering the verification effort / cost. 
+- our problem depends on the properties at stake, so we have to identify precisely the properties we are interested in,
+- our problem is essentially an industrial problem, not a development assurance problem, which means that there is no **fundamental** reason to ensure that all properties are preserved ; again, the problem must be addressed on a per property basis, considering the verification effort / cost. 
 
 #### Let's go back to the function (Nicolas)
 

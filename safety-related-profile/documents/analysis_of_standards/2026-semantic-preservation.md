@@ -150,3 +150,6 @@ Hypothesis there is no error on the input.
 The maximum error on the output is given by $B_1A_2 \dots A_L + B_2A_3 \dots A_L + \dots + B_{L-1}A_L + B_L$. Thus we should have:
 
 $B_1A_2 \dots A_L + B_2A_3 \dots A_L + \dots + B_{L-1}A_L + B_L < \frac{1}{2} \min_{i \in D} |l_1(x_i) - l_2(x_i)|$
+
+There is a simple requirement assignement:
+-

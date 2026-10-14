@@ -138,3 +138,5 @@ Note: Accuracy, i.e. the number of correct predictions divided by the total numb
 Hypothesis: The low level requirements are related to numerical precision, i.e. the maximum difference between a value computed in real numbers and a value computed in floating point numbers, at the level of operators beloning to the neural network. Note: Because the the network solves a binary classification problem, its last layer is a comparision, i.e. if the logit associated to class 1 is larger than the logit associated to class 2 the result is class 1 otherwise it is class 2.
 
 Definition: Perfect replication. For a database a perfect replication is obtained when for each sample the results of the predictions are equal, i.e. the same class is predicted by both classifiers.
+
+Perfect replication implies accuracy preservation.

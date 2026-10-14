@@ -134,3 +134,7 @@ I am not sure about the scope of this discussion because if we are trying to add
 
 Hypothesis: The neural network solves a binary classification problem and the main high level requirement is stated in terms of accuracy.
 Note: Accuracy, i.e. the number of correct predictions divided by the total number of predictions, is defined w.r.t. a database, usualy the test database.
+
+Hypothesis: The low level requirements are related to numerical precision, i.e. the maximum difference between a value computed in real numbers and a value computed in floating point numbers, at the level of operators beloning to the neural network. Note: Because the the network solves a binary classification problem, its last layer is a comparision, i.e. if the logit associated to class 1 is larger than the logit associated to class 2 the result is class 1 otherwise it is class 2.
+
+

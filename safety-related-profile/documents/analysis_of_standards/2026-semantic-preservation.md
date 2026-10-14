@@ -154,3 +154,7 @@ $B_1A_2 \dots A_L + B_2A_3 \dots A_L + \dots + B_{L-1}A_L + B_L < \frac{1}{2} \m
 There is a simple low level requirement satisfying the high level requirement. For any operator, $j$:
 - the input error multiplicative factor $A_j$ is less than one and
 - its own maximal error $B_j$ is less than $\frac{1}{2L} \min_{i \in D} |l_1(x_i) - l_2(x_i)|$.
+
+Note that this could also lead to add requirements to the first V of the W:
+- in order to have a small $L$, the network should not be so deep and
+- the differences between logits shall be large for any sample, this may be linked to some definition of robustness.

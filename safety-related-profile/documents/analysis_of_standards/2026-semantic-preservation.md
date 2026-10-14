@@ -128,4 +128,6 @@ I do not consider a metric as a requirement. The metric is a means to validate a
 I am not sure about the scope of this discussion because if we are trying to address the objective SU-IMP-06 of the version 3 of EASA's concept paper, i.e. "The performance of the implemented model when integrated on the target platform should be evaluated based on the test data set, and the result of the model verification should be documented.", a property not related to the test data set is not relevant and a sample per sample run of the implemented model should allow to compute any property related to the test data set. Did I miss something?
 
 >[eric] Yes. The test dataset may be designed to cover the ML performance, the robustness, etc. and be executed on the implementation model. In that case, I am wondering why we need this 
->[eric] In fact, I feel that the MLMD is just there to give the spec that the developers need to develop the implementation model. It is a development artefact, not an element of development assurance. 
+>[eric] In fact, I feel that the MLMD is just there to give the spec that the developers need to develop the implementation model. It is a development artefact, not an element of development assurance.
+
+##### From High Level Requirements to Low Level Requirements

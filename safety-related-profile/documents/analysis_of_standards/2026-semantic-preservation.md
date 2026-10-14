@@ -147,4 +147,4 @@ Hypothesis: The neural network is a serie of $L$ operators, each operator $i$ mu
 
 Hypothesis there is no error on the input.
 
-The maximum error on the output is given by $B_1A_2\dotsA_L$.
+The maximum error on the output is given by $B_1A_2 \dots A_L$.

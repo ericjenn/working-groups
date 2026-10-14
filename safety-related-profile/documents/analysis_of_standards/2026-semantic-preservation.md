@@ -140,3 +140,5 @@ Hypothesis: The low level requirements are related to numerical precision, i.e. 
 Definition: Perfect replication. For a database a perfect replication is obtained when for each sample the results of the predictions are equal, i.e. the same class is predicted by both classifiers.
 
 Perfect replication implies accuracy preservation.
+
+Network numerical precision implying perfect replication. When the numerical precision of the neural network is such that for any sample of the database the result of the test on logits doesn't change then there is perfect replication. This can be translated in terms of maximal error by stating that the maximal error multiplied by two shall be less than the minimum, among the samples of the database, of the absolute value of the difference between the logit associated to class 1 and the logit associated to class 2. 

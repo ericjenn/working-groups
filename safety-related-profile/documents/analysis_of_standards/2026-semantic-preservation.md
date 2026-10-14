@@ -131,3 +131,6 @@ I am not sure about the scope of this discussion because if we are trying to add
 >[eric] In fact, I feel that the MLMD is just there to give the spec that the developers need to develop the implementation model. It is a development artefact, not an element of development assurance.
 
 ##### From High Level Requirements to Low Level Requirements
+
+Hypothesis: The neural network solves a binary classification problem and the main high level requirement is stated in terms of accuracy.
+Note: Accuracy, i.e. the number of correct predictions divided by the total number of predictions, is defined w.r.t. a database, usualy the test database.

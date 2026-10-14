@@ -151,4 +151,4 @@ The maximum error on the output is given by $B_1A_2 \dots A_L + B_2A_3 \dots A_L
 
 $B_1A_2 \dots A_L + B_2A_3 \dots A_L + \dots + B_{L-1}A_L + B_L < \frac{1}{2} \min_{i \in D} |l_1(x_i) - l_2(x_i)|$
 
-There is a simple requirement assignement: For any operator, $j$, the input error multiplicative factor $A_j$ is less than one and its own maximal error $B_j$ is less than $\frac{1}{2|D|} \min_{i \in D} |l_1(x_i) - l_2(x_i)|$.
+There is a simple requirement assignement: For any operator, $j$, the input error multiplicative factor $A_j$ is less than one and its own maximal error $B_j$ is less than $\frac{1}{2L} \min_{i \in D} |l_1(x_i) - l_2(x_i)|$.

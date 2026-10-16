@@ -1,7 +1,43 @@
 #### 2026/10/16
-- Etat des actions
-- Utilisation de GenAI pour la production des specs, premiers essais
-- (Tentative d'ultime) Clarification du probléme de la précision numérique en IA...
+##### Topics 
+  - Status of actions
+  - Discussion about accuracy specification 
+  - Use of GenAI for SONNX specs generation 
+  
+##### Meeting Notes
+- Long discussion about "accuracy"
+  - Review of Jean-Loup proposal for the specification of accuracy for classification DNN (see [here](https://github.com/ericjenn/working-groups/blob/ericjenn-srpwg-wg1/safety-related-profile/documents/analysis_of_standards/2026-semantic-preservation.md). 
+  - Geoffrey's 3 points
+    - How are errors managed for control-law systems? Are errors within the robustness margins?
+    - How do computation error compare to other sources of errors (epistemtic, aleatoric,...)
+
+- Presentation of the genAI-based generation of requirements. See [here](https://github.com/ericjenn/sonnx/tree/main)
+
+- Presentation of the genAI-based req generator.
+  - Seems pretty good for simple ops. To be checked for compex ones.
+  - Could be used (after correction) to do the first writing, th ereview being done by the working group.
+
+##### Actions
+###### New actions
+- [ ] (Geoffrey) Prepare a short presentation of the ARP cycle (incl. relations between ARP's artefacts). 
+  (would'nt it be wiser to do it during the plenary WG meeting on Wednesday?)
+- [ ] (Eric) Contact Florence and Sébastien (THAV) about accuracy mngt in "classical" applications 
+- [ ] (Jean) Check accuracy mngt at Airbus for control-comamnd applications 
+- [ ] (Eric) Correct issues in the genAI-based spec generator (lengthy explanations, handling of denormalized numbers). 
+- [ ] (Eric) Use pure Python+numpy implementationof operators in test generatoin in the genAI spec generator 
+- [ ] (Eric) Generate a set of ops to be reviewed during the next WG meeting
+- [ ] (Eric) Check with Franck how the accuracy errors compares to other sources of errors
+- [ ] (Eric) Check of genAI could help making formal specs more readable (e.g., by the introduction of iterative operators such as \Sum and \Prod...)
+
+
+###### Past actions
+
+- [ ] Spécifier que nous utilisons l'opérateur `maximum` de IEEEE qui propage le NaN (l'autre op. est `maximumNumber`)  [project::[[SONNX]]]
+- [x] Identifier quelle est la pratique de gestion des valeurs par défaut chez AI [project::[[SONNX]]]
+	- (02/10) Les valeurs doivent être fixées explicitement
+- [ ] Produire une version complète des guidelines et de la spécification d'un opérateur à partir desquelles on pourra tenter de générer automatiquement d'autres spécifications. 
+  - (02/10) En cours (eric)
+
 
 #### 2026/10/02
 - Retour sur les actions en cours.

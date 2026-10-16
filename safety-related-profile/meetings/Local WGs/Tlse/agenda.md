@@ -1,4 +1,9 @@
-#### 2025/10/02
+#### 2026/10/16
+- Etat des actions
+- Utilisation de GenAI pour la production des specs, premiers essais
+- (Tentative d'ultime) Clarification du probléme de la précision numérique en IA...
+
+#### 2026/10/02
 - Retour sur les actions en cours.
 - Orientation des travaux...
   
@@ -16,10 +21,10 @@
 - [ ] Produire une version complète des guidelines et de la spécification d'un opérateur à partir desquelles on pourra tenter de générer automatiquement d'autres spécifications. 
   - (02/10) En cours (eric)
 
-#### 2025/07/10
+#### 2026/07/10
 - Mise à jour des guidelines
 
-#### 2025/06/25
+#### 2026/06/25
 - [X] Faire mail Loïc pour améliorer l'approche formelle [project::[[SONNX]]] [assignee::[[JENN Eric]]] ➕ 2026-06-25 
   - Voir demande à Loïc par mail du 25/06
 - [X] Prendre en compte les remarques de J-L dans les guidelines "spécification formelle" [project::[[SONNX]]] [assignee::[[FARGES Jean-Loup]]] ➕ 2026-06-25 
@@ -29,7 +34,7 @@
 - [ ] Clarifier / systématiser l'approche de factorisation des specs informelles (voir par ex. **MaxPool**). [project::[[SONNX]]] [assignee::[[JENN Eric]]] ➕ 2026-06-25 
 - [ ] Finaliser **MaxPool** [project::[[SONNX]]]  ➕ 2026-06-25 
 
-#### 2025/06/05
+#### 2026/06/05
 - Discussion about the relation between the informal and formal spec. Are we really convinced on the benefits of formal spec if we don't add functional invariants? See e.g. ![](../Tlse/attachments/conv_informa_formal.png).
 - Check [this ONNX PR](https://github.com/onnx/onnx/issues/8054#issuecomment-4622938091)
 
@@ -92,7 +97,7 @@
 
 
 
-#### 2025/05/21
+#### 2026/05/21
 - Jean-Loup comments on [testing strategy](../../../sonnx/ops/docs/guidelines/tests-part2.md)
 - Discussion about the use of Hypothesis 
 - Review of Franck guidelines for accuracy evaluation
@@ -129,7 +134,7 @@
 - [ ]  Address the case of negative axes 
 - [ ]  Check the behaviour of softmax for nb of axes > 2
 
-#### 2025/04/16
+#### 2026/04/16
 - Discussion about Jean-Loup's mail dated 10/04 "Re: SONNX Graph status"
 - Discussion on the test strategy
 - Validation of guidelines on formal spec
@@ -156,7 +161,7 @@
 - [ ]  Check the behaviour of softmax for nb of axes > 2
 
 
-#### 2025/03/26
+#### 2026/03/26
 
 ##### Agenda
 - Finalization of **flatten**, **Clip** and **Tanh**.
@@ -179,7 +184,7 @@
 - [ ]  Address the case of negative axes 
 - [ ]  Check the behaviour of softmax for nb of axes > 2
 
-#### 2025/03/13
+#### 2026/03/13
 
 ##### Agenda
 
@@ -206,7 +211,7 @@
   - [ ]  Check the behaviour of softmax for nb of axes > 2
 - Review of **SoftMax**
 
-#### 2025/02/27 
+#### 2026/02/27 
 
 ##### Agenda
 - Review of actions 
@@ -226,7 +231,7 @@
 - [ ] Propose a restriction to the scope of formal specification and verification (at least in a first phase)
 
 
-#### 2025/02/13
+#### 2026/02/13
 ##### Agenda
 No agenda defined...
 
@@ -254,7 +259,7 @@ No agenda defined...
   - (Eric) Added in [definitions](../../../sonnx/ops/spec/informal/common/definitions.md).
 
 
-#### 2025/02/04 
+#### 2026/02/04 
 - Feedback on strange observations on $MaxPool$ and code analysis. (30 min max)
 - Proposal of guidelines modifications to factorize restrictions and constraints. 
 - Discussion (1h max) about the specification of ops in FP. 
@@ -310,7 +315,7 @@ No agenda defined...
 - basically, we must put in the "error conditions" all results that are,  , "not expected". 
 - The name of this section could possibly be changed: "Special cases" ? 
 
-#### 2025/01/15
+#### 2026/01/15
 ##### Agenda
 - Case of max:min/maxpool with NaN: for all operators, try to rely on the spec of Max and Min. (Nota: I don't like the spec NaN > Inf > ... I think that we should treat NaN as a special case because NaN is no normally  comparable and here we are defining a comparison...)
 - Processing of existing issues: see [issues tagged "TLSE WG"](https://github.com/users/ericjenn/projects/4/views/14))

@@ -7,6 +7,10 @@
 ##### Meeting Notes
 - Long discussion about "accuracy"
   - Review of Jean-Loup proposal for the specification of accuracy for classification DNN (see [here](https://github.com/ericjenn/working-groups/blob/ericjenn-srpwg-wg1/safety-related-profile/documents/analysis_of_standards/2026-semantic-preservation.md). 
+    - For classification problems, specifying error margins is pretty simple: errors have to maintain the separations between outputs. 
+    - In principle, errors could be computed backward in order to allocate an error budget to layers, operators... But is it feasible **in practice**?
+    - Error allocation has to be made model-wise and implementation-wise. How can we allocate error to a given operator independently from the implementation without being over-constraining?
+    - What are the properties to preserve during the implementation? (e.g., if some credit is taken thanks to the fact that the model is Lipschitz, how do we preserve it? 
   - Geoffrey's 3 points
     - How are errors managed for control-law systems? Are errors within the robustness margins?
     - How do computation error compare to other sources of errors (epistemtic, aleatoric,...)

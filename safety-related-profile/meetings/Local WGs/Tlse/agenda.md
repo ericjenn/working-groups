@@ -19,7 +19,7 @@
 
 - Presentation of the genAI-based req generator.
   - Seems pretty good for simple ops. To be checked for compex ones.
-  - Could be used (after correction) to do the first writing, th ereview being done by the working group.
+  - Could be used (after correction) to do the first writing, the review being done by the working group.
 
 ##### Actions
 ###### New actions

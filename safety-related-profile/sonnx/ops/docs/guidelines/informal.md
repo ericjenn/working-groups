@@ -2,13 +2,14 @@
 
 This document gives the guidelines to be followed when writing an operator's non-formal specification. Guidelines for the development of a formal specification are given in a [dedicated document](./formal.md).
 
-It is organised in three parts:
+It is organized in three parts:
 
 - The "Definitions" section fixes the meaning of the terms used throughout the document: *specification*, *specifying information*, *restriction*, *constraint* and *precondition*, *family*, *tag*.
 - The "Rationales" section explains the principles on which the guidelines rest: the level of formalization aimed at, the data types covered, the relation to the IEEE 754 standard and to implementation standards, what counts as specifying information, the treatment of error conditions, and the place of the accuracy analysis.
 - The "Specification guidelines" section states the rules themselves, in two sub-sections: "General guidelines" gives the presentation rules (fonts, basic operations, naming conventions, notations, tags, types, and reuse), and "Structure and contents of the specification" gives the organization and the contents of the specification of an operator, section by section, following the headings of the specification itself.
 
 A reader who only needs the rules may go directly to the "Specification guidelines" section; the "Rationales" section is there to make the rules understandable and to justify them.
+
 
 # Definitions
 
@@ -289,7 +290,7 @@ An example is given hereafter
 
 Some SONNX restrictions apply to all the operators. Therefore, this section shall always contain the following markdown link:
 
-> [General restrictions](./../common/general_restrictions.md) are applicable.
+> [General restrictions](./global_restrictions.md) are applicable.
 
 When there are no other restrictions, the following sentence shall be added:
 

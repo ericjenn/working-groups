@@ -26,9 +26,10 @@
 - [ ] (Geoffrey) Prepare a short presentation of the ARP cycle (incl. relations between ARP's artefacts). 
   (would'nt it be wiser to do it during the plenary WG meeting on Wednesday?)
 - [ ] (Eric) Contact Florence and Sébastien (THAV) about accuracy mngt in "classical" applications 
-- [ ] (Jean) Check accuracy mngt at Airbus for control-comamnd applications 
+    - Sebastian contacted, waiting for answer
+- [ ] (Jean) Check accuracy mngt at Airbus for control-command applications 
 - [ ] (Eric) Correct issues in the genAI-based spec generator (lengthy explanations, handling of denormalized numbers). 
-- [ ] (Eric) Use pure Python+numpy implementationof operators in test generatoin in the genAI spec generator 
+- [ ] (Eric) Use pure Python+numpy implementationof operators in test generation in the genAI spec generator 
 - [ ] (Eric) Generate a set of ops to be reviewed during the next WG meeting
 - [ ] (Eric) Check with Franck how the accuracy errors compares to other sources of errors
 - [ ] (Eric) Check of genAI could help making formal specs more readable (e.g., by the introduction of iterative operators such as \Sum and \Prod...)

@@ -1,11 +1,71 @@
-#### 2025/10/02
+#### 2026/10/16
+##### Topics 
+  - Status of actions
+  - Discussion about accuracy specification 
+  - Use of GenAI for SONNX specs generation 
+  
+##### Meeting Notes
+- Long discussion about "accuracy"
+  - Review of Jean-Loup proposal for the specification of accuracy for classification DNN (see [here](https://github.com/ericjenn/working-groups/blob/ericjenn-srpwg-wg1/safety-related-profile/documents/analysis_of_standards/2026-semantic-preservation.md). 
+    - For binary classification problems, specifying error margins is pretty simple: errors have to maintain the separations between outputs. 
+    - In principle, errors could be computed backward in order to allocate an error budget to layers, operators... But is it feasible **in practice**?
+    - Error allocation has to be made model-wise and implementation-wise. How can we allocate error to a given operator independently from the implementation without being over-constraining?
+    - What are the properties to preserve during the implementation? (e.g., if some credit is taken thanks to the fact that the model is Lipschitz, how do we preserve it?)
+  - Geoffrey's 3 points
+    - How are errors managed for control-law systems? Are errors within the robustness margins?
+    - How do computation error compare to other sources of errors (epistemtic, aleatoric,...)
+
+- Presentation of the genAI-based generation of requirements. See [here](https://github.com/ericjenn/sonnx/tree/main)
+
+- Presentation of the genAI-based req generator.
+  - Seems pretty good for simple ops. To be checked for compex ones.
+  - Could be used (after correction) to do the first writing, the review being done by the working group.
+
+##### Actions
+###### New actions
+- [ ] (Geoffrey) Prepare a short presentation of the ARP cycle (incl. relations between ARP's artefacts). 
+  (would'nt it be wiser to do it during the plenary WG meeting on Wednesday?)
+- [ ] (Eric) Contact Florence and Sébastien (THAV) about accuracy mngt in "classical" applications 
+    - Sebastian contacted, waiting for answer
+- [ ] (Jean) Check accuracy mngt at Airbus for control-command applications 
+- [ ] (Eric) Correct issues in the genAI-based spec generator (lengthy explanations, handling of denormalized numbers). 
+- [ ] (Eric) Use pure Python+numpy implementationof operators in test generation in the genAI spec generator 
+- [ ] (Eric) Generate a set of ops to be reviewed during the next WG meeting
+- [ ] (Eric) Check with Franck how the accuracy errors compares to other sources of errors
+- [ ] (Eric) Check of genAI could help making formal specs more readable (e.g., by the introduction of iterative operators such as \Sum and \Prod...)
+
+
+###### Past actions
+
+- [ ] Spécifier que nous utilisons l'opérateur `maximum` de IEEEE qui propage le NaN (l'autre op. est `maximumNumber`)  [project::[[SONNX]]]
+- [x] Identifier quelle est la pratique de gestion des valeurs par défaut chez AI [project::[[SONNX]]]
+	- (02/10) Les valeurs doivent être fixées explicitement
+- [ ] Produire une version complète des guidelines et de la spécification d'un opérateur à partir desquelles on pourra tenter de générer automatiquement d'autres spécifications. 
+  - (02/10) En cours (eric)
+
+
+#### 2026/10/02
 - Retour sur les actions en cours.
 - Orientation des travaux...
   
-#### 2025/07/10
+##### Meeting Notes
+
+- Discussions sur les tenseurs dynamiques
+	- Comme déjà dit, on s'interdit l'usage de tenseurs dynamiques en entrée du réseau. Par conséquent, la dimension de tous les tenseurs est fixée dans le fichier ONNX (il faut que l'inférence des tailles de tenseurs soit faite avant la sérialisation).
+- [x] Ajouter les opérateurs de comparaison à la liste des opérateurs de base 
+	- (05/10) Fait
+- [x] Concernant les "errors conditions", décrire une démarche en 3 étapes : prise en compte dans la spec, prise en compte dans les contraintes (pré-conditions), description dans la section "errors conditions" 
+	- (05/10) Fait
+- [ ] Spécifier que nous utilisons l'opérateur `maximum` de IEEEE qui propage le NaN (l'autre op. est `maximumNumber`)  [project::[[SONNX]]]
+- [x] Identifier quelle est la pratique de gestion des valeurs par défaut chez AI [project::[[SONNX]]]
+	- (02/10) Les valeurs doivent être fixées explicitement
+- [ ] Produire une version complète des guidelines et de la spécification d'un opérateur à partir desquelles on pourra tenter de générer automatiquement d'autres spécifications. 
+  - (02/10) En cours (eric)
+
+#### 2026/07/10
 - Mise à jour des guidelines
 
-#### 2025/06/25
+#### 2026/06/25
 - [X] Faire mail Loïc pour améliorer l'approche formelle [project::[[SONNX]]] [assignee::[[JENN Eric]]] ➕ 2026-06-25 
   - Voir demande à Loïc par mail du 25/06
 - [X] Prendre en compte les remarques de J-L dans les guidelines "spécification formelle" [project::[[SONNX]]] [assignee::[[FARGES Jean-Loup]]] ➕ 2026-06-25 
@@ -15,7 +75,7 @@
 - [ ] Clarifier / systématiser l'approche de factorisation des specs informelles (voir par ex. **MaxPool**). [project::[[SONNX]]] [assignee::[[JENN Eric]]] ➕ 2026-06-25 
 - [ ] Finaliser **MaxPool** [project::[[SONNX]]]  ➕ 2026-06-25 
 
-#### 2025/06/05
+#### 2026/06/05
 - Discussion about the relation between the informal and formal spec. Are we really convinced on the benefits of formal spec if we don't add functional invariants? See e.g. ![](../Tlse/attachments/conv_informa_formal.png).
 - Check [this ONNX PR](https://github.com/onnx/onnx/issues/8054#issuecomment-4622938091)
 
@@ -78,7 +138,7 @@
 
 
 
-#### 2025/05/21
+#### 2026/05/21
 - Jean-Loup comments on [testing strategy](../../../sonnx/ops/docs/guidelines/tests-part2.md)
 - Discussion about the use of Hypothesis 
 - Review of Franck guidelines for accuracy evaluation
@@ -115,7 +175,7 @@
 - [ ]  Address the case of negative axes 
 - [ ]  Check the behaviour of softmax for nb of axes > 2
 
-#### 2025/04/16
+#### 2026/04/16
 - Discussion about Jean-Loup's mail dated 10/04 "Re: SONNX Graph status"
 - Discussion on the test strategy
 - Validation of guidelines on formal spec
@@ -142,7 +202,7 @@
 - [ ]  Check the behaviour of softmax for nb of axes > 2
 
 
-#### 2025/03/26
+#### 2026/03/26
 
 ##### Agenda
 - Finalization of **flatten**, **Clip** and **Tanh**.
@@ -165,7 +225,7 @@
 - [ ]  Address the case of negative axes 
 - [ ]  Check the behaviour of softmax for nb of axes > 2
 
-#### 2025/03/13
+#### 2026/03/13
 
 ##### Agenda
 
@@ -192,7 +252,7 @@
   - [ ]  Check the behaviour of softmax for nb of axes > 2
 - Review of **SoftMax**
 
-#### 2025/02/27 
+#### 2026/02/27 
 
 ##### Agenda
 - Review of actions 
@@ -212,7 +272,7 @@
 - [ ] Propose a restriction to the scope of formal specification and verification (at least in a first phase)
 
 
-#### 2025/02/13
+#### 2026/02/13
 ##### Agenda
 No agenda defined...
 
@@ -240,7 +300,7 @@ No agenda defined...
   - (Eric) Added in [definitions](../../../sonnx/ops/spec/informal/common/definitions.md).
 
 
-#### 2025/02/04 
+#### 2026/02/04 
 - Feedback on strange observations on $MaxPool$ and code analysis. (30 min max)
 - Proposal of guidelines modifications to factorize restrictions and constraints. 
 - Discussion (1h max) about the specification of ops in FP. 
@@ -296,7 +356,7 @@ No agenda defined...
 - basically, we must put in the "error conditions" all results that are,  , "not expected". 
 - The name of this section could possibly be changed: "Special cases" ? 
 
-#### 2025/01/15
+#### 2026/01/15
 ##### Agenda
 - Case of max:min/maxpool with NaN: for all operators, try to rely on the spec of Max and Min. (Nota: I don't like the spec NaN > Inf > ... I think that we should treat NaN as a special case because NaN is no normally  comparable and here we are defining a comparison...)
 - Processing of existing issues: see [issues tagged "TLSE WG"](https://github.com/users/ericjenn/projects/4/views/14))

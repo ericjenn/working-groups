@@ -1,14 +1,23 @@
+(* Conv2d (real), formal specification.
+   Tags [E_CONV_...] refer to the informal specification.
+ *)
+
 module OPConv2d
 
-  use tensor.Tensor
+  use tensor.tensor.Tensor
   use real.Real
   use int.Int
-  use std.Int
+  use tensor.std.Int
   use list.List
   use int.EuclideanDivision
-  use tensor.Range
+  use tensor.tensor.Range
   use list.Length
 
+  (* [E_CONV_REAL_FUNC_0010] [E_CONV_REAL_CONSTR_STRIDES_0020]
+     Goal: compute the shape (dY_0, dY_1, dY_2, dY_3) of the output Y.
+     dY_0 = batch size, dY_1 = number of output channels,
+     dY_2 and dY_3 = number of kernel positions along each spatial axis.
+   *)
   function convDims (x w :tensor real) (str_h str_w :int) 
                     (dir_h dir_w :int) (pad_top pad_left pad_bottom pad_right :int) : list int
   =
@@ -26,6 +35,9 @@ module OPConv2d
     Cons dY_0 (Cons dY_1 (Cons dY_2 (Cons dY_3 Nil)))
 
 
+  (* [E_CONV_REAL_FUNC_0010] term X_p, [E_CONV_REAL_CONSTR_PADS_0010]
+     Goal: read X_p = pad(X, pads) at a given position:
+     the value of X if the position is inside X, 0 if it is in the padding. *)
   function coords_from_X_p (x: tensor real) (x_p_coords : list int) ( pad_top pad_left :int) : real
   =
     let b = get_dim x_p_coords 0 in
@@ -38,6 +50,9 @@ module OPConv2d
     else
       0.0
 
+  (* [E_CONV_REAL_FUNC_0010] term SUM_{z=0}^{dW_3-1}
+     Goal: sum over the kernel width, for a fixed input channel c and kernel
+     row i, of X_p[...] * W_d[...] (jj goes from its start value up to j-1). *)
   let rec ghost function w_cools_calculate (x w : tensor real) (c: int) (i:int) (j:int) (jj:int) (n m y_h y_w: int)  (str_h str_w :int) (dil_h dil_w :int) (pad_top pad_left :int) : real 
   variant { j - jj }
   =
@@ -50,6 +65,7 @@ module OPConv2d
       let w_val = w.data (Cons m (Cons c (Cons i (Cons jj Nil)))) in
       Real.(x_val * w_val + w_cools_calculate x w c i j Int.(jj + 1) n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left)
 
+  (* Proof helper *)
   let rec lemma w_cools_split (x w : tensor real) (c i j jj k n m y_h y_w : int) (str_h str_w dil_h dil_w pad_top pad_left : int)
     requires { jj <= k < j }
     variant  { k - jj }
@@ -64,6 +80,9 @@ module OPConv2d
     =
       if jj < k then w_cools_split x w c i j Int.(jj+1) k n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left else ()
 
+  (* [E_CONV_REAL_FUNC_0010] term SUM_{j=0}^{dW_2-1}
+     Goal: sum over the kernel height, for a fixed input channel c, of the
+     inner sums computed by w_cools_calculate (one per kernel row ii). *)
   let rec ghost function w_lines_calculate (x w : tensor real) (c: int) (i:int) (ii:int) (j:int) (n m y_h y_w: int)  (str_h str_w :int) (dil_h dil_w :int) (pad_top pad_left :int) : real
   variant { i - ii }
   =
@@ -72,6 +91,7 @@ module OPConv2d
     else
       w_cools_calculate x w c ii j 0 n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left + w_lines_calculate x w c i Int.(ii + 1) j n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left
 
+  (* Proof helper. *)
   let rec lemma w_lines_split (x w : tensor real) (c i ii k j n m y_h y_w : int) (str_h str_w dil_h dil_w pad_top pad_left : int)
     requires { ii <= k < i }
     variant  { k - ii }
@@ -82,6 +102,9 @@ module OPConv2d
     =
       if ii < k then w_lines_split x w c i Int.(ii+1) k j n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left else ()
 
+  (* [E_CONV_REAL_FUNC_0010] term SUM_{i=0}^{dW_1-1}, [E_CONV_REAL_CONSTR_X_0020]
+     Goal: sum over the input channels (cc up to c-1) of the sums computed by
+     w_lines_calculate. *)
   let rec ghost function w_channels_calculate (x w :tensor real) (c:int )(cc:int) (i:int) (j:int) (n m y_h y_w: int)  (str_h str_w :int) (dil_h dil_w :int) (pad_top pad_left :int) : real
   variant { c - cc }
   =
@@ -90,6 +113,7 @@ module OPConv2d
     else
       w_lines_calculate x w cc i 0 j n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left + w_channels_calculate x w c Int.(cc + 1) i j n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left
 
+  (* Proof helper *)
   let rec lemma w_channels_split (x w : tensor real) (c i cc k j n m y_h y_w : int) (str_h str_w dil_h dil_w pad_top pad_left : int)
     requires { cc <= k < c }
     variant  { k - cc }
@@ -100,6 +124,9 @@ module OPConv2d
     =
       if cc < k then w_channels_split x w c i Int.(cc+1) k j n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left else ()
 
+  (* [E_CONV_REAL_FUNC_0010] value of Y[b,c,m,n]
+     Goal: give the content of Y. For each valid output index (b,c,m,n),
+     return SUM_i SUM_j SUM_z X_p * W_d. *)
   function dconv (x w : tensor real) (y_dims : list int) (str_h str_w :int) (dir_h dir_w :int) (pad_top pad_left :int) : data real
   = 
   let c = get_dim w.dims 1 in
@@ -115,6 +142,7 @@ module OPConv2d
     else
       x.background
 
+  (* Proof lemma *)
   let rec lemma get_dim_positive (ds : list int)
     requires { positive ds }
     ensures { forall i. 0 <= i < length ds -> 0 < get_dim ds i }
@@ -123,21 +151,26 @@ module OPConv2d
         | Nil -> () 
         | Cons _ ds -> get_dim_positive ds end
 
+  (* [E_CONV_REAL_FUNC_0010] operator Conv, restrictions [R1] and [R2]
+     Goal: define Conv (standard convolution, group = 1) as the tensor whose
+     shape is convDims and whose data is dconv, under the constraints of the
+     informal specification. *)
   let ghost function conv (x w : tensor real) (str_h str_w :int) (dir_h dir_w :int) (pad_top pad_left pad_bottom pad_right :int) : tensor real
-  requires { str_h > 0 /\ str_w > 0 }
-  requires { pad_top >= 0 /\ pad_left >= 0 /\ pad_bottom >= 0 /\ pad_right >= 0 }
-  requires { dir_h > 0 /\ dir_w > 0 }
-  requires { length x.dims = 4 }
-  requires { get_dim x.dims 1 = get_dim w.dims 1 }
-  requires { length w.dims = 4 }
+  requires { str_h > 0 /\ str_w > 0 }                                             (* [E_CONV_REAL_CONSTR_STRIDES_0010] *)
+  requires { pad_top >= 0 /\ pad_left >= 0 /\ pad_bottom >= 0 /\ pad_right >= 0 } (* [E_CONV_REAL_CONSTR_PADS_0010] *)
+  requires { dir_h > 0 /\ dir_w > 0 }                                             (* [E_CONV_REAL_CONSTR_DILATIONS_0010] *)
+  requires { length x.dims = 4 }                                                  (* [E_CONV_REAL_CONSTR_X_0010], [R1] *)
+  requires { get_dim x.dims 1 = get_dim w.dims 1 }                                (* [E_CONV_REAL_CONSTR_X_0020], group = 1 *)
+  requires { length w.dims = 4 }                                                  (* [E_CONV_REAL_CONSTR_KERNELSHAPE_0020] *)
   requires { let y_shape = convDims x w str_h str_w dir_h dir_w pad_top pad_left pad_bottom pad_right in
               get_dim y_shape 2 > 0 /\ get_dim y_shape 3 > 0
-           }
+           }                                                                      (* [E_CONV_REAL_CONSTR_STRIDES_0020] *)
   ensures { result.background = x.background }
   ensures { result.dims = convDims x w str_h str_w dir_h dir_w pad_top pad_left pad_bottom pad_right }
+                                                                                  (* [E_CONV_REAL_CONSTR_Y_0010] shape of Y *)
   ensures { let y_dims = convDims x w str_h str_w dir_h dir_w pad_top pad_left pad_bottom pad_right in
             result.data = dconv x w y_dims str_h str_w dir_h dir_w pad_top pad_left  
-         }
+         }                                                                        (* [E_CONV_REAL_FUNC_0010] values of Y *)
   =
   let y_dims = convDims x w str_h str_w dir_h dir_w pad_top pad_left pad_bottom pad_right in
   { dims = y_dims;
@@ -146,26 +179,25 @@ module OPConv2d
   }
 end
 
-
 module COPConv2d
 
     use OPConv2d
-    use tensor.Tensor
-    use tensor.Range
+    use tensor.tensor.Tensor
+    use tensor.tensor.Range
     use real.Real
     use int.Int
     use list.List
-    use layout.CFlat
+    use tensor.layout.CFlat
  
-    use libtensor.CTensor
-    use libvector.CIndex
-    use std.Clib
+    use tensor.libtensor.CTensor
+    use tensor.libvector.CIndex
+    use tensor.std.Clib
     use mach.int.Int32
-    use std.Cfloat
-    use std.Int
+    use tensor.std.Cfloat
+    use tensor.std.Int
     use list.Length
-    use layout.CFlat
-    use tensor.Range
+    use tensor.layout.CFlat
+    use tensor.tensor.Range
 
 
   let lemma ivector_get_dim_value_at (coords: iarray) (n: int) (i: int)

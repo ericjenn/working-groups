@@ -239,14 +239,11 @@ module CTensorInt32
 
 end
 
-(** ONNX DequantizeLinear, default attributes (per-tensor: scale/zero_point
-    are scalars).
+(* DequantizeLinear (int32 -> float), formal specification.
+   Tags [E_DEQUANTIZELINEAR_FLOAT_...] refer to the informal specification.
 
-      y = (x - x_zero_point) * y_scale
-
-    T1 = int32 (x, x_zero_point), T2 = float32 (y_scale), T3 = float32 (y)
-
-    zero_point is kept fully general (not forced to 0). *)
+   Equation [E_DEQUANTIZELINEAR_FLOAT_FUNC_0010]:
+     Y[i] = float(X[i] -(i32) x_zero_point) * x_scale *)
 
 module OPDequantizeLinear
   use tensor.tensor.Tensor
@@ -256,24 +253,34 @@ module OPDequantizeLinear
   use tensor.tensor.Range
   use tensorint.mint.WInt32
 
-  (** int32 wrap-around subtraction: matches hardware (x - zero_point)
-     semantics before the cast to float. *)
+(* [E_DEQUANTIZELINEAR_FLOAT_FUNC_0010] term -(i32), Error conditions (overflow)
+   Goal: wrap an integer into the int32 range (two's complement), so that
+   the subtraction X[i] - x_zero_point behaves like an int32 subtraction. *)
   function wrap (v : int) : int = WInt32.swrap v
 
-  (** Dequantization of a single scalar *)
+(* [E_DEQUANTIZELINEAR_FLOAT_FUNC_0010] value of Y[i] for one element
+   Goal: dequantize one scalar v: float(wrap(v - zero_point)) * scale.
+   First the int32 subtraction (d), then the conversion of d to a real,
+   then the multiplication by the scale. This is the equation of the
+   informal specification, applied to one element X[i]. *)
   function dequantize_value (v : int) (scale : real) (zero_point : int) : real =
     let d = wrap Int.( v - zero_point ) in
     Real.( FromInt.from_int d * scale )
 
-(* Applies dequantize_value everywhere *)
+(* [E_DEQUANTIZELINEAR_FLOAT_FUNC_0010]
+   Goal: apply dequantize_value to every element of the data of X, so that
+   Y[i] is the dequantization of X[i] for every tensor index i. *)
   let ghost function ddequantize (x : tensor int) (scale : real) (zero_point : int) : data real
     = fun ks -> dequantize_value (x.data ks) scale zero_point
 
-
+(* [E_DEQUANTIZELINEAR_FLOAT_FUNC_0010] operator DequantizeLinear
+   Goal: define DequantizeLinear as the tensor with the same shape as X and
+   whose data is ddequantize, under the constraints of the informal
+   specification *)
   let ghost function opdequantizelinear (x : tensor int) (scale : real) (zero_point : int) : tensor real
     requires { Real.( scale > 0.0 ) }
-    ensures { result.dims = x.dims }
-    ensures { result.data = ddequantize x scale zero_point }
+    ensures { result.dims = x.dims }  (* [E_DEQUANTIZELINEAR_FLOAT_CONSTR_X_0010], [E_DEQUANTIZELINEAR_FLOAT_CONSTR_Y_0010] *)
+    ensures { result.data = ddequantize x scale zero_point }  (* [E_DEQUANTIZELINEAR_FLOAT_FUNC_0010] values of Y *)
     ensures { result.background = dequantize_value x.background scale zero_point }
     (*proof*)
     = { dims = x.dims ;

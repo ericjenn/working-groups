@@ -249,20 +249,11 @@ module CTensorUInt8
 
 end
 
+(* QuantizeLinear (float -> uint8), formal specification.
+   Tags [E_QUANTIZELINEAR_UINT8_...] refer to the informal specification.
 
-(** Formal specification of ONNX QuantizeLinear
-    (default attributes: per-tensor quantization, axis irrelevant since
-    y_scale/y_zero_point are scalars, saturate = 1)
-
-      y = clamp( round_half_even( x / y_scale ) + y_zero_point , 0 , 255 )
-
-    T1 = float32 (input x)
-    T2 = float32 (y_scale)
-    T3 = uint8   (y_zero_point, output y)
-
-    This module is pure math: no C, no pointers, just the reference
-    semantics that the C implementation is proved to match on the valid index domain.
-*)
+   Equation [E_QUANTIZELINEAR_UINT8_FUNC_0010]:
+     Y[i] = clamp(round(X[i] / y_scale) + y_zero_point, 0, 255) *)
 module OPQuantizeLinear
   use tensor.tensor.Tensor
   use int.Int
@@ -273,9 +264,10 @@ module OPQuantizeLinear
   use tensor.std.Cfloat
   use tensor.tensor.Range
 
-  (** Round-to-nearest, ties-to-even : the default IEEE-754 rounding mode
-      used by the reference ONNX implementation of QuantizeLinear.
-  *)
+(* [E_QUANTIZELINEAR_UINT8_FUNC_0010] term round(.)
+   Goal: round a real to the nearest integer, ties to even (the default
+   IEEE 754 rounding mode, as required by the informal definition of round *)
+
   function round_half_even (x : real) : int =
     let f = Truncate.floor x in
     let r = Real.( x - FromInt.from_int f ) in
@@ -283,24 +275,34 @@ module OPQuantizeLinear
     else if Real.( r > 0.5 ) then Int.( f + 1 )
     else if mod f 2 = 0 then f else Int.( f + 1 )
 
-  (** Saturating cast into [lo,hi].*)
+  (* [E_QUANTIZELINEAR_UINT8_FUNC_0010] term clamp(v, lo, hi) = min(max(v, lo), hi)
+   [E_QUANTIZELINEAR_UINT8_CONSTR_Y_0020] value range
+   Goal: saturate an integer into [lo, hi]. It is used with lo = 0 and hi = 255, the range of uint8. *)
   function clamp (v lo hi : int) : int =
     if Int.( v < lo ) then lo else if Int.( v > hi ) then hi else v
 
-  (** Quantization of a single scalar *)
+(* [E_QUANTIZELINEAR_UINT8_FUNC_0010] value of Y[i] for one element
+   Goal: quantize one scalar v:
+   clamp(round(v / scale) + zero_point, 0, 255).
+   This is the equation of the informal specification, applied to one
+   element X[i]. *)
   function quantize_value (v scale : real) (zero_point : int) : int =
     clamp Int.( round_half_even (Real.( v / scale )) + zero_point ) 0 255
 
-  (* Pointwise application of quantize_value over an entire tensor data map *)
+(* [E_QUANTIZELINEAR_UINT8_FUNC_0010]
+   Goal: apply quantize_value to every element of the data of X, so that
+   Y[i] is the quantization of X[i] for every tensor index i. *)
   let ghost function dquantize (x : tensor real) (scale : real) (zero_point : int) : data int
     = fun ks -> quantize_value (x.data ks) scale zero_point
 
-  (** The reference tensor-level spec of QuantizeLinear *)
+ (* [E_QUANTIZELINEAR_UINT8_FUNC_0010] operator QuantizeLinear
+   Goal: define QuantizeLinear as the tensor with the same shape as X and
+   whose data is dquantize, under the constraints of the informal specification *)
   let ghost function opquantizelinear (x : tensor real) (scale : real) (zero_point : int) : tensor int
-    requires { Real.( scale > 0.0 ) }
-    requires { Int.( 0 <= zero_point <= 255 ) }
-    ensures { result.dims = x.dims }
-    ensures { result.data = dquantize x scale zero_point }
+    requires { Real.( scale > 0.0 ) }                 (* [E_QUANTIZELINEAR_UINT8_CONSTR_YSCALE_0010] y_scale <> 0*)
+    requires { Int.( 0 <= zero_point <= 255 ) }       (* y_zero_point is a uint8 scalar *)
+    ensures { result.dims = x.dims }           (* [E_QUANTIZELINEAR_UINT8_CONSTR_X_0010], [E_QUANTIZELINEAR_UINT8_CONSTR_Y_0010] shape of Y = shape of X *)
+    ensures { result.data = dquantize x scale zero_point }   (* [E_QUANTIZELINEAR_UINT8_FUNC_0010] values of Y *)
     ensures { result.background = quantize_value x.background scale zero_point }
     (*proof*)
     = { dims = x.dims ;

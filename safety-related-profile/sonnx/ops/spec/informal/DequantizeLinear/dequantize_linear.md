@@ -18,15 +18,14 @@ where:
 - $x\_zero\_point$: zero point of the dequantization, a scalar of type int32
 - $Y$: the dequantized tensor, of type float
 
-<span style="font-size:0.7em;">[info]</br></span>
+
 For int32 inputs, $x\_zero\_point$ is usually left at its default value $0$ (in the common case of a symmetrically-quantized int32 tensor, no zero point is needed). This specification nevertheless defines the operator for any value of $x\_zero\_point$, since the ONNX formula is the same in every case.
-<span style="font-size:0.7em;">[/info]</br></span>
 
 ## Restrictions
 
 [General restrictions](./../common/general_restrictions.md) are applicable.
 
-The following specific restrictions apply to the **DequantizeLinear** operator, in this specification:
+The following specific restrictions apply to the **DequantizeLinear** operator in this specification:
 
 | Restriction | Statement                                                                                                                                 | Origin    |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------------------|-----------|
@@ -98,7 +97,8 @@ Default value: `1`.
 (Only used for per-axis and blocked dequantization, see restriction [<b><span style="font-family: 'Courier New', monospace">R1</span></b>](#R1).)
 
 #### Constraints
-- `[C1]` <a id="C1axis"></a> Restricted to default value
+<a id="E_DEQUANTIZELINEAR_FLOAT_CONSTR_AXIS_0010"></a>
+- `[E_DEQUANTIZELINEAR_FLOAT_CONSTR_AXIS_0010]` Restricted to default value
   - Statement: see restriction [<b><span style="font-family: 'Courier New', monospace">R1</span></b>](#R1).
 
 ### `block_size`: int
@@ -107,14 +107,16 @@ Default value: `0`.
 (Only used for blocked dequantization, see restriction [<b><span style="font-family: 'Courier New', monospace">R2</span></b>](#R2).)
 
 #### Constraints
-- `[C1]` <a id="C1blocksize"></a> Restricted to default value
+<a id="E_DEQUANTIZELINEAR_FLOAT_CONSTR_BLOCK_SIZE_0010"></a>
+- `[E_DEQUANTIZELINEAR_FLOAT_CONSTR_BLOCK_SIZE_0010]` Restricted to default value
   - Statement: see restriction [<b><span style="font-family: 'Courier New', monospace">R2</span></b>](#R2).
 
 ### `output_dtype`: int
 Default value: `0` (unspecified; the output type is then inferred from the type of $x\_scale$, i.e., float).
 
 #### Constraints
-- `[C1]` <a id="C1outputdtype"></a> Restricted to default value
+<a id="E_DEQUANTIZELINEAR_FLOAT_CONSTR_OUTPUT_DTYPE_0010"></a>   
+- `[E_DEQUANTIZELINEAR_FLOAT_CONSTR_OUTPUT_DTYPE_0010]` Restricted to default value
   - Statement: see restriction [<b><span style="font-family: 'Courier New', monospace">R3</span></b>](#R3).
 
 ## Inputs

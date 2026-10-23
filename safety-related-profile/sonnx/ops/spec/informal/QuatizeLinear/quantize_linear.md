@@ -56,6 +56,7 @@ The effect of the operator is illustrated on the following examples.
 ### Example 1
 
 ```math
+
 X = \begin{bmatrix} 6.1 & -3.5 & 130.2 \end{bmatrix}
 ```
 
@@ -99,7 +100,8 @@ Default value: `1`.
 (Only used for per-axis and blocked quantization, see restriction [<b><span style="font-family: 'Courier New', monospace">R1</span></b>](#R1).)
 
 #### Constraints
-- `[C1]` <a id="C1axis"></a> Restricted to default value
+<a id="E_QUANTIZELINEAR_UINT8_CONSTR_AXIS_0010"></a>
+- `[E_QUANTIZELINEAR_UINT8_CONSTR_AXIS_0010]` Restricted to default value
   - Statement: see restriction [<b><span style="font-family: 'Courier New', monospace">R1</span></b>](#R1).
 
 ### `block_size`: int
@@ -108,25 +110,29 @@ Default value: `0`.
 (Only used for blocked quantization, see restriction [<b><span style="font-family: 'Courier New', monospace">R2</span></b>](#R2).)
 
 #### Constraints
-- `[C1]` <a id="C1blocksize"></a> Restricted to default value
+<a id="E_QUANTIZELINEAR_UINT8_CONSTR_BLOCK_SIZE_0010"></a> 
+- `[E_QUANTIZELINEAR_UINT8_CONSTR_BLOCK_SIZE_0010]` Restricted to default value
   - Statement: see restriction [<b><span style="font-family: 'Courier New', monospace">R2</span></b>](#R2).
 
 ### `output_dtype`: int
 Default value: `0` (unspecified; the output type is then inferred from the type of $y\_zero\_point$, i.e., uint8).
 
 #### Constraints
-- `[C1]` <a id="C1outputdtype"></a> Restricted to default value
+<a id="E_QUANTIZELINEAR_UINT8_CONSTR_OUTPUT_DTYPE_0010"></a> 
+- `[E_QUANTIZELINEAR_UINT8_CONSTR_OUTPUTDTYPE_0010]` Restricted to default value
   - Statement: see restriction [<b><span style="font-family: 'Courier New', monospace">R3</span></b>](#R3).
 
 ### `precision`: int
 Default value: unspecified (the division is performed using the type of $y\_scale$, i.e., float).
 
 #### Constraints
-- `[C1]` <a id="C1precision"></a> Restricted to default value
+<a id="E_QUANTIZELINEAR_UINT8_CONSTR_PRECISION_0010"></a> - `[E_QUANTIZELINEAR_UINT8_CONSTR_PRECISION_0010]` Restricted to default value
   - Statement: see restriction [<b><span style="font-family: 'Courier New', monospace">R4</span></b>](#R4).
 
 ### `saturate`: int
-Default value: `1`. Not applicable, see restriction [<b><span style="font-family: 'Courier New', monospace">R5</span></b>](#R5).
+<a id="E_QUANTIZELINEAR_UINT8_CONSTR_SATURATE_0010"></a> 
+- `[E_QUANTIZELINEAR_UINT8_CONSTR_SATURATE_0010]` Restricted to default value
+  - Statement:Default value: `1`. Not applicable, see restriction [<b><span style="font-family: 'Courier New', monospace">R5</span></b>](#R5).
 
 ## Inputs
 

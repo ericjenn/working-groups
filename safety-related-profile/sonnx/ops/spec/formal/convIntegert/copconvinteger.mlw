@@ -1,3 +1,7 @@
+(* ConvInteger (int8, uint8), formal specification.
+   Tags [E_CONVINTEGER_INT_...] refer to the informal specification.
+*)
+
 module OPConvInteger
 
   use tensor.tensor.Tensor
@@ -9,7 +13,8 @@ module OPConvInteger
   use list.Length
   use tensorint.mint.WInt32
 
-
+(* [E_CONVINTEGER_INT_FUNC_0010] [E_CONVINTEGER_INT_CONSTR_STRIDES_0020] [E_CONVINTEGER_INT_CONSTR_Y_0010]
+   Goal: compute the shape (dY_0, dY_1, dY_2, dY_3) of the output Y. *)
   function convDims (x w : tensor int) (str_h str_w : int)
                      (dil_h dil_w : int)
                      (pad_top pad_left pad_bottom pad_right : int) : list int
@@ -27,6 +32,8 @@ module OPConvInteger
 
     Cons dY_0 (Cons dY_1 (Cons dY_2 (Cons dY_3 Nil)))
 
+(* [E_CONVINTEGER_INT_FUNC_0010] term W_0[c], [E_CONVINTEGER_INT_CONSTR_WZEROPOINT_0010]
+   Goal: read the zero point W_0[c] of output channel m. *)
   function w_zero_at (wz : tensor int) (m : int) : int
   =
     match wz.dims with
@@ -35,7 +42,8 @@ module OPConvInteger
     | _ -> wz.background
     end
 
-
+(* [E_CONVINTEGER_INT_FUNC_0010] terms X_p and X_0, [E_CONVINTEGER_INT_CONSTR_PADS_0010]
+   Goal: read (X_p - X_0) at a given position. *)
   function coords_from_X_p (x : tensor int) (x_zero : int) (x_p_coords : list int) (pad_top pad_left : int) : int
   =
     let b = get_dim x_p_coords 0 in
@@ -45,6 +53,9 @@ module OPConvInteger
     let x_coords = Cons b (Cons c (Cons n (Cons m Nil))) in
     if valid x_coords x.dims then x.data x_coords - x_zero else 0 - x_zero
 
+(* [E_CONVINTEGER_INT_FUNC_0010] term SUM_{z=0}^{dW_3-1}
+   Goal: sum over the kernel width, for a fixed input channel c and kernel
+   row i, of (X_p - X_0) * (W_d - W_0). *)
   let rec ghost function w_cools_calculate
     (x w : tensor int) (x_zero : int) (wz : tensor int)
     (c i j jj n m y_h y_w : int)
@@ -60,6 +71,7 @@ module OPConvInteger
       let w_val = w.data (Cons m (Cons c (Cons i (Cons jj Nil)))) - w_zero_at wz m in
       x_val * w_val + w_cools_calculate x w x_zero wz c i j (jj + 1) n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left
 
+(* Proof helper *)
   let rec lemma w_cools_split
     (x w : tensor int) (x_zero : int) (wz : tensor int)
     (c i j jj k n m y_h y_w : int)
@@ -76,6 +88,9 @@ module OPConvInteger
     }
     = if jj < k then w_cools_split x w x_zero wz c i j (jj+1) k n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left else ()
 
+(* [E_CONVINTEGER_INT_FUNC_0010] term SUM_{j=0}^{dW_2-1}
+   Goal: sum over the kernel height, for a fixed input channel c, of the inner
+   sums computed by w_cools_calculate. *)
   let rec ghost function w_lines_calculate
     (x w : tensor int) (x_zero : int) (wz : tensor int)
     (c i ii j n m y_h y_w : int)
@@ -88,6 +103,7 @@ module OPConvInteger
       w_cools_calculate x w x_zero wz c ii j 0 n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left
       + w_lines_calculate x w x_zero wz c i (ii + 1) j n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left
 
+(* Proof helper *)
   let rec lemma w_lines_split
     (x w : tensor int) (x_zero : int) (wz : tensor int)
     (c i ii k j n m y_h y_w : int)
@@ -101,6 +117,8 @@ module OPConvInteger
     }
     = if ii < k then w_lines_split x w x_zero wz c i (ii+1) k j n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left else ()
 
+(* [E_CONVINTEGER_INT_FUNC_0010] term SUM_{i=0}^{dW_1-1}, [E_CONVINTEGER_INT_CONSTR_X_0020]
+   Goal: sum over the input channels (cc up to c-1) of the sums computed by w_lines_calculate. *)
   let rec ghost function w_channels_calculate
     (x w : tensor int) (x_zero : int) (wz : tensor int)
     (c cc i j n m y_h y_w : int)
@@ -113,6 +131,7 @@ module OPConvInteger
       w_lines_calculate x w x_zero wz cc i 0 j n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left
       + w_channels_calculate x w x_zero wz c (cc + 1) i j n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left
 
+(* Proof helper *)
   let rec lemma w_channels_split
     (x w : tensor int) (x_zero : int) (wz : tensor int)
     (c i cc k j n m y_h y_w : int)
@@ -126,7 +145,9 @@ module OPConvInteger
     }
     = if cc < k then w_channels_split x w x_zero wz c i (cc+1) k j n m y_h y_w str_h str_w dil_h dil_w pad_top pad_left else ()
 
-
+(* [E_CONVINTEGER_INT_FUNC_0010] value of Y[b,c,m,n], [E_CONVINTEGER_INT_CONSTR_Y_0020]
+   Goal: give the content of Y. For each valid output index (b,c,m,n), return
+   SUM_i SUM_j SUM_z (X_p - X_0) * (W_d - W_0). *)
   function dconv
     (x w : tensor int) (x_zero : int) (wz : tensor int)
     (y_dims : list int)
@@ -145,6 +166,7 @@ module OPConvInteger
       else
         0
 
+(* Proof helper *)
   let rec lemma get_dim_positive (ds : list int)
     requires { positive ds }
     ensures { forall i. 0 <= i < length ds -> 0 < get_dim ds i }
@@ -154,25 +176,26 @@ module OPConvInteger
       | Cons _ ds -> get_dim_positive ds
       end
 
-
+(* [E_CONVINTEGER_INT_FUNC_0010] operator ConvInteger, restrictions [R1], [R2]
+   Goal: define ConvInteger (standard convolution, group = 1) as the tensor
+   whose shape is convDims and whose data is dconv, under the constraints of
+   the informal specification *)
   let ghost function convInteger
     (x w : tensor int) (x_zero : int) (wz : tensor int)
     (str_h str_w dil_h dil_w pad_top pad_left pad_bottom pad_right : int) : tensor int
-  requires { str_h > 0 /\ str_w > 0 }
-  requires { pad_top >= 0 /\ pad_left >= 0 /\ pad_bottom >= 0 /\ pad_right >= 0 }
-  requires { dil_h > 0 /\ dil_w > 0 }
-  requires { length x.dims = 4 }
-  requires { get_dim x.dims 1 = get_dim w.dims 1 }   (* [R3], group = 1 *)
-  requires { length w.dims = 4 }
-  requires { wz.dims = Nil \/ wz.dims = Cons (get_dim w.dims 0) Nil }
+  requires { str_h > 0 /\ str_w > 0 }           (* [E_CONVINTEGER_INT_CONSTR_STRIDES_0010] *)
+  requires { pad_top >= 0 /\ pad_left >= 0 /\ pad_bottom >= 0 /\ pad_right >= 0 } (* [E_CONVINTEGER_INT_CONSTR_PADS_0010] *)
+  requires { dil_h > 0 /\ dil_w > 0 }           (* [E_CONVINTEGER_INT_CONSTR_DILATIONS_0010] *)
+  requires { length x.dims = 4 }                (* [E_CONVINTEGER_INT_CONSTR_X_0010], [R1] *)
+  requires { get_dim x.dims 1 = get_dim w.dims 1 }  (* [E_CONVINTEGER_INT_CONSTR_X_0020], group = 1 *)
+  requires { length w.dims = 4 }                (* [E_CONVINTEGER_INT_CONSTR_KERNELSHAPE_0020] *)
+  requires { wz.dims = Nil \/ wz.dims = Cons (get_dim w.dims 0) Nil } (* [E_CONVINTEGER_INT_CONSTR_WZEROPOINT_0010] *)
   requires { let y_shape = convDims x w str_h str_w dil_h dil_w pad_top pad_left pad_bottom pad_right in
-              get_dim y_shape 2 > 0 /\ get_dim y_shape 3 > 0
-           }
+              get_dim y_shape 2 > 0 /\ get_dim y_shape 3 > 0 } (* [E_CONVINTEGER_INT_CONSTR_STRIDES_0020] *)
   ensures { result.background = 0 }
-  ensures { result.dims = convDims x w str_h str_w dil_h dil_w pad_top pad_left pad_bottom pad_right }
+  ensures { result.dims = convDims x w str_h str_w dil_h dil_w pad_top pad_left pad_bottom pad_right } (* [E_CONVINTEGER_INT_CONSTR_Y_0010] *)
   ensures { let y_dims = convDims x w str_h str_w dil_h dil_w pad_top pad_left pad_bottom pad_right in
-            result.data = dconv x w x_zero wz y_dims str_h str_w dil_h dil_w pad_top pad_left
-         }
+            result.data = dconv x w x_zero wz y_dims str_h str_w dil_h dil_w pad_top pad_left}  (* [E_CONVINTEGER_INT_FUNC_0010] *)
   =
   let y_dims = convDims x w str_h str_w dil_h dil_w pad_top pad_left pad_bottom pad_right in
   { dims = y_dims ;
